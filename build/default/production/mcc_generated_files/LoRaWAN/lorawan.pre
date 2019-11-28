@@ -9764,7 +9764,7 @@ return SILENT_IMMEDIATELY_ACTIVE;
 
 if (loRa.macStatus.networkJoined == 0)
 {
-
+return NETWORK_NOT_JOINED;
 }
 
 if ( (port < 1) && (bufferLength != 0) )

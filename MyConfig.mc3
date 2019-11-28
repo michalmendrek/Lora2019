@@ -1228,7 +1228,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="MSSP2" name="enableI2cInterrupt"/>
-         <value>true</value>
+         <value>false</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="ANSELE" settingAlias="ANSE2"/>
@@ -1744,7 +1744,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="LORAWAN" name="NSS"/>
-         <value>disabled</value>
+         <value>RD3</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataNA915Up%14%frequency"/>
@@ -1880,7 +1880,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="TRISD" settingAlias="TRISD3"/>
-         <value>input</value>
+         <value>output</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="LATD" settingAlias="LATD4" alias="clear"/>
@@ -2451,12 +2451,12 @@
          <value>0</value>
       </entry>
       <entry>
-         <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataEU868%2%frequency"/>
-         <value>868.5</value>
-      </entry>
-      <entry>
          <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataNA915Up%64%data_rate_min"/>
          <value>4</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataEU868%2%frequency"/>
+         <value>868.5</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataNA915Up%38%data_rate_max"/>
@@ -2996,7 +2996,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="ANSELD"/>
-         <value>236</value>
+         <value>228</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="Pin Module" registerAlias="LATB" settingAlias="LATB1" alias="set"/>
@@ -3548,7 +3548,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="Pin Module" registerAlias="TRISD"/>
-         <value>238</value>
+         <value>230</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataNA915Up%8%data_rate_min"/>
@@ -3860,7 +3860,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="Pin Module" registerAlias="ANSELD" settingAlias="ANSD3"/>
-         <value>analog</value>
+         <value>digital</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataNA915Up%28%frequency"/>
@@ -4136,7 +4136,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="dependentModuleKey"/>
-         <value>1</value>
+         <value>2</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataNA915Up%22%frequency"/>
@@ -4483,12 +4483,12 @@
          <value>433.175</value>
       </entry>
       <entry>
-         <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataEU868%1%active"/>
-         <value>true</value>
-      </entry>
-      <entry>
          <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataNA915Up%31%data_rate_max"/>
          <value>3</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.PropertyTokenKey" moduleName="LORAWAN" name="dataEU868%1%active"/>
+         <value>true</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="MSSP2" name="foscClockValue"/>
@@ -6253,6 +6253,10 @@
    </tokenMap>
    <generatedFileHashHistoryMap class="java.util.HashMap">
       <entry>
+         <file>mcc_generated_files\LoRaWAN\lorawan_radio.h</file>
+         <hash>50f7b49b13ca9fd4d7ea8c30743aa79eb6611469dfe192293ac8f3462970ac00</hash>
+      </entry>
+      <entry>
          <file>mcc_generated_files\ext_int.c</file>
          <hash>b7a2d1e130cc8d367225462d953b196c417443baa68c5e8fb15e9f2615e81b1f</hash>
       </entry>
@@ -6261,12 +6265,8 @@
          <hash>31203443f6ea6e645674fb0227bd58168af584da63696a38e6e9fdfad200625a</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\LoRaWAN\lorawan_radio.h</file>
-         <hash>50f7b49b13ca9fd4d7ea8c30743aa79eb6611469dfe192293ac8f3462970ac00</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\LoRaWAN\pin_manager_lora_addons.h</file>
-         <hash>847e286227440ccbb9ffd1ca8403bd0f22298119c1923c2d82b7d16d0f022f96</hash>
+         <hash>2cf195220220f61ac10689ceaffe922183f6c849b44989db995dae0f59307111</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\LoRaWAN\sw_timer.h</file>
@@ -6297,12 +6297,12 @@
          <hash>5f5b9268734e73b446702476dae9bae50b11192da2078d80a3f3403984a2d7f4</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\LoRaWAN\radio_driver_hal.c</file>
-         <hash>637f1df9e115ac6ebfa0aa8aab7cb7b0f478f6b8b847cd20c5dfe136690eb6ab</hash>
+         <file>mcc_generated_files\mcc.c</file>
+         <hash>f4282ef3e2fa293605fc7c057e2824596df9a5a1ffb4d03607de6559396c0732</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\mcc.c</file>
-         <hash>a845a20bff5da66acb112f3b5878d692ffbe0fcc50d866543f104f97182269ec</hash>
+         <file>mcc_generated_files\LoRaWAN\radio_driver_hal.c</file>
+         <hash>637f1df9e115ac6ebfa0aa8aab7cb7b0f478f6b8b847cd20c5dfe136690eb6ab</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\LoRaWAN\radio_driver_SX1276.c</file>
@@ -6313,16 +6313,16 @@
          <hash>7b305b5ef00325fcccc5320f5974136268241ffcb56e73dbaee71f4230ffec30</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\LoRaWAN\radio_interface.h</file>
-         <hash>1d473ab676318ea2b3c11b7509140430606e39d9d9b1095580eeaf479dedd739</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\mcc.h</file>
          <hash>b746dc8e0b9ea8de130a0210e6d8ced2ca01572a2e663c446d6ee1a4f0d05a44</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\device_config.h</file>
          <hash>37f06d6c1147c490ec350671fb83646f496bcafdbb59c55af1a248afbd274817</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\LoRaWAN\radio_interface.h</file>
+         <hash>1d473ab676318ea2b3c11b7509140430606e39d9d9b1095580eeaf479dedd739</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\LoRaWAN\radio_driver_SX1276.h</file>
@@ -6350,7 +6350,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.h</file>
-         <hash>f89817efbf1f36529509b7de944bc38f25042fc62f773b3aa39f8756290704a0</hash>
+         <hash>026e46f6a0073c279be1f4c5ba57392f578ebef9195f1a63b4ba6be26fbc47b6</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\LoRaWAN\lorawan_defs.h</file>
@@ -6370,7 +6370,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\pin_manager.c</file>
-         <hash>2bd5d43ecc5dcbfd9edfad293a60dba48bfa28c645a97806e2cd72718d646b9a</hash>
+         <hash>92f45ab4c543e61ef2c9502e5972aa073766417d3360d57d93e167d7212f9868</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\LoRaWAN\mcc_lora_config.h</file>

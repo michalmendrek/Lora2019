@@ -46,7 +46,7 @@ extern "C" {
 
 /******************************* SPI ******************************************/
 #define SPI_Initialize                      SPI2_Initialize
-#define SPI_Exchange8bit                    SPI2_Exchange8bit
+#define SPI_Exchange8bit                    SPI2_ExchangeByte
 #define SPI_Exchange8bitBuffer              SPI2_Exchange8bitBuffer
 #define SPI_IsBufferFull                    SPI2_IsBufferFull
 #define SPI_HasWriteCollisionOccured        SPI2_HasWriteCollisionOccured

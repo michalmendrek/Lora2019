@@ -6829,12 +6829,12 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;spi2.h: 69: void SPI2_ReadBlock(void *block, size_t blockSize);
 [; ;spi2.h: 70: void SPI2_WriteByte(uint8_t byte);
 [; ;spi2.h: 71: uint8_t SPI2_ReadByte(void);
-[; ;pin_manager.h: 206: void PIN_MANAGER_Initialize (void);
-[; ;pin_manager.h: 218: void PIN_MANAGER_IOC(void);
-[; ;pin_manager.h: 231: void IOCB4_ISR(void);
-[; ;pin_manager.h: 254: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
-[; ;pin_manager.h: 278: extern void (*IOCB4_InterruptHandler)(void);
-[; ;pin_manager.h: 302: void IOCB4_DefaultInterruptHandler(void);
+[; ;pin_manager.h: 216: void PIN_MANAGER_Initialize (void);
+[; ;pin_manager.h: 228: void PIN_MANAGER_IOC(void);
+[; ;pin_manager.h: 241: void IOCB4_ISR(void);
+[; ;pin_manager.h: 264: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
+[; ;pin_manager.h: 288: extern void (*IOCB4_InterruptHandler)(void);
+[; ;pin_manager.h: 312: void IOCB4_DefaultInterruptHandler(void);
 [; ;radio_driver_hal.h: 55: void HALResetPinMakeOutput(void);
 [; ;radio_driver_hal.h: 56: void HALResetPinMakeInput(void);
 [; ;radio_driver_hal.h: 57: void HALResetPinOutputValue(uint8_t value);

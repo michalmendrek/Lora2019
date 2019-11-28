@@ -1,22 +1,48 @@
 Version 3.2 HI-TECH Software Intermediate Code
+"57 main.c
+[c E7387 0 1 2 3 4 5 .. ]
+[n E7387 . MAC_NOT_OK MAC_OK RADIO_NOT_OK RADIO_OK INVALID_BUFFER_LEN MCAST_RE_KEYING_NEEDED  ]
 [p mainexit ]
 "81 mcc_generated_files/mcc.h
 [v _SYSTEM_Initialize `(v ~T0 @X0 0 ef ]
-"9 main.c
-[c E7860 0 1 .. ]
-[n E7860 . MODULATION_FSK MODULATION_LORA  ]
-[c E7870 7 8 9 10 11 12 .. ]
-[n E7870 . SF_7 SF_8 SF_9 SF_10 SF_11 SF_12  ]
-[c E7878 7 8 9 .. ]
-[n E7878 . BW_125KHZ BW_250KHZ BW_500KHZ  ]
-"19 LoraSystenm.h
-[s S880 `ul 1 `ul 1 `ul 1 `ui 1 `uc 1 `uc -> 8 `i `uc 1 `E7860 1 `E7870 1 `E7878 1 `c 1 ]
-[n S880 . frequency frequencyDeviation bitRate preambleLen syncWordLoRa syncWord syncWordLen modulation dataRate bandWidth outputPower ]
-"68
-[s S882 `S880 -> 5 `i `uc -> 200 `i `uc -> 4 `i ]
-[n S882 __lora__ CHANNELS DataToSend Flags ]
-"14 C:\Program Files (x86)\Microchip\xc8\v1.45\include\string.h
-[v _memcpy `(*v ~T0 @X0 0 ef3`*v`*Cv`ui ]
+"16930 C:\Program Files (x86)\Microchip\xc8\v1.45\include\pic18lf46k22.h
+[s S821 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S821 . RBIF INT0IF TMR0IF RBIE INT0IE TMR0IE PEIE_GIEL GIE_GIEH ]
+"16940
+[s S822 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S822 . . INT0F T0IF . INT0E T0IE PEIE GIE ]
+"16950
+[s S823 :6 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S823 . . GIEL GIEH ]
+"16929
+[u S820 `S821 1 `S822 1 `S823 1 ]
+[n S820 . . . . ]
+"16956
+[v _INTCONbits `VS820 ~T0 @X0 0 e@4082 ]
+[v F7444 `(v ~T0 @X0 0 tf3`*uc`uc`E7387 ]
+[v F7449 `(v ~T0 @X0 0 tf1`uc ]
+"162 mcc_generated_files/LoRaWAN/lorawan.h
+[v _LORAWAN_Init `(v ~T0 @X0 0 ef2`*F7444`*F7449 ]
+"489
+[v _LORAWAN_SetNetworkSessionKey `(v ~T0 @X0 0 ef1`*uc ]
+"524
+[v _LORAWAN_SetApplicationSessionKey `(v ~T0 @X0 0 ef1`*uc ]
+"399
+[v _LORAWAN_SetDeviceAddress `(v ~T0 @X0 0 ef1`ul ]
+"89 main.c
+[c E7395 0 1 .. ]
+[n E7395 . OTAA ABP  ]
+[c E7372 0 1 2 3 4 5 6 7 8 9 10 11 12 .. ]
+[n E7372 . OK NETWORK_NOT_JOINED MAC_STATE_NOT_READY_FOR_TRANSMISSION INVALID_PARAMETER KEYS_NOT_INITIALIZED SILENT_IMMEDIATELY_ACTIVE FRAME_COUNTER_ERROR_REJOIN_NEEDED INVALID_BUFFER_LENGTH MAC_PAUSED NO_CHANNELS_FOUND INVALID_CLASS MCAST_PARAM_ERROR MCAST_MSG_ERROR  ]
+"177 mcc_generated_files/LoRaWAN/lorawan.h
+[v _LORAWAN_Join `(E7372 ~T0 @X0 0 ef1`E7395 ]
+"1529
+[v _LORAWAN_Mainloop `(v ~T0 @X0 0 ef ]
+"96 main.c
+[c E7399 0 1 .. ]
+[n E7399 . UNCNF CNF  ]
+"197 mcc_generated_files/LoRaWAN/lorawan.h
+[v _LORAWAN_Send `(E7372 ~T0 @X0 0 ef4`E7399`uc`*v`uc ]
 [; ;htc.h: 26: extern const char __xc8_OPTIM_SPEED;
 [; ;htc.h: 28: extern double __fpnormalize(double);
 [; ;xc8debug.h: 14: extern void __builtin_software_breakpoint(void);
@@ -6580,12 +6606,12 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic18.h: 164: extern __nonreentrant void _delay(unsigned long);
 [; ;pic18.h: 166: extern __nonreentrant void _delaywdt(unsigned long);
 [; ;pic18.h: 168: extern __nonreentrant void _delay3(unsigned char);
-[; ;pin_manager.h: 206: void PIN_MANAGER_Initialize (void);
-[; ;pin_manager.h: 218: void PIN_MANAGER_IOC(void);
-[; ;pin_manager.h: 231: void IOCB4_ISR(void);
-[; ;pin_manager.h: 254: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
-[; ;pin_manager.h: 278: extern void (*IOCB4_InterruptHandler)(void);
-[; ;pin_manager.h: 302: void IOCB4_DefaultInterruptHandler(void);
+[; ;pin_manager.h: 216: void PIN_MANAGER_Initialize (void);
+[; ;pin_manager.h: 228: void PIN_MANAGER_IOC(void);
+[; ;pin_manager.h: 241: void IOCB4_ISR(void);
+[; ;pin_manager.h: 264: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
+[; ;pin_manager.h: 288: extern void (*IOCB4_InterruptHandler)(void);
+[; ;pin_manager.h: 312: void IOCB4_DefaultInterruptHandler(void);
 [; ;stdint.h: 13: typedef signed char int8_t;
 [; ;stdint.h: 20: typedef signed int int16_t;
 [; ;stdint.h: 28: typedef signed short long int int24_t;
@@ -7290,84 +7316,149 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;radio_driver_hal.h: 65: uint8_t HALDIO5PinValue(void);
 [; ;mcc.h: 81: void SYSTEM_Initialize(void);
 [; ;mcc.h: 94: void OSCILLATOR_Initialize(void);
-[; ;LoraSystenm.h: 18: typedef struct
-[; ;LoraSystenm.h: 19: {
-[; ;LoraSystenm.h: 20: uint32_t frequency;
-[; ;LoraSystenm.h: 21: uint32_t frequencyDeviation;
-[; ;LoraSystenm.h: 22: uint32_t bitRate;
-[; ;LoraSystenm.h: 23: uint16_t preambleLen;
-[; ;LoraSystenm.h: 24: uint8_t syncWordLoRa;
-[; ;LoraSystenm.h: 25: uint8_t syncWord[8];
-[; ;LoraSystenm.h: 26: uint8_t syncWordLen;
-[; ;LoraSystenm.h: 27: RadioModulation_t modulation;
-[; ;LoraSystenm.h: 28: RadioDataRate_t dataRate;
-[; ;LoraSystenm.h: 29: RadioLoRaBandWidth_t bandWidth;
-[; ;LoraSystenm.h: 30: int8_t outputPower;
-[; ;LoraSystenm.h: 51: } RadioConfiguration_t;
-[; ;LoraSystenm.h: 53: typedef struct __channel_config__ {
-[; ;LoraSystenm.h: 54: uint32_t frequency;
-[; ;LoraSystenm.h: 55: uint32_t frequencyDeviation;
-[; ;LoraSystenm.h: 56: uint32_t bitRate;
-[; ;LoraSystenm.h: 57: uint16_t preambleLen;
-[; ;LoraSystenm.h: 58: uint8_t syncWordLoRa;
-[; ;LoraSystenm.h: 59: uint8_t syncWord[8];
-[; ;LoraSystenm.h: 60: uint8_t syncWordLen;
-[; ;LoraSystenm.h: 61: RadioModulation_t modulation;
-[; ;LoraSystenm.h: 62: RadioDataRate_t dataRate;
-[; ;LoraSystenm.h: 63: RadioLoRaBandWidth_t bandWidth;
-[; ;LoraSystenm.h: 64: int8_t outputPower;
-[; ;LoraSystenm.h: 65: } ChannelConfig;
-[; ;LoraSystenm.h: 68: typedef struct __lora__ {
-[; ;LoraSystenm.h: 70: RadioConfiguration_t CHANNELS[5];
-[; ;LoraSystenm.h: 71: uint8_t DataToSend[200];
-[; ;LoraSystenm.h: 72: bool Flags[4];
-[; ;LoraSystenm.h: 74: } LORA;
-[; ;LoraSystenm.h: 77: LORA * lora_open(ChannelConfig config[5], uint8_t config_len);
-[; ;LoraSystenm.h: 78: uint8_t lora_send(LORA *ptr, uint8_t channel,uint8_t power, uint8_t *data, uint8_t len);
-[; ;LoraSystenm.h: 79: void lora_close(LORA *ptr);
-[v $root$_main `(v ~T0 @X0 0 e ]
-"4 main.c
-[v _main `(v ~T0 @X0 1 ef ]
-"5
+"50 main.c
+[v _nwkSKey `uc ~T0 @X0 -> 16 `i e ]
+[i _nwkSKey
+:U ..
+-> -> 43 `i `uc
+-> -> 126 `i `uc
+-> -> 21 `i `uc
+-> -> 22 `i `uc
+-> -> 40 `i `uc
+-> -> 174 `i `uc
+-> -> 210 `i `uc
+-> -> 166 `i `uc
+-> -> 171 `i `uc
+"51
+-> -> 247 `i `uc
+-> -> 21 `i `uc
+-> -> 136 `i `uc
+-> -> 9 `i `uc
+-> -> 207 `i `uc
+-> -> 79 `i `uc
+-> -> 60 `i `uc
+..
+]
+[; ;main.c: 50: uint8_t nwkSKey[16] = {0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6, 0xAB,
+[; ;main.c: 51: 0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C};
+"52
+[v _appSKey `uc ~T0 @X0 -> 16 `i e ]
+[i _appSKey
+:U ..
+-> -> 60 `i `uc
+-> -> 143 `i `uc
+-> -> 38 `i `uc
+-> -> 39 `i `uc
+-> -> 57 `i `uc
+-> -> 191 `i `uc
+-> -> 227 `i `uc
+-> -> 183 `i `uc
+-> -> 188 `i `uc
+"53
+-> -> 8 `i `uc
+-> -> 38 `i `uc
+-> -> 153 `i `uc
+-> -> 26 `i `uc
+-> -> 208 `i `uc
+-> -> 80 `i `uc
+-> -> 77 `i `uc
+..
+]
+[; ;main.c: 52: uint8_t appSKey[16] = {0x3C, 0x8F, 0x26, 0x27, 0x39, 0xBF, 0xE3, 0xB7, 0xBC,
+[; ;main.c: 53: 0x08, 0x26, 0x99, 0x1A, 0xD0, 0x50, 0x4D};
+"54
+[v _devAddr `ul ~T0 @X0 1 e ]
+[i _devAddr
+-> -> 285212687 `l `ul
+]
+[; ;main.c: 54: uint32_t devAddr = 0x1100000F;
+"56
+[v _RxData `(v ~T0 @X0 1 ef3`*uc`uc`E7387 ]
+"57
 {
-[; ;main.c: 4: void main(void)
-[; ;main.c: 5: {
+[; ;main.c: 56: void RxData(uint8_t* pData, uint8_t dataLength, OpStatus_t status)
+[; ;main.c: 57: {
+[e :U _RxData ]
+"56
+[v _pData `*uc ~T0 @X0 1 r1 ]
+[v _dataLength `uc ~T0 @X0 1 r2 ]
+[v _status `E7387 ~T0 @X0 1 r3 ]
+"57
+[f ]
+[; ;main.c: 58: }
+"58
+[e :UE 880 ]
+}
+"60
+[v _RxJoinResponse `(v ~T0 @X0 1 ef1`uc ]
+"61
+{
+[; ;main.c: 60: void RxJoinResponse(bool status)
+[; ;main.c: 61: {
+[e :U _RxJoinResponse ]
+"60
+[v _status `uc ~T0 @X0 1 r1 ]
+"61
+[f ]
+[; ;main.c: 62: }
+"62
+[e :UE 881 ]
+}
+[v $root$_main `(v ~T0 @X0 0 e ]
+"64
+[v _main `(v ~T0 @X0 1 ef ]
+"65
+{
+[; ;main.c: 64: void main(void)
+[; ;main.c: 65: {
 [e :U _main ]
 [f ]
-[; ;main.c: 7: SYSTEM_Initialize();
-"7
+[; ;main.c: 67: SYSTEM_Initialize();
+"67
 [e ( _SYSTEM_Initialize ..  ]
-"9
-[v _ptr `*S882 ~T0 @X0 1 a ]
-[; ;main.c: 9: LORA *ptr;
-[; ;main.c: 11: if(ptr!=(0))
-"11
-[e $ ! != _ptr -> -> 0 `i `*S882 884  ]
-[; ;main.c: 12: {
-"12
-{
-"14
-}
+[; ;main.c: 74: (INTCONbits.GIE = 1);
+"74
+[e = . . _INTCONbits 1 7 -> -> 1 `i `uc ]
+[; ;main.c: 80: (INTCONbits.PEIE = 1);
+"80
+[e = . . _INTCONbits 1 6 -> -> 1 `i `uc ]
+[; ;main.c: 85: LORAWAN_Init(RxData, RxJoinResponse);
+"85
+[e ( _LORAWAN_Init (2 , &U _RxData &U _RxJoinResponse ]
+[; ;main.c: 86: LORAWAN_SetNetworkSessionKey(nwkSKey);
+"86
+[e ( _LORAWAN_SetNetworkSessionKey (1 &U _nwkSKey ]
+[; ;main.c: 87: LORAWAN_SetApplicationSessionKey(appSKey);
+"87
+[e ( _LORAWAN_SetApplicationSessionKey (1 &U _appSKey ]
+[; ;main.c: 88: LORAWAN_SetDeviceAddress(devAddr);
+"88
+[e ( _LORAWAN_SetDeviceAddress (1 _devAddr ]
+[; ;main.c: 89: LORAWAN_Join(ABP);
+"89
+[e ( _LORAWAN_Join (1 . `E7395 1 ]
+[; ;main.c: 91: while(1)
+"91
 [e :U 884 ]
-[; ;main.c: 14: }
-[; ;main.c: 15: memcpy((char *)ptr->DataToSend, "DUPSKO",sizeof("DUPSKO"));
-"15
-[e ( _memcpy (3 , , -> &U . *U _ptr 1 `*v -> :s 1C `*Cv -> 7 `ui ]
-[; ;main.c: 30: while (1)
-"30
-[e :U 886 ]
-[; ;main.c: 31: {
-"31
+[; ;main.c: 92: {
+"92
 {
-"33
+[; ;main.c: 94: LORAWAN_Mainloop();
+"94
+[e ( _LORAWAN_Mainloop ..  ]
+[; ;main.c: 96: LORAWAN_Send(UNCNF, 2, "LoRa", 4);
+"96
+[e ( _LORAWAN_Send (4 , , , . `E7399 0 -> -> 2 `i `uc -> :s 1C `*v -> -> 4 `i `uc ]
+"97
 }
+[e :U 883 ]
+"91
+[e $U 884  ]
 [e :U 885 ]
-"30
-[e $U 886  ]
-[e :U 887 ]
-[; ;main.c: 33: }
-[; ;main.c: 34: }
-"34
-[e :UE 883 ]
+[; ;main.c: 97: }
+[; ;main.c: 98: }
+"98
+[e :UE 882 ]
 }
-[a 1C 68 85 80 83 75 79 0 ]
+[a 1C 76 111 82 97 0 ]
+

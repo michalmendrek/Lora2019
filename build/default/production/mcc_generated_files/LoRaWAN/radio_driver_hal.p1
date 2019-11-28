@@ -3,12 +3,10 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _TRISC2 `Vb ~T0 @X0 0 e@31906 ]
 "18332
 [v _LATC2 `Vb ~T0 @X0 0 e@31834 ]
-"65 mcc_generated_files/LoRaWAN/radio_driver_hal.c
-[v _RADIO_nCS_SetLow `(i ~T0 @X0 0 ef ]
-"70
-[v _RADIO_nCS_SetHigh `(i ~T0 @X0 0 ef ]
-"75
-[v _SPI2_Exchange8bit `(i ~T0 @X0 0 ef ]
+"18350
+[v _LATD3 `Vb ~T0 @X0 0 e@31843 ]
+"66 mcc_generated_files/LoRaWAN/../spi2.h
+[v _SPI2_ExchangeByte `(uc ~T0 @X0 0 ef1`uc ]
 "6569 C:\Program Files (x86)\Microchip\xc8\v1.45\include\pic18lf46k22.h
 [s S341 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
 [n S341 . RB0 RB1 RB2 RB3 RB4 RB5 RB6 RB7 ]
@@ -6672,12 +6670,12 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;spi2.h: 69: void SPI2_ReadBlock(void *block, size_t blockSize);
 [; ;spi2.h: 70: void SPI2_WriteByte(uint8_t byte);
 [; ;spi2.h: 71: uint8_t SPI2_ReadByte(void);
-[; ;pin_manager.h: 206: void PIN_MANAGER_Initialize (void);
-[; ;pin_manager.h: 218: void PIN_MANAGER_IOC(void);
-[; ;pin_manager.h: 231: void IOCB4_ISR(void);
-[; ;pin_manager.h: 254: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
-[; ;pin_manager.h: 278: extern void (*IOCB4_InterruptHandler)(void);
-[; ;pin_manager.h: 302: void IOCB4_DefaultInterruptHandler(void);
+[; ;pin_manager.h: 216: void PIN_MANAGER_Initialize (void);
+[; ;pin_manager.h: 228: void PIN_MANAGER_IOC(void);
+[; ;pin_manager.h: 241: void IOCB4_ISR(void);
+[; ;pin_manager.h: 264: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
+[; ;pin_manager.h: 288: extern void (*IOCB4_InterruptHandler)(void);
+[; ;pin_manager.h: 312: void IOCB4_DefaultInterruptHandler(void);
 [; ;radio_driver_hal.h: 55: void HALResetPinMakeOutput(void);
 [; ;radio_driver_hal.h: 56: void HALResetPinMakeInput(void);
 [; ;radio_driver_hal.h: 57: void HALResetPinOutputValue(uint8_t value);
@@ -6773,9 +6771,13 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;radio_driver_hal.c: 64: {
 [e :U _HALSPICSAssert ]
 [f ]
-[; ;radio_driver_hal.c: 65: RADIO_nCS_SetLow();
+[; ;radio_driver_hal.c: 65: do { LATD3 = 0; } while(0);
 "65
-[e ( _RADIO_nCS_SetLow ..  ]
+[e :U 871 ]
+{
+[e = _LATD3 -> -> 0 `i `b ]
+}
+[e :U 870 ]
 [; ;radio_driver_hal.c: 66: }
 "66
 [e :UE 868 ]
@@ -6788,12 +6790,16 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;radio_driver_hal.c: 69: {
 [e :U _HALSPICSDeassert ]
 [f ]
-[; ;radio_driver_hal.c: 70: RADIO_nCS_SetHigh();
+[; ;radio_driver_hal.c: 70: do { LATD3 = 1; } while(0);
 "70
-[e ( _RADIO_nCS_SetHigh ..  ]
+[e :U 875 ]
+{
+[e = _LATD3 -> -> 1 `i `b ]
+}
+[e :U 874 ]
 [; ;radio_driver_hal.c: 71: }
 "71
-[e :UE 869 ]
+[e :UE 872 ]
 }
 "73
 [v _HALSPISend `(uc ~T0 @X0 1 ef1`uc ]
@@ -6806,13 +6812,13 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _data `uc ~T0 @X0 1 r1 ]
 "74
 [f ]
-[; ;radio_driver_hal.c: 75: return SPI2_Exchange8bit(data);
+[; ;radio_driver_hal.c: 75: return SPI2_ExchangeByte(data);
 "75
-[e ) -> ( _SPI2_Exchange8bit -> _data `i `uc ]
-[e $UE 870  ]
+[e ) ( _SPI2_ExchangeByte (1 _data ]
+[e $UE 876  ]
 [; ;radio_driver_hal.c: 76: }
 "76
-[e :UE 870 ]
+[e :UE 876 ]
 }
 "78
 [v _HALDIO0PinValue `(uc ~T0 @X0 1 ef ]
@@ -6825,10 +6831,10 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;radio_driver_hal.c: 80: return PORTBbits.RB1;
 "80
 [e ) . . _PORTBbits 0 1 ]
-[e $UE 871  ]
+[e $UE 877  ]
 [; ;radio_driver_hal.c: 81: }
 "81
-[e :UE 871 ]
+[e :UE 877 ]
 }
 "83
 [v _HALDIO1PinValue `(uc ~T0 @X0 1 ef ]
@@ -6841,10 +6847,10 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;radio_driver_hal.c: 85: return PORTBbits.RB2;
 "85
 [e ) . . _PORTBbits 0 2 ]
-[e $UE 872  ]
+[e $UE 878  ]
 [; ;radio_driver_hal.c: 86: }
 "86
-[e :UE 872 ]
+[e :UE 878 ]
 }
 "88
 [v _HALDIO2PinValue `(uc ~T0 @X0 1 ef ]
@@ -6857,10 +6863,10 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;radio_driver_hal.c: 90: return PORTBbits.RB4;
 "90
 [e ) . . _PORTBbits 0 4 ]
-[e $UE 873  ]
+[e $UE 879  ]
 [; ;radio_driver_hal.c: 91: }
 "91
-[e :UE 873 ]
+[e :UE 879 ]
 }
 "95
 [v _HALDIO5PinValue `(uc ~T0 @X0 1 ef ]
@@ -6873,8 +6879,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;radio_driver_hal.c: 97: return PORTBbits.RB0;
 "97
 [e ) . . _PORTBbits 0 0 ]
-[e $UE 874  ]
+[e $UE 880  ]
 [; ;radio_driver_hal.c: 98: }
 "98
-[e :UE 874 ]
+[e :UE 880 ]
 }

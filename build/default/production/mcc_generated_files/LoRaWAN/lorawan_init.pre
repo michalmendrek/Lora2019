@@ -8521,22 +8521,22 @@ extern void (*INT2_InterruptHandler)(void);
 # 905
 void INT2_DefaultInterruptHandler(void);
 
-# 206 "mcc_generated_files/LoRaWAN/../pin_manager.h"
+# 216 "mcc_generated_files/LoRaWAN/../pin_manager.h"
 void PIN_MANAGER_Initialize (void);
 
-# 218
+# 228
 void PIN_MANAGER_IOC(void);
 
-# 231
+# 241
 void IOCB4_ISR(void);
 
-# 254
+# 264
 void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
 
-# 278
+# 288
 extern void (*IOCB4_InterruptHandler)(void);
 
-# 302
+# 312
 void IOCB4_DefaultInterruptHandler(void);
 
 # 110 "mcc_generated_files/LoRaWAN/../interrupt_manager.h"

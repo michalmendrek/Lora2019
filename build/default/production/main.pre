@@ -8473,22 +8473,22 @@ extern __nonreentrant void _delaywdt(unsigned long);
 #pragma intrinsic(_delay3)
 extern __nonreentrant void _delay3(unsigned char);
 
-# 206 "mcc_generated_files/pin_manager.h"
+# 216 "mcc_generated_files/pin_manager.h"
 void PIN_MANAGER_Initialize (void);
 
-# 218
+# 228
 void PIN_MANAGER_IOC(void);
 
-# 231
+# 241
 void IOCB4_ISR(void);
 
-# 254
+# 264
 void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
 
-# 278
+# 288
 extern void (*IOCB4_InterruptHandler)(void);
 
-# 302
+# 312
 void IOCB4_DefaultInterruptHandler(void);
 
 # 13 "C:\Program Files (x86)\Microchip\xc8\v1.45\include\stdint.h"
@@ -9672,70 +9672,47 @@ void SYSTEM_Initialize(void);
 # 94
 void OSCILLATOR_Initialize(void);
 
-# 18 "LoraSystenm.h"
-typedef struct
+# 50 "main.c"
+uint8_t nwkSKey[16] = {0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6, 0xAB,
+0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F, 0x3C};
+uint8_t appSKey[16] = {0x3C, 0x8F, 0x26, 0x27, 0x39, 0xBF, 0xE3, 0xB7, 0xBC,
+0x08, 0x26, 0x99, 0x1A, 0xD0, 0x50, 0x4D};
+uint32_t devAddr = 0x1100000F;
+
+void RxData(uint8_t* pData, uint8_t dataLength, OpStatus_t status)
 {
-uint32_t frequency;
-uint32_t frequencyDeviation;
-uint32_t bitRate;
-uint16_t preambleLen;
-uint8_t syncWordLoRa;
-uint8_t syncWord[8];
-uint8_t syncWordLen;
-RadioModulation_t modulation;
-RadioDataRate_t dataRate;
-RadioLoRaBandWidth_t bandWidth;
-int8_t outputPower;
+}
 
-# 51
-} RadioConfiguration_t;
+void RxJoinResponse(bool status)
+{
+}
 
-typedef struct __channel_config__ {
-uint32_t frequency;
-uint32_t frequencyDeviation;
-uint32_t bitRate;
-uint16_t preambleLen;
-uint8_t syncWordLoRa;
-uint8_t syncWord[8];
-uint8_t syncWordLen;
-RadioModulation_t modulation;
-RadioDataRate_t dataRate;
-RadioLoRaBandWidth_t bandWidth;
-int8_t outputPower;
-} ChannelConfig;
-
-
-typedef struct __lora__ {
-
-RadioConfiguration_t CHANNELS[5];
-uint8_t DataToSend[200];
-bool Flags[4];
-
-} LORA;
-
-
-LORA * lora_open(ChannelConfig config[5], uint8_t config_len);
-uint8_t lora_send(LORA *ptr, uint8_t channel,uint8_t power, uint8_t *data, uint8_t len);
-void lora_close(LORA *ptr);
-
-# 4 "main.c"
 void main(void)
 {
 
 SYSTEM_Initialize();
 
-LORA *ptr;
+# 74
+(INTCONbits.GIE = 1);
 
-if(ptr!=(0))
+# 80
+(INTCONbits.PEIE = 1);
+
+
+
+
+LORAWAN_Init(RxData, RxJoinResponse);
+LORAWAN_SetNetworkSessionKey(nwkSKey);
+LORAWAN_SetApplicationSessionKey(appSKey);
+LORAWAN_SetDeviceAddress(devAddr);
+LORAWAN_Join(ABP);
+
+while(1)
 {
 
-}
-memcpy((char *)ptr->DataToSend, "DUPSKO",sizeof("DUPSKO"));
+LORAWAN_Mainloop();
 
-# 30
-while (1)
-{
-
+LORAWAN_Send(UNCNF, 2, "LoRa", 4);
 }
 }
 

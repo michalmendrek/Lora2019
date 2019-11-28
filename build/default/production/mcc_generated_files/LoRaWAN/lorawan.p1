@@ -7889,6 +7889,10 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;lorawan.c: 200: {
 "200
 {
+[; ;lorawan.c: 201: return NETWORK_NOT_JOINED;
+"201
+[e ) . `E7190 1 ]
+[e $UE 899  ]
 "202
 }
 [e :U 902 ]

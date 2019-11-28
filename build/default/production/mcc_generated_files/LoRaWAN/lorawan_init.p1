@@ -10,7 +10,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 "94 mcc_generated_files/LoRaWAN/interrupt_manager_lora_addons.h
 [v _DIO1_ISR_Lora `(v ~T0 @X0 0 ef ]
 [v F7005 `(v ~T0 @X0 0 tf ]
-"254 mcc_generated_files/LoRaWAN/../pin_manager.h
+"264 mcc_generated_files/LoRaWAN/../pin_manager.h
 [v _IOCB4_SetInterruptHandler `(v ~T0 @X0 0 ef1`*F7005 ]
 "95 mcc_generated_files/LoRaWAN/interrupt_manager_lora_addons.h
 [v _DIO2_ISR_Lora `(v ~T0 @X0 0 ef ]
@@ -6602,12 +6602,12 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;ext_int.h: 857: void INT2_SetInterruptHandler(void (* InterruptHandler)(void));
 [; ;ext_int.h: 881: extern void (*INT2_InterruptHandler)(void);
 [; ;ext_int.h: 905: void INT2_DefaultInterruptHandler(void);
-[; ;pin_manager.h: 206: void PIN_MANAGER_Initialize (void);
-[; ;pin_manager.h: 218: void PIN_MANAGER_IOC(void);
-[; ;pin_manager.h: 231: void IOCB4_ISR(void);
-[; ;pin_manager.h: 254: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
-[; ;pin_manager.h: 278: extern void (*IOCB4_InterruptHandler)(void);
-[; ;pin_manager.h: 302: void IOCB4_DefaultInterruptHandler(void);
+[; ;pin_manager.h: 216: void PIN_MANAGER_Initialize (void);
+[; ;pin_manager.h: 228: void PIN_MANAGER_IOC(void);
+[; ;pin_manager.h: 241: void IOCB4_ISR(void);
+[; ;pin_manager.h: 264: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
+[; ;pin_manager.h: 288: extern void (*IOCB4_InterruptHandler)(void);
+[; ;pin_manager.h: 312: void IOCB4_DefaultInterruptHandler(void);
 [; ;interrupt_manager.h: 110: void INTERRUPT_Initialize (void);
 [; ;stdint.h: 13: typedef signed char int8_t;
 [; ;stdint.h: 20: typedef signed int int16_t;

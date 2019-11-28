@@ -6654,12 +6654,12 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;tmr_lora_addons.h: 56: void TMR_ISR_lora(void);
 [; ;tmr_lora_addons.h: 57: void TMR_ISR_Lora_Init(void);
 [; ;interrupt_manager.h: 110: void INTERRUPT_Initialize (void);
-[; ;pin_manager.h: 206: void PIN_MANAGER_Initialize (void);
-[; ;pin_manager.h: 218: void PIN_MANAGER_IOC(void);
-[; ;pin_manager.h: 231: void IOCB4_ISR(void);
-[; ;pin_manager.h: 254: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
-[; ;pin_manager.h: 278: extern void (*IOCB4_InterruptHandler)(void);
-[; ;pin_manager.h: 302: void IOCB4_DefaultInterruptHandler(void);
+[; ;pin_manager.h: 216: void PIN_MANAGER_Initialize (void);
+[; ;pin_manager.h: 228: void PIN_MANAGER_IOC(void);
+[; ;pin_manager.h: 241: void IOCB4_ISR(void);
+[; ;pin_manager.h: 264: void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
+[; ;pin_manager.h: 288: extern void (*IOCB4_InterruptHandler)(void);
+[; ;pin_manager.h: 312: void IOCB4_DefaultInterruptHandler(void);
 [; ;errno.h: 29: extern int errno;
 [; ;conio.h: 12: extern void init_uart(void);
 [; ;conio.h: 14: extern char getch(void);
