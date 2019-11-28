@@ -54,8 +54,8 @@ void SYSTEM_Initialize(void)
     SPI2_Initialize();
     PIN_MANAGER_Initialize();
     OSCILLATOR_Initialize();
-    EXT_INT_Initialize();
     TMR1_Initialize();
+    EXT_INT_Initialize();
     LORAWAN_PlatformInit();
 }
 

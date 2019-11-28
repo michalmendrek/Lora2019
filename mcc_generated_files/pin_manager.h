@@ -165,6 +165,16 @@
 #define SDI2_SetAnalogMode()      do { ANSELDbits.ANSD1 = 1; } while(0)
 #define SDI2_SetDigitalMode()     do { ANSELDbits.ANSD1 = 0; } while(0)
 
+// get/set RD3 procedures
+#define RD3_SetHigh()            do { LATDbits.LATD3 = 1; } while(0)
+#define RD3_SetLow()             do { LATDbits.LATD3 = 0; } while(0)
+#define RD3_Toggle()             do { LATDbits.LATD3 = ~LATDbits.LATD3; } while(0)
+#define RD3_GetValue()              PORTDbits.RD3
+#define RD3_SetDigitalInput()    do { TRISDbits.TRISD3 = 1; } while(0)
+#define RD3_SetDigitalOutput()   do { TRISDbits.TRISD3 = 0; } while(0)
+#define RD3_SetAnalogMode()         do { ANSELDbits.ANSD3 = 1; } while(0)
+#define RD3_SetDigitalMode()        do { ANSELDbits.ANSD3 = 0; } while(0)
+
 // get/set SDO2 aliases
 #define SDO2_TRIS                 TRISDbits.TRISD4
 #define SDO2_LAT                  LATDbits.LATD4

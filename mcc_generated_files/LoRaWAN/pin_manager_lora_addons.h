@@ -138,6 +138,22 @@ extern "C" {
 
 
 
+// get/set RADIO_nCS aliases
+#define RADIO_nCS_TRIS                      TRISD3
+#define RADIO_nCS_LAT                       LATD3
+#define RADIO_nCS_PORT                      RD3
+#define RADIO_nCS_WPU                       WPUD3
+#define RADIO_nCS_ANS                       ANSD3
+#define RADIO_nCS_SetHigh()                 do { LATD3 = 1; } while(0)
+#define RADIO_nCS_SetLow()                  do { LATD3 = 0; } while(0)
+#define RADIO_nCS_Toggle()                  do { LATD3 = ~LATD3; } while(0)
+#define RADIO_nCS_GetValue()                PORTDbits.RD3
+#define RADIO_nCS_SetDigitalInput()         do { TRISD3 = 1; } while(0)
+#define RADIO_nCS_SetDigitalOutput()        do { TRISD3 = 0; } while(0)
+#define RADIO_nCS_SetPullup()               do { WPUD3 = 1; } while(0)
+#define RADIO_nCS_ResetPullup()             do { WPUD3 = 0; } while(0)
+#define RADIO_nCS_SetAnalogMode()           do { ANSD3 = 1; } while(0)
+#define RADIO_nCS_SetDigitalMode()          do { ANSD3 = 0; } while(0)        
 
 
 #ifdef    __cplusplus
