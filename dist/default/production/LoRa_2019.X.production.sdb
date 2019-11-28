@@ -1,0 +1,1472 @@
+[p LITE_MODE AUTOSTATIC IEEE_FLT IEEE_DBL LFSROK EMI_WORD ]
+[d version 1.1 ]
+[d edition pro ]
+[d chip 18LF46K22 ]
+[d frameptr 4065 ]
+"73 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/spi2.c
+[e E92 . `uc
+SPI2_DEFAULT 0
+]
+"103 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/radio_driver_SX1276.c
+[e E6984 . `uc
+MODULATION_FSK 0
+MODULATION_LORA 1
+]
+[e E6994 . `uc
+SF_7 7
+SF_8 8
+SF_9 9
+SF_10 10
+SF_11 11
+SF_12 12
+]
+[e E7002 . `uc
+BW_125KHZ 7
+BW_250KHZ 8
+BW_500KHZ 9
+]
+[e E6988 . `uc
+CR_4_5 1
+CR_4_6 2
+CR_4_7 3
+CR_4_8 4
+]
+[e E7007 . `uc
+FSK_SHAPING_NONE 0
+FSK_SHAPING_GAUSS_BT_1_0 1
+FSK_SHAPING_GAUSS_BT_0_5 2
+FSK_SHAPING_GAUSS_BT_0_3 3
+]
+[e E7013 . `uc
+FSKBW_250_0KHZ 1
+FSKBW_125_0KHZ 2
+FSKBW_62_5KHZ 3
+FSKBW_31_3KHZ 4
+FSKBW_15_6KHZ 5
+FSKBW_7_8KHZ 6
+FSKBW_3_9KHZ 7
+FSKBW_INVALID_PADDING_0 8
+FSKBW_200_0KHZ 9
+FSKBW_100_0KHZ 10
+FSKBW_50_0KHZ 11
+FSKBW_25_0KHZ 12
+FSKBW_12_5KHZ 13
+FSKBW_6_3KHZ 14
+FSKBW_3_1KHZ 15
+FSKBW_INVALID_PADDING_1 16
+FSKBW_166_7KHZ 17
+FSKBW_83_3KHZ 18
+FSKBW_41_7KHZ 19
+FSKBW_20_8KHZ 20
+FSKBW_10_4KHZ 21
+FSKBW_5_2KHZ 22
+FSKBW_2_6KHZ 23
+]
+"148
+[e E7789 . `uc
+MODE_SLEEP 0
+MODE_STANDBY 1
+MODE_FSTX 2
+MODE_TX 3
+MODE_FSRX 4
+MODE_RXCONT 5
+MODE_RXSINGLE 6
+MODE_CAD 7
+]
+"753
+[e E7038 . `i
+ERR_NO_DATA -32767
+ERR_DATA_SIZE -32766
+ERR_BUFFER_LOCKED -32765
+ERR_RADIO_BUSY -32764
+ERR_OUT_OF_RANGE -32763
+ERR_NONE 0
+]
+"1006
+[e E7497 . `uc
+OK 0
+NETWORK_NOT_JOINED 1
+MAC_STATE_NOT_READY_FOR_TRANSMISSION 2
+INVALID_PARAMETER 3
+KEYS_NOT_INITIALIZED 4
+SILENT_IMMEDIATELY_ACTIVE 5
+FRAME_COUNTER_ERROR_REJOIN_NEEDED 6
+INVALID_BUFFER_LENGTH 7
+MAC_PAUSED 8
+NO_CHANNELS_FOUND 9
+INVALID_CLASS 10
+MCAST_PARAM_ERROR 11
+MCAST_MSG_ERROR 12
+]
+"62 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan_eu.c
+[e E7754 . `uc
+BW_125KHZ 7
+BW_250KHZ 8
+BW_500KHZ 9
+]
+"65
+[e E7736 . `uc
+MODULATION_FSK 0
+MODULATION_LORA 1
+]
+"124
+[e E7264 . `uc
+MAC_NOT_OK 0
+MAC_OK 1
+RADIO_NOT_OK 2
+RADIO_OK 3
+INVALID_BUFFER_LEN 4
+MCAST_RE_KEYING_NEEDED 5
+]
+"126
+[e E7284 . `uc
+CLASS_A 0
+CLASS_B 1
+CLASS_C 2
+]
+[e E7272 . `uc
+OTAA 0
+ABP 1
+]
+[e E7280 . `uc
+ISM_EU868 0
+ISM_EU433 1
+]
+"236
+[e E7249 . `uc
+OK 0
+NETWORK_NOT_JOINED 1
+MAC_STATE_NOT_READY_FOR_TRANSMISSION 2
+INVALID_PARAMETER 3
+KEYS_NOT_INITIALIZED 4
+SILENT_IMMEDIATELY_ACTIVE 5
+FRAME_COUNTER_ERROR_REJOIN_NEEDED 6
+INVALID_BUFFER_LENGTH 7
+MAC_PAUSED 8
+NO_CHANNELS_FOUND 9
+INVALID_CLASS 10
+MCAST_PARAM_ERROR 11
+MCAST_MSG_ERROR 12
+]
+"376
+[e E7515 . `uc
+IDLE 0
+TRANSMISSION_OCCURRING 1
+BEFORE_RX1 2
+RX1_OPEN 3
+BETWEEN_RX1_RX2 4
+RX2_OPEN 5
+RETRANSMISSION_DELAY 6
+ABP_DELAY 7
+CLASS_C_RX2_1_OPEN 8
+CLASS_C_RX2_2_OPEN 9
+]
+"519
+[e E7790 . `i
+ERR_NO_DATA -32767
+ERR_DATA_SIZE -32766
+ERR_BUFFER_LOCKED -32765
+ERR_RADIO_BUSY -32764
+ERR_OUT_OF_RANGE -32763
+ERR_NONE 0
+]
+"872
+[e E7746 . `uc
+SF_7 7
+SF_8 8
+SF_9 9
+SF_10 10
+SF_11 11
+SF_12 12
+]
+"54 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan.c
+[e E7225 . `uc
+CLASS_A 0
+CLASS_B 1
+CLASS_C 2
+]
+[e E7213 . `uc
+OTAA 0
+ABP 1
+]
+[e E7221 . `uc
+ISM_EU868 0
+ISM_EU433 1
+]
+"59
+[e E7205 . `uc
+MAC_NOT_OK 0
+MAC_OK 1
+RADIO_NOT_OK 2
+RADIO_OK 3
+INVALID_BUFFER_LEN 4
+MCAST_RE_KEYING_NEEDED 5
+]
+"116
+[e E7190 . `uc
+OK 0
+NETWORK_NOT_JOINED 1
+MAC_STATE_NOT_READY_FOR_TRANSMISSION 2
+INVALID_PARAMETER 3
+KEYS_NOT_INITIALIZED 4
+SILENT_IMMEDIATELY_ACTIVE 5
+FRAME_COUNTER_ERROR_REJOIN_NEEDED 6
+INVALID_BUFFER_LENGTH 7
+MAC_PAUSED 8
+NO_CHANNELS_FOUND 9
+INVALID_CLASS 10
+MCAST_PARAM_ERROR 11
+MCAST_MSG_ERROR 12
+]
+"130
+[e E7456 . `uc
+IDLE 0
+TRANSMISSION_OCCURRING 1
+BEFORE_RX1 2
+RX1_OPEN 3
+BETWEEN_RX1_RX2 4
+RX2_OPEN 5
+RETRANSMISSION_DELAY 6
+ABP_DELAY 7
+CLASS_C_RX2_1_OPEN 8
+CLASS_C_RX2_2_OPEN 9
+]
+"151
+[e E7731 . `i
+ERR_NO_DATA -32767
+ERR_DATA_SIZE -32766
+ERR_BUFFER_LOCKED -32765
+ERR_RADIO_BUSY -32764
+ERR_OUT_OF_RANGE -32763
+ERR_NONE 0
+]
+"186
+[e E7217 . `uc
+UNCNF 0
+CNF 1
+]
+"767
+[e E7478 . `uc
+LINK_CHECK_CID 2
+LINK_ADR_CID 3
+DUTY_CYCLE_CID 4
+RX2_SETUP_CID 5
+DEV_STATUS_CID 6
+NEW_CHANNEL_CID 7
+RX_TIMING_SETUP_CID 8
+]
+"1135
+[e E7468 . `uc
+FRAME_TYPE_JOIN_REQ 0
+FRAME_TYPE_JOIN_ACCEPT 1
+FRAME_TYPE_DATA_UNCONFIRMED_UP 2
+FRAME_TYPE_DATA_UNCONFIRMED_DOWN 3
+FRAME_TYPE_DATA_CONFIRMED_UP 4
+FRAME_TYPE_DATA_CONFIRMED_DOWN 5
+FRAME_TYPE_RFU 6
+FRAME_TYPE_PROPRIETARY 7
+]
+"4 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\abdiv.c
+[v ___abdiv __abdiv `(c  1 e 1 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\awdiv.c
+[v ___awdiv __awdiv `(i  1 e 2 0 ]
+"62 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\float.c
+[v ___ftpack __ftpack `(f  1 e 4 0 ]
+"86 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\ftadd.c
+[v ___ftadd __ftadd `(f  1 e 4 0 ]
+"54 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\ftdiv.c
+[v ___ftdiv __ftdiv `(f  1 e 4 0 ]
+"62 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\ftmul.c
+[v ___ftmul __ftmul `(f  1 e 4 0 ]
+"20 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\ftsub.c
+[v ___ftsub __ftsub `(f  1 e 4 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\lldiv.c
+[v ___lldiv __lldiv `(ul  1 e 4 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\llmod.c
+[v ___llmod __llmod `(ul  1 e 4 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\lwmod.c
+[v ___lwmod __lwmod `(ui  1 e 2 0 ]
+"27 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\memcpy.c
+[v _memcpy memcpy `(*.39v  1 e 2 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\memset.c
+[v _memset memset `(*.39v  1 e 2 0 ]
+"6 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\rand.c
+[v _srand srand `(v  1 e 1 0 ]
+"12
+[v _rand rand `(i  1 e 2 0 ]
+"10 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\sprcadd.c
+[v ___fladd __fladd `(d  1 e 4 0 ]
+"245
+[v ___flsub __flsub `(d  1 e 4 0 ]
+"11 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\sprcdiv.c
+[v ___fldiv __fldiv `(d  1 e 4 0 ]
+"8 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\sprcmul.c
+[v ___flmul __flmul `(d  1 e 4 0 ]
+"15 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\Umul16.c
+[v ___wmul __wmul `(ui  1 e 2 0 ]
+"15 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\Umul32.c
+[v ___lmul __lmul `(ul  1 e 4 0 ]
+"49 D:\elektr_2019\LoRa_2019\LoRa_2019.X\main.c
+[v _main main `(v  1 e 1 0 ]
+"34 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/ext_int.c
+[v _INT0_ISR INT0_ISR `(v  1 e 1 0 ]
+"43
+[v _INT0_CallBack INT0_CallBack `(v  1 e 1 0 ]
+"52
+[v _INT0_SetInterruptHandler INT0_SetInterruptHandler `(v  1 e 1 0 ]
+"56
+[v _INT0_DefaultInterruptHandler INT0_DefaultInterruptHandler `(v  1 e 1 0 ]
+"60
+[v _INT1_ISR INT1_ISR `(v  1 e 1 0 ]
+"69
+[v _INT1_CallBack INT1_CallBack `(v  1 e 1 0 ]
+"78
+[v _INT1_SetInterruptHandler INT1_SetInterruptHandler `(v  1 e 1 0 ]
+"82
+[v _INT1_DefaultInterruptHandler INT1_DefaultInterruptHandler `(v  1 e 1 0 ]
+"86
+[v _INT2_ISR INT2_ISR `(v  1 e 1 0 ]
+"95
+[v _INT2_CallBack INT2_CallBack `(v  1 e 1 0 ]
+"104
+[v _INT2_SetInterruptHandler INT2_SetInterruptHandler `(v  1 e 1 0 ]
+"108
+[v _INT2_DefaultInterruptHandler INT2_DefaultInterruptHandler `(v  1 e 1 0 ]
+"113
+[v _EXT_INT_Initialize EXT_INT_Initialize `(v  1 e 1 0 ]
+"52 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/interrupt_manager.c
+[v _INTERRUPT_Initialize INTERRUPT_Initialize `(v  1 e 1 0 ]
+"58
+[v _INTERRUPT_InterruptManager INTERRUPT_InterruptManager `IIH(v  1 e 1 0 ]
+"217 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/AES.c
+[v _AESEncode AESEncode `(v  1 e 1 0 ]
+"306
+[v _EncKeySchedule EncKeySchedule `(v  1 e 1 0 ]
+"354
+[v _EncodeShiftRow EncodeShiftRow `(v  1 e 1 0 ]
+"48 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/interrupt_manager_lora_addons.c
+[v _INTERRUPT_GetDioStatus INTERRUPT_GetDioStatus `(uc  1 e 1 0 ]
+"63
+[v _DIO0_ISR_Lora DIO0_ISR_Lora `(v  1 e 1 0 ]
+"68
+[v _DIO1_ISR_Lora DIO1_ISR_Lora `(v  1 e 1 0 ]
+"73
+[v _DIO2_ISR_Lora DIO2_ISR_Lora `(v  1 e 1 0 ]
+"88
+[v _DIO5_ISR_Lora DIO5_ISR_Lora `(v  1 e 1 0 ]
+"185 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan.c
+[v _LORAWAN_Send LORAWAN_Send `(E7190  1 e 1 0 ]
+"755
+[v _LORAWAN_LinkCheckConfigure LORAWAN_LinkCheckConfigure `(v  1 e 1 0 ]
+"796
+[v _LORAWAN_ReceiveWindow1Callback LORAWAN_ReceiveWindow1Callback `R(v  1 e 1 0 ]
+"827
+[v _LORAWAN_ReceiveWindow2Callback LORAWAN_ReceiveWindow2Callback `RR(v  1 e 1 0 ]
+"881
+[v _LORAWAN_LinkCheckCallback LORAWAN_LinkCheckCallback `R(v  1 e 1 0 ]
+"915
+[v _LORAWAN_EnterContinuousReceive LORAWAN_EnterContinuousReceive `(v  1 e 1 0 ]
+"934
+[v _AckRetransmissionCallback AckRetransmissionCallback `R(v  1 e 1 0 ]
+"997
+[v _UnconfirmedTransmissionCallback UnconfirmedTransmissionCallback `R(v  1 e 1 0 ]
+"1017
+[v _AutomaticReplyCallback AutomaticReplyCallback `R(v  1 e 1 0 ]
+"1024
+[v _UpdateCurrentDataRate UpdateCurrentDataRate `(v  1 e 1 0 ]
+"1029
+[v _UpdateTxPower UpdateTxPower `(v  1 e 1 0 ]
+"1034
+[v _UpdateRetransmissionAckTimeoutState UpdateRetransmissionAckTimeoutState `(v  1 e 1 0 ]
+"1041
+[v _UpdateJoinSuccessState UpdateJoinSuccessState `R(v  1 e 1 0 ]
+"1063
+[v _UpdateMinMaxChDataRate UpdateMinMaxChDataRate `(v  1 e 1 0 ]
+"1084
+[v _UpdateReceiveWindow2Parameters UpdateReceiveWindow2Parameters `(v  1 e 1 0 ]
+"1090
+[v _ResetParametersForConfirmedTransmission ResetParametersForConfirmedTransmission `(v  1 e 1 0 ]
+"1097
+[v _ResetParametersForUnconfirmedTransmission ResetParametersForUnconfirmedTransmission `(v  1 e 1 0 ]
+"1104
+[v _SetJoinFailState SetJoinFailState `(v  1 e 1 0 ]
+"1116
+[v _Random Random `(ui  1 e 2 0 ]
+"1121
+[v _LORAWAN_RxDone LORAWAN_RxDone `(E7497  1 e 1 0 ]
+"1556
+[v _LORAWAN_GetMaxPayloadSize LORAWAN_GetMaxPayloadSize `(uc  1 s 1 LORAWAN_GetMaxPayloadSize ]
+"1575
+[v _MacExecuteCommands MacExecuteCommands `(*.39uc  1 s 2 MacExecuteCommands ]
+"1652
+[v _ExecuteLinkCheck ExecuteLinkCheck `(*.39uc  1 s 2 ExecuteLinkCheck ]
+"1659
+[v _ExecuteRxTimingSetup ExecuteRxTimingSetup `(*.39uc  1 s 2 ExecuteRxTimingSetup ]
+"1672
+[v _AssemblePacket AssemblePacket `(v  1 s 1 AssemblePacket ]
+"1806
+[v _PrepareJoinRequestFrame PrepareJoinRequestFrame `(uc  1 s 1 PrepareJoinRequestFrame ]
+"1845
+[v _IncludeMacCommandsResponse IncludeMacCommandsResponse `(v  1 s 1 IncludeMacCommandsResponse ]
+"1963
+[v _FindSmallestDataRate FindSmallestDataRate `(uc  1 s 1 FindSmallestDataRate ]
+"1997
+[v _SetReceptionNotOkState SetReceptionNotOkState `(v  1 s 1 SetReceptionNotOkState ]
+"2019
+[v _ConfigureRadioRx ConfigureRadioRx `(v  1 s 1 ConfigureRadioRx ]
+"2026
+[v _UpdateReceiveDelays UpdateReceiveDelays `(v  1 s 1 UpdateReceiveDelays ]
+"2037
+[v _UpdateJoinInProgress UpdateJoinInProgress `(v  1 s 1 UpdateJoinInProgress ]
+"2045
+[v _PrepareSessionKeys PrepareSessionKeys `(v  1 s 1 PrepareSessionKeys ]
+"2062
+[v _ComputeSessionKeys ComputeSessionKeys `(v  1 s 1 ComputeSessionKeys ]
+"2074
+[v _CheckFlags CheckFlags `(v  1 s 1 CheckFlags ]
+"2097
+[v _CheckMcastFlags CheckMcastFlags `(uc  1 s 1 CheckMcastFlags ]
+"2134
+[v _CountfOptsLength CountfOptsLength `(uc  1 s 1 CountfOptsLength ]
+"2156
+[v _AssembleEncryptionBlock AssembleEncryptionBlock `(v  1 s 1 AssembleEncryptionBlock ]
+"2187
+[v _ExtractMic ExtractMic `(ul  1 s 4 ExtractMic ]
+"2194
+[v _ComputeMic ComputeMic `(ul  1 s 4 ComputeMic ]
+"2205
+[v _EncryptFRMPayload EncryptFRMPayload `(v  1 s 1 EncryptFRMPayload ]
+"34 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan_aes.c
+[v _AESEncodeLoRa AESEncodeLoRa `(v  1 e 1 0 ]
+"41 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan_aes_cmac.c
+[v _AESCmac AESCmac `(v  1 e 1 0 ]
+"124
+[v _GenerateSubkey GenerateSubkey `(v  1 s 1 GenerateSubkey ]
+"167
+[v _FillSubKey FillSubKey `(v  1 s 1 FillSubKey ]
+"148 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan_eu.c
+[v _LORAWAN_Reset LORAWAN_Reset `(v  1 e 1 0 ]
+"282
+[v _LORAWAN_SetChannelIdStatus LORAWAN_SetChannelIdStatus `(E7249  1 e 1 0 ]
+"365
+[v _LORAWAN_TxDone LORAWAN_TxDone `(v  1 e 1 0 ]
+"464
+[v _LORAWAN_RxTimeout LORAWAN_RxTimeout `(v  1 e 1 0 ]
+"570
+[v _ValidateDataRate ValidateDataRate `(E7249  1 e 1 0 ]
+"582
+[v _ValidateTxPower ValidateTxPower `(E7249  1 e 1 0 ]
+"594
+[v _ExecuteDutyCycle ExecuteDutyCycle `(*.39uc  1 e 2 0 ]
+"613
+[v _ExecuteLinkAdr ExecuteLinkAdr `(*.39uc  1 e 2 0 ]
+"672
+[v _ExecuteDevStatus ExecuteDevStatus `(*.39uc  1 e 2 0 ]
+"677
+[v _ExecuteNewChannel ExecuteNewChannel `(*.39uc  1 e 2 0 ]
+"740
+[v _ExecuteRxParamSetupReq ExecuteRxParamSetupReq `(*.39uc  1 e 2 0 ]
+"778
+[v _SearchAvailableChannel SearchAvailableChannel `(E7249  1 e 1 0 ]
+"824
+[v _UpdateCfList UpdateCfList `(v  1 e 1 0 ]
+"863
+[v _ConfigureRadio ConfigureRadio `(v  1 e 1 0 ]
+"883
+[v _GetRx1Freq GetRx1Freq `(ul  1 e 4 0 ]
+"888
+[v _UpdateDLSettings UpdateDLSettings `(v  1 e 1 0 ]
+"902
+[v _StartReTxTimer StartReTxTimer `(v  1 e 1 0 ]
+"919
+[v _SelectChannelForTransmission SelectChannelForTransmission `(E7249  1 e 1 0 ]
+"937
+[v _CreateAllSoftwareTimers CreateAllSoftwareTimers `(v  1 s 1 CreateAllSoftwareTimers ]
+"951
+[v _SetCallbackSoftwareTimers SetCallbackSoftwareTimers `(v  1 s 1 SetCallbackSoftwareTimers ]
+"965
+[v _StopAllSoftwareTimers StopAllSoftwareTimers `(v  1 s 1 StopAllSoftwareTimers ]
+"979
+[v _InitDefault868Channels InitDefault868Channels `(v  1 s 1 InitDefault868Channels ]
+"994
+[v _InitDefault433Channels InitDefault433Channels `(v  1 s 1 InitDefault433Channels ]
+"1009
+[v _UpdateDataRange UpdateDataRange `(v  1 s 1 UpdateDataRange ]
+"1042
+[v _UpdateChannelIdStatus UpdateChannelIdStatus `(v  1 s 1 UpdateChannelIdStatus ]
+"1076
+[v _ValidateRxOffset ValidateRxOffset `(E7249  1 s 1 ValidateRxOffset ]
+"1088
+[v _ValidateFrequency ValidateFrequency `(E7249  1 s 1 ValidateFrequency ]
+"1110
+[v _ValidateDataRange ValidateDataRange `(E7249  1 s 1 ValidateDataRange ]
+"1125
+[v _ValidateChannelId ValidateChannelId `(E7249  1 s 1 ValidateChannelId ]
+"1137
+[v _ValidateChannelMaskCntl ValidateChannelMaskCntl `(E7249  1 s 1 ValidateChannelMaskCntl ]
+"1149
+[v _EnableChannels EnableChannels `(v  1 s 1 EnableChannels ]
+"1154
+[v _UpdateFrequency UpdateFrequency `(v  1 s 1 UpdateFrequency ]
+"1160
+[v _UpdateDutyCycle UpdateDutyCycle `(v  1 s 1 UpdateDutyCycle ]
+"1166
+[v _ValidateChannelMask ValidateChannelMask `(E7249  1 s 1 ValidateChannelMask ]
+"1193
+[v _EnableChannels1 EnableChannels1 `(v  1 s 1 EnableChannels1 ]
+"1221
+[v _DutyCycleCallback DutyCycleCallback `R(v  1 s 1 DutyCycleCallback ]
+"1255
+[v _ConfigureRadioTx ConfigureRadioTx `(v  1 s 1 ConfigureRadioTx ]
+"44 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan_init.c
+[v _DIO0_ISR_Lora_Init DIO0_ISR_Lora_Init `(v  1 e 1 0 ]
+"49
+[v _DIO1_ISR_Lora_Init DIO1_ISR_Lora_Init `(v  1 e 1 0 ]
+"54
+[v _DIO2_ISR_Lora_Init DIO2_ISR_Lora_Init `(v  1 e 1 0 ]
+"59
+[v _DIO3_ISR_Lora_Init DIO3_ISR_Lora_Init `(v  1 e 1 0 ]
+"63
+[v _DIO4_ISR_Lora_Init DIO4_ISR_Lora_Init `(v  1 e 1 0 ]
+"67
+[v _DIO5_ISR_Lora_Init DIO5_ISR_Lora_Init `(v  1 e 1 0 ]
+"72
+[v _LORAWAN_PlatformInit LORAWAN_PlatformInit `(v  1 e 1 0 ]
+"45 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/radio_driver_hal.c
+[v _HALResetPinMakeOutput HALResetPinMakeOutput `(v  1 e 1 0 ]
+"50
+[v _HALResetPinMakeInput HALResetPinMakeInput `(v  1 e 1 0 ]
+"55
+[v _HALResetPinOutputValue HALResetPinOutputValue `(v  1 e 1 0 ]
+"63
+[v _HALSPICSAssert HALSPICSAssert `(v  1 e 1 0 ]
+"68
+[v _HALSPICSDeassert HALSPICSDeassert `(v  1 e 1 0 ]
+"73
+[v _HALSPISend HALSPISend `(uc  1 e 1 0 ]
+"95
+[v _HALDIO5PinValue HALDIO5PinValue `(uc  1 e 1 0 ]
+"126 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/radio_driver_SX1276.c
+[v _RADIO_RegisterWrite RADIO_RegisterWrite `(v  1 e 1 0 ]
+"134
+[v _RADIO_RegisterRead RADIO_RegisterRead `(uc  1 e 1 0 ]
+"147
+[v _RADIO_WriteMode RADIO_WriteMode `(v  1 s 1 RADIO_WriteMode ]
+"249
+[v _RADIO_Reset RADIO_Reset `(v  1 s 1 RADIO_Reset ]
+"262
+[v _RADIO_WriteFrequency RADIO_WriteFrequency `(v  1 s 1 RADIO_WriteFrequency ]
+"294
+[v _RADIO_WriteFSKFrequencyDeviation RADIO_WriteFSKFrequencyDeviation `(v  1 s 1 RADIO_WriteFSKFrequencyDeviation ]
+"316
+[v _RADIO_WriteFSKBitRate RADIO_WriteFSKBitRate `(v  1 s 1 RADIO_WriteFSKBitRate ]
+"342
+[v _RADIO_WritePower RADIO_WritePower `(v  1 s 1 RADIO_WritePower ]
+"422
+[v _RADIO_Init RADIO_Init `(v  1 e 1 0 ]
+"522
+[v _RADIO_SetLoRaSyncWord RADIO_SetLoRaSyncWord `(v  1 e 1 0 ]
+"533
+[v _RADIO_WriteConfiguration RADIO_WriteConfiguration `(v  1 s 1 RADIO_WriteConfiguration ]
+"786
+[v _RADIO_Transmit RADIO_Transmit `(E7038  1 e 2 0 ]
+"875
+[v _RADIO_ReceiveStart RADIO_ReceiveStart `(E7038  1 e 2 0 ]
+"951
+[v _RADIO_ReceiveStop RADIO_ReceiveStop `(v  1 e 1 0 ]
+"961
+[v _RADIO_RxDone RADIO_RxDone `(v  1 s 1 RADIO_RxDone ]
+"1010
+[v _RADIO_FSKPayloadReady RADIO_FSKPayloadReady `(v  1 s 1 RADIO_FSKPayloadReady ]
+"1066
+[v _RADIO_RxTimeout RADIO_RxTimeout `(v  1 s 1 RADIO_RxTimeout ]
+"1078
+[v _RADIO_TxDone RADIO_TxDone `(v  1 s 1 RADIO_TxDone ]
+"1093
+[v _RADIO_FSKPacketSent RADIO_FSKPacketSent `(v  1 s 1 RADIO_FSKPacketSent ]
+"1116
+[v _RADIO_GetStatus RADIO_GetStatus `(uc  1 e 1 0 ]
+"1134
+[v _RADIO_ReleaseData RADIO_ReleaseData `(v  1 e 1 0 ]
+"1139
+[v _RADIO_UnhandledInterrupt RADIO_UnhandledInterrupt `(v  1 s 1 RADIO_UnhandledInterrupt ]
+"1158
+[v _RADIO_FHSSChangeChannel RADIO_FHSSChangeChannel `(v  1 s 1 RADIO_FHSSChangeChannel ]
+"1176
+[v _RADIO_DIO0 RADIO_DIO0 `(v  1 e 1 0 ]
+"1231
+[v _RADIO_DIO1 RADIO_DIO1 `(v  1 e 1 0 ]
+"1268
+[v _RADIO_DIO2 RADIO_DIO2 `(v  1 e 1 0 ]
+"1298
+[v _RADIO_DIO3 RADIO_DIO3 `(v  1 e 1 0 ]
+"1321
+[v _RADIO_DIO4 RADIO_DIO4 `(v  1 e 1 0 ]
+"1344
+[v _RADIO_DIO5 RADIO_DIO5 `(v  1 e 1 0 ]
+"1367
+[v _RADIO_ReadRandom RADIO_ReadRandom `(ui  1 e 2 0 ]
+"1392
+[v _RADIO_RxFSKTimeout RADIO_RxFSKTimeout `R(v  1 s 1 RADIO_RxFSKTimeout ]
+"1408
+[v _RADIO_WatchdogTimeout RADIO_WatchdogTimeout `R(v  1 s 1 RADIO_WatchdogTimeout ]
+"1429
+[v _RADIO_GetPacketSnr RADIO_GetPacketSnr `(c  1 e 1 0 ]
+"1434
+[v _RADIO_SetSpreadingFactor RADIO_SetSpreadingFactor `(v  1 e 1 0 ]
+"1444
+[v _RADIO_SetChannelFrequency RADIO_SetChannelFrequency `(E7038  1 e 2 0 ]
+"1464
+[v _RADIO_SetOutputPower RADIO_SetOutputPower `(v  1 e 1 0 ]
+"1474
+[v _RADIO_SetCRC RADIO_SetCRC `(v  1 e 1 0 ]
+"1484
+[v _RADIO_SetIQInverted RADIO_SetIQInverted `(v  1 e 1 0 ]
+"1495
+[v _RADIO_SetBandwidth RADIO_SetBandwidth `(v  1 e 1 0 ]
+"1515
+[v _RADIO_SetModulation RADIO_SetModulation `(v  1 e 1 0 ]
+"1550
+[v _RADIO_SetFrequencyHopPeriod RADIO_SetFrequencyHopPeriod `(v  1 e 1 0 ]
+"1572
+[v _RADIO_SetWatchdogTimeout RADIO_SetWatchdogTimeout `(v  1 e 1 0 ]
+"1624
+[v _RADIO_SetFSKSyncWord RADIO_SetFSKSyncWord `(v  1 e 1 0 ]
+"65 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/sw_timer.c
+[v _TMR_OverrideRemaining TMR_OverrideRemaining `(v  1 e 1 0 ]
+"88
+[v _TMR_GetDeltaTime TMR_GetDeltaTime `(ul  1 e 4 0 ]
+"112
+[v _TMR_SwapTimer TMR_SwapTimer `(ui  1 e 2 0 ]
+"135
+[v _SystemTimerInit SystemTimerInit `(v  1 e 1 0 ]
+"145
+[v _SystemBlockingWaitMs SystemBlockingWaitMs `(v  1 e 1 0 ]
+"154
+[v _SwTimerCreate SwTimerCreate `(uc  1 e 1 0 ]
+"180
+[v _SwTimerSetCallback SwTimerSetCallback `(v  1 e 1 0 ]
+"186
+[v _SwTimerSetTimeout SwTimerSetTimeout `(v  1 e 1 0 ]
+"193
+[v _SwTimerReadValue SwTimerReadValue `(ul  1 e 4 0 ]
+"207
+[v _SwTimerIsRunning SwTimerIsRunning `(uc  1 e 1 0 ]
+"218
+[v _SwTimerStart SwTimerStart `(v  1 e 1 0 ]
+"233
+[v _SwTimerStop SwTimerStop `(v  1 e 1 0 ]
+"260
+[v _SwTimersExecute SwTimersExecute `(v  1 e 1 0 ]
+"287
+[v _SwTimersInterrupt SwTimersInterrupt `(ul  1 e 4 0 ]
+"54 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/tmr_lora_addons.c
+[v _TMR_ISR_Lora_Init TMR_ISR_Lora_Init `(v  1 e 1 0 ]
+"59
+[v _TMR_ISR_lora TMR_ISR_lora `(v  1 e 1 0 ]
+"50 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/mcc.c
+[v _SYSTEM_Initialize SYSTEM_Initialize `(v  1 e 1 0 ]
+"62
+[v _OSCILLATOR_Initialize OSCILLATOR_Initialize `(v  1 e 1 0 ]
+"57 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/pin_manager.c
+[v _PIN_MANAGER_Initialize PIN_MANAGER_Initialize `(v  1 e 1 0 ]
+"110
+[v _PIN_MANAGER_IOC PIN_MANAGER_IOC `(v  1 e 1 0 ]
+"124
+[v _IOCB4_ISR IOCB4_ISR `(v  1 e 1 0 ]
+"138
+[v _IOCB4_SetInterruptHandler IOCB4_SetInterruptHandler `(v  1 e 1 0 ]
+"145
+[v _IOCB4_DefaultInterruptHandler IOCB4_DefaultInterruptHandler `(v  1 e 1 0 ]
+"62 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/spi2.c
+[v _SPI2_Initialize SPI2_Initialize `(v  1 e 1 0 ]
+"92
+[v _SPI2_ExchangeByte SPI2_ExchangeByte `(uc  1 e 1 0 ]
+"64 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/tmr1.c
+[v _TMR1_Initialize TMR1_Initialize `(v  1 e 1 0 ]
+"105
+[v _TMR1_ReadTimer TMR1_ReadTimer `(ui  1 e 2 0 ]
+"121
+[v _TMR1_WriteTimer TMR1_WriteTimer `(v  1 e 1 0 ]
+"158
+[v _TMR1_ISR TMR1_ISR `(v  1 e 1 0 ]
+"177
+[v _TMR1_CallBack TMR1_CallBack `(v  1 e 1 0 ]
+"186
+[v _TMR1_SetInterruptHandler TMR1_SetInterruptHandler `(v  1 e 1 0 ]
+"190
+[v _TMR1_DefaultInterruptHandler TMR1_DefaultInterruptHandler `(v  1 e 1 0 ]
+"50 C:\Program Files (x86)\Microchip\xc8\v1.45\include\pic18lf46k22.h
+[v _ANSELA ANSELA `VEuc  1 e 1 @3896 ]
+"95
+[v _ANSELB ANSELB `VEuc  1 e 1 @3897 ]
+"145
+[v _ANSELC ANSELC `VEuc  1 e 1 @3898 ]
+"196
+[v _ANSELD ANSELD `VEuc  1 e 1 @3899 ]
+"258
+[v _ANSELE ANSELE `VEuc  1 e 1 @3900 ]
+"2717
+[v _WPUB WPUB `VEuc  1 e 1 @3937 ]
+[s S107 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 IOCB4 1 0 :1:4 
+`uc 1 IOCB5 1 0 :1:5 
+`uc 1 IOCB6 1 0 :1:6 
+`uc 1 IOCB7 1 0 :1:7 
+]
+"2793
+[u S113 . 1 `S107 1 . 1 0 ]
+[v _IOCBbits IOCBbits `VES113  1 e 1 @3938 ]
+"3531
+[v _SSP2CON2 SSP2CON2 `VEuc  1 e 1 @3947 ]
+"3676
+[v _SSP2CON1 SSP2CON1 `VEuc  1 e 1 @3948 ]
+[s S320 . 1 `uc 1 SSPM 1 0 :4:0 
+`uc 1 CKP 1 0 :1:4 
+`uc 1 SSPEN 1 0 :1:5 
+`uc 1 SSPOV 1 0 :1:6 
+`uc 1 WCOL 1 0 :1:7 
+]
+"3706
+[s S326 . 1 `uc 1 SSPM0 1 0 :1:0 
+`uc 1 SSPM1 1 0 :1:1 
+`uc 1 SSPM2 1 0 :1:2 
+`uc 1 SSPM3 1 0 :1:3 
+]
+[s S331 . 1 `uc 1 SSPM02 1 0 :1:0 
+`uc 1 SSPM12 1 0 :1:1 
+`uc 1 SSPM22 1 0 :1:2 
+`uc 1 SSPM32 1 0 :1:3 
+`uc 1 CKP2 1 0 :1:4 
+`uc 1 SSPEN2 1 0 :1:5 
+`uc 1 SSPOV2 1 0 :1:6 
+`uc 1 WCOL2 1 0 :1:7 
+]
+[u S340 . 1 `S320 1 . 1 0 `S326 1 . 1 0 `S331 1 . 1 0 ]
+[v _SSP2CON1bits SSP2CON1bits `VES340  1 e 1 @3948 ]
+"3796
+[v _SSP2STAT SSP2STAT `VEuc  1 e 1 @3949 ]
+"4196
+[v _SSP2ADD SSP2ADD `VEuc  1 e 1 @3950 ]
+"4266
+[v _SSP2BUF SSP2BUF `VEuc  1 e 1 @3951 ]
+[s S574 . 1 `uc 1 RB0 1 0 :1:0 
+`uc 1 RB1 1 0 :1:1 
+`uc 1 RB2 1 0 :1:2 
+`uc 1 RB3 1 0 :1:3 
+`uc 1 RB4 1 0 :1:4 
+`uc 1 RB5 1 0 :1:5 
+`uc 1 RB6 1 0 :1:6 
+`uc 1 RB7 1 0 :1:7 
+]
+"6633
+[s S583 . 1 `uc 1 INT0 1 0 :1:0 
+`uc 1 INT1 1 0 :1:1 
+`uc 1 INT2 1 0 :1:2 
+`uc 1 CCP2 1 0 :1:3 
+`uc 1 KBI0 1 0 :1:4 
+`uc 1 KBI1 1 0 :1:5 
+`uc 1 KBI2 1 0 :1:6 
+`uc 1 KBI3 1 0 :1:7 
+]
+[s S592 . 1 `uc 1 AN12 1 0 :1:0 
+`uc 1 AN10 1 0 :1:1 
+`uc 1 AN8 1 0 :1:2 
+`uc 1 AN9 1 0 :1:3 
+`uc 1 AN11 1 0 :1:4 
+`uc 1 AN13 1 0 :1:5 
+`uc 1 PGC 1 0 :1:6 
+`uc 1 PGD 1 0 :1:7 
+]
+[s S601 . 1 `uc 1 FLT0 1 0 :1:0 
+`uc 1 C12IN3M 1 0 :1:1 
+`uc 1 . 1 0 :1:2 
+`uc 1 C12IN2M 1 0 :1:3 
+`uc 1 T5G 1 0 :1:4 
+`uc 1 T1G 1 0 :1:5 
+]
+[s S608 . 1 `uc 1 SRI 1 0 :1:0 
+`uc 1 C12IN3N 1 0 :1:1 
+`uc 1 . 1 0 :1:2 
+`uc 1 C12IN2N 1 0 :1:3 
+`uc 1 . 1 0 :1:4 
+`uc 1 CCP3 1 0 :1:5 
+]
+[s S615 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 CTED1 1 0 :1:2 
+`uc 1 CTED2 1 0 :1:3 
+`uc 1 . 1 0 :1:4 
+`uc 1 T3CKI 1 0 :1:5 
+]
+[s S621 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 P2A 1 0 :1:3 
+`uc 1 . 1 0 :1:4 
+`uc 1 P3A 1 0 :1:5 
+]
+[s S626 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 CCP2_PA2 1 0 :1:3 
+]
+[u S629 . 1 `S574 1 . 1 0 `S583 1 . 1 0 `S592 1 . 1 0 `S601 1 . 1 0 `S608 1 . 1 0 `S615 1 . 1 0 `S621 1 . 1 0 `S626 1 . 1 0 ]
+[v _PORTBbits PORTBbits `VES629  1 e 1 @3969 ]
+"7558
+[v _LATA LATA `VEuc  1 e 1 @3977 ]
+"7670
+[v _LATB LATB `VEuc  1 e 1 @3978 ]
+"7782
+[v _LATC LATC `VEuc  1 e 1 @3979 ]
+"7894
+[v _LATD LATD `VEuc  1 e 1 @3980 ]
+"8006
+[v _LATE LATE `VEuc  1 e 1 @3981 ]
+"8058
+[v _TRISA TRISA `VEuc  1 e 1 @3986 ]
+"8280
+[v _TRISB TRISB `VEuc  1 e 1 @3987 ]
+"8502
+[v _TRISC TRISC `VEuc  1 e 1 @3988 ]
+"8724
+[v _TRISD TRISD `VEuc  1 e 1 @3989 ]
+[s S280 . 1 `uc 1 TRISD0 1 0 :1:0 
+`uc 1 TRISD1 1 0 :1:1 
+`uc 1 TRISD2 1 0 :1:2 
+`uc 1 TRISD3 1 0 :1:3 
+`uc 1 TRISD4 1 0 :1:4 
+`uc 1 TRISD5 1 0 :1:5 
+`uc 1 TRISD6 1 0 :1:6 
+`uc 1 TRISD7 1 0 :1:7 
+]
+"8756
+[s S289 . 1 `uc 1 RD0 1 0 :1:0 
+`uc 1 RD1 1 0 :1:1 
+`uc 1 RD2 1 0 :1:2 
+`uc 1 RD3 1 0 :1:3 
+`uc 1 RD4 1 0 :1:4 
+`uc 1 RD5 1 0 :1:5 
+`uc 1 RD6 1 0 :1:6 
+`uc 1 RD7 1 0 :1:7 
+]
+[u S298 . 1 `S280 1 . 1 0 `S289 1 . 1 0 ]
+[v _TRISDbits TRISDbits `VES298  1 e 1 @3989 ]
+"8946
+[v _TRISE TRISE `VEuc  1 e 1 @3990 ]
+"9062
+[v _OSCTUNE OSCTUNE `VEuc  1 e 1 @3995 ]
+[s S2502 . 1 `uc 1 TMR1IE 1 0 :1:0 
+`uc 1 TMR2IE 1 0 :1:1 
+`uc 1 CCP1IE 1 0 :1:2 
+`uc 1 SSP1IE 1 0 :1:3 
+`uc 1 TX1IE 1 0 :1:4 
+`uc 1 RC1IE 1 0 :1:5 
+`uc 1 ADIE 1 0 :1:6 
+]
+"9434
+[s S2510 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 SSPIE 1 0 :1:3 
+`uc 1 TXIE 1 0 :1:4 
+`uc 1 RCIE 1 0 :1:5 
+]
+[u S2515 . 1 `S2502 1 . 1 0 `S2510 1 . 1 0 ]
+[v _PIE1bits PIE1bits `VES2515  1 e 1 @3997 ]
+[s S2532 . 1 `uc 1 TMR1IF 1 0 :1:0 
+`uc 1 TMR2IF 1 0 :1:1 
+`uc 1 CCP1IF 1 0 :1:2 
+`uc 1 SSP1IF 1 0 :1:3 
+`uc 1 TX1IF 1 0 :1:4 
+`uc 1 RC1IF 1 0 :1:5 
+`uc 1 ADIF 1 0 :1:6 
+]
+"9511
+[s S2540 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 SSPIF 1 0 :1:3 
+`uc 1 TXIF 1 0 :1:4 
+`uc 1 RCIF 1 0 :1:5 
+]
+[u S2545 . 1 `S2532 1 . 1 0 `S2540 1 . 1 0 ]
+[v _PIR1bits PIR1bits `VES2545  1 e 1 @3998 ]
+[s S369 . 1 `uc 1 TMR1GIF 1 0 :1:0 
+`uc 1 TMR3GIF 1 0 :1:1 
+`uc 1 TMR5GIF 1 0 :1:2 
+`uc 1 CTMUIF 1 0 :1:3 
+`uc 1 TX2IF 1 0 :1:4 
+`uc 1 RC2IF 1 0 :1:5 
+`uc 1 BCL2IF 1 0 :1:6 
+`uc 1 SSP2IF 1 0 :1:7 
+]
+"10034
+[s S378 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 RXBNIF 1 0 :1:1 
+`uc 1 . 1 0 :2:2 
+`uc 1 TXBNIF 1 0 :1:4 
+]
+[u S383 . 1 `S369 1 . 1 0 `S378 1 . 1 0 ]
+[v _PIR3bits PIR3bits `VES383  1 e 1 @4004 ]
+"15571
+[v _T1GCON T1GCON `VEuc  1 e 1 @4044 ]
+[s S2702 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 T1GGO_NOT_DONE 1 0 :1:3 
+]
+"15601
+[s S2705 . 1 `uc 1 T1GSS 1 0 :2:0 
+`uc 1 T1GVAL 1 0 :1:2 
+`uc 1 T1GGO_nDONE 1 0 :1:3 
+`uc 1 T1GSPM 1 0 :1:4 
+`uc 1 T1GTM 1 0 :1:5 
+`uc 1 T1GPOL 1 0 :1:6 
+`uc 1 TMR1GE 1 0 :1:7 
+]
+[s S2713 . 1 `uc 1 T1GSS0 1 0 :1:0 
+`uc 1 T1GSS1 1 0 :1:1 
+`uc 1 . 1 0 :1:2 
+`uc 1 T1G_DONE 1 0 :1:3 
+]
+[s S2718 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 T1GGO 1 0 :1:3 
+]
+[u S2721 . 1 `S2702 1 . 1 0 `S2705 1 . 1 0 `S2713 1 . 1 0 `S2718 1 . 1 0 ]
+[v _T1GCONbits T1GCONbits `VES2721  1 e 1 @4044 ]
+"15666
+[v _T1CON T1CON `VEuc  1 e 1 @4045 ]
+[s S2652 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 NOT_T1SYNC 1 0 :1:2 
+]
+"15699
+[s S2655 . 1 `uc 1 TMR1ON 1 0 :1:0 
+`uc 1 T1RD16 1 0 :1:1 
+`uc 1 nT1SYNC 1 0 :1:2 
+`uc 1 T1SOSCEN 1 0 :1:3 
+`uc 1 T1CKPS 1 0 :2:4 
+`uc 1 TMR1CS 1 0 :2:6 
+]
+[s S2662 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 RD16 1 0 :1:1 
+`uc 1 T1SYNC 1 0 :1:2 
+`uc 1 T1OSCEN 1 0 :1:3 
+`uc 1 T1CKPS0 1 0 :1:4 
+`uc 1 T1CKPS1 1 0 :1:5 
+`uc 1 TMR1CS0 1 0 :1:6 
+`uc 1 TMR1CS1 1 0 :1:7 
+]
+[s S2671 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 SOSCEN 1 0 :1:3 
+]
+[u S2674 . 1 `S2652 1 . 1 0 `S2655 1 . 1 0 `S2662 1 . 1 0 `S2671 1 . 1 0 ]
+[v _T1CONbits T1CONbits `VES2674  1 e 1 @4045 ]
+"15779
+[v _TMR1 TMR1 `VEus  1 e 2 @4046 ]
+"15786
+[v _TMR1L TMR1L `VEuc  1 e 1 @4046 ]
+"15806
+[v _TMR1H TMR1H `VEuc  1 e 1 @4047 ]
+[s S2382 . 1 `uc 1 NOT_BOR 1 0 :1:0 
+]
+"15869
+[s S2384 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 NOT_POR 1 0 :1:1 
+]
+[s S2387 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 NOT_PD 1 0 :1:2 
+]
+[s S2390 . 1 `uc 1 . 1 0 :3:0 
+`uc 1 NOT_TO 1 0 :1:3 
+]
+[s S2393 . 1 `uc 1 . 1 0 :4:0 
+`uc 1 NOT_RI 1 0 :1:4 
+]
+[s S2396 . 1 `uc 1 nBOR 1 0 :1:0 
+`uc 1 nPOR 1 0 :1:1 
+`uc 1 nPD 1 0 :1:2 
+`uc 1 nTO 1 0 :1:3 
+`uc 1 nRI 1 0 :1:4 
+`uc 1 . 1 0 :1:5 
+`uc 1 SBOREN 1 0 :1:6 
+`uc 1 IPEN 1 0 :1:7 
+]
+[s S2405 . 1 `uc 1 BOR 1 0 :1:0 
+`uc 1 POR 1 0 :1:1 
+`uc 1 PD 1 0 :1:2 
+`uc 1 TO 1 0 :1:3 
+`uc 1 RI 1 0 :1:4 
+]
+[u S2411 . 1 `S2382 1 . 1 0 `S2384 1 . 1 0 `S2387 1 . 1 0 `S2390 1 . 1 0 `S2393 1 . 1 0 `S2396 1 . 1 0 `S2405 1 . 1 0 ]
+[v _RCONbits RCONbits `VES2411  1 e 1 @4048 ]
+"15987
+[v _OSCCON2 OSCCON2 `VEuc  1 e 1 @4050 ]
+"16044
+[v _OSCCON OSCCON `VEuc  1 e 1 @4051 ]
+[s S2279 . 1 `uc 1 INT1IF 1 0 :1:0 
+`uc 1 INT2IF 1 0 :1:1 
+`uc 1 . 1 0 :1:2 
+`uc 1 INT1IE 1 0 :1:3 
+`uc 1 INT2IE 1 0 :1:4 
+`uc 1 . 1 0 :1:5 
+`uc 1 INT1IP 1 0 :1:6 
+`uc 1 INT2IP 1 0 :1:7 
+]
+"16789
+[s S2288 . 1 `uc 1 INT1F 1 0 :1:0 
+`uc 1 INT2F 1 0 :1:1 
+`uc 1 . 1 0 :1:2 
+`uc 1 INT1E 1 0 :1:3 
+`uc 1 INT2E 1 0 :1:4 
+`uc 1 . 1 0 :1:5 
+`uc 1 INT1P 1 0 :1:6 
+`uc 1 INT2P 1 0 :1:7 
+]
+[u S2297 . 1 `S2279 1 . 1 0 `S2288 1 . 1 0 ]
+[v _INTCON3bits INTCON3bits `VES2297  1 e 1 @4080 ]
+[s S72 . 1 `uc 1 . 1 0 :7:0 
+`uc 1 NOT_RBPU 1 0 :1:7 
+]
+"16879
+[s S75 . 1 `uc 1 RBIP 1 0 :1:0 
+`uc 1 . 1 0 :1:1 
+`uc 1 TMR0IP 1 0 :1:2 
+`uc 1 . 1 0 :1:3 
+`uc 1 INTEDG2 1 0 :1:4 
+`uc 1 INTEDG1 1 0 :1:5 
+`uc 1 INTEDG0 1 0 :1:6 
+`uc 1 nRBPU 1 0 :1:7 
+]
+[s S84 . 1 `uc 1 . 1 0 :7:0 
+`uc 1 RBPU 1 0 :1:7 
+]
+[u S87 . 1 `S72 1 . 1 0 `S75 1 . 1 0 `S84 1 . 1 0 ]
+[v _INTCON2bits INTCON2bits `VES87  1 e 1 @4081 ]
+[s S132 . 1 `uc 1 RBIF 1 0 :1:0 
+`uc 1 INT0IF 1 0 :1:1 
+`uc 1 TMR0IF 1 0 :1:2 
+`uc 1 RBIE 1 0 :1:3 
+`uc 1 INT0IE 1 0 :1:4 
+`uc 1 TMR0IE 1 0 :1:5 
+`uc 1 PEIE_GIEL 1 0 :1:6 
+`uc 1 GIE_GIEH 1 0 :1:7 
+]
+"16956
+[s S141 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 INT0F 1 0 :1:1 
+`uc 1 T0IF 1 0 :1:2 
+`uc 1 . 1 0 :1:3 
+`uc 1 INT0E 1 0 :1:4 
+`uc 1 T0IE 1 0 :1:5 
+`uc 1 PEIE 1 0 :1:6 
+`uc 1 GIE 1 0 :1:7 
+]
+[s S150 . 1 `uc 1 . 1 0 :6:0 
+`uc 1 GIEL 1 0 :1:6 
+`uc 1 GIEH 1 0 :1:7 
+]
+[u S154 . 1 `S132 1 . 1 0 `S141 1 . 1 0 `S150 1 . 1 0 ]
+[v _INTCONbits INTCONbits `VES154  1 e 1 @4082 ]
+"18332
+[v _LATC2 LATC2 `VEb  1 e 0 @31834 ]
+"19470
+[v _TRISC2 TRISC2 `VEb  1 e 0 @31906 ]
+"3 C:\Program Files (x86)\Microchip\xc8\v1.45\sources\common\rand.c
+[v _randx randx `l  1 s 4 randx ]
+"30 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/ext_int.c
+[v _INT0_InterruptHandler INT0_InterruptHandler `*.37(v  1 e 2 0 ]
+"31
+[v _INT1_InterruptHandler INT1_InterruptHandler `*.37(v  1 e 2 0 ]
+"32
+[v _INT2_InterruptHandler INT2_InterruptHandler `*.37(v  1 e 2 0 ]
+"32 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/AES.c
+[v _STable STable `C[256]uc  1 e 256 0 ]
+"182
+[v __roundCounter _roundCounter `uc  1 s 1 _roundCounter ]
+"183
+[v __rcon _rcon `uc  1 s 1 _rcon ]
+"58 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/interrupt_manager_lora_addons.h
+[v _dioStatus dioStatus `VEuc  1 e 1 0 ]
+"52 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan.c
+[v _macEndDevCmdReplyLen macEndDevCmdReplyLen `C[7]uc  1 s 7 macEndDevCmdReplyLen ]
+[s S1288 . 1 `uc 1 ackRequiredFromNextDownlinkMessage 1 0 :1:0 
+`uc 1 ackRequiredFromNextUplinkMessage 1 0 :1:1 
+`uc 1 joining 1 0 :1:2 
+`uc 1 fPending 1 0 :1:3 
+`uc 1 adrAckRequest 1 0 :1:4 
+`uc 1 synchronization 1 0 :1:5 
+]
+"54
+[u S1295 . 2 `ui 1 value 2 0 `S1288 1 . 1 0 ]
+[s S1298 . 3 `uc 1 macState 1 0 :4:0 
+`uc 1 networkJoined 1 0 :1:4 
+`uc 1 automaticReply 1 0 :1:5 
+`uc 1 adr 1 0 :1:6 
+`uc 1 silentImmediately 1 0 :1:7 
+`uc 1 macPause 1 1 :1:0 
+`uc 1 rxDone 1 1 :1:1 
+`uc 1 linkCheck 1 1 :1:2 
+`uc 1 channelsModified 1 1 :1:3 
+`uc 1 txPowerModified 1 1 :1:4 
+`uc 1 nbRepModified 1 1 :1:5 
+`uc 1 prescalerModified 1 1 :1:6 
+`uc 1 secondReceiveWindowModified 1 1 :1:7 
+`uc 1 rxTimingSetup 1 2 :1:0 
+`uc 1 rejoinNeeded 1 2 :1:1 
+`uc 1 mcastEnable 1 2 :1:2 
+]
+[u S1315 . 4 `ul 1 value 4 0 `S1298 1 . 3 0 ]
+[s S1318 . 4 `ui 1 valueLow 2 0 `ui 1 valueHigh 2 2 ]
+[u S1321 . 4 `ul 1 value 4 0 `S1318 1 members 4 0 ]
+[s S1328 . 5 `ul 1 frequency 4 0 `uc 1 dataRate 1 4 ]
+[u S1334 . 4 `ul 1 value 4 0 `[4]uc 1 buffer 4 0 ]
+[s S1337 . 8 `ul 1 genericEuiL 4 0 `ul 1 genericEuiH 4 4 ]
+[u S1340 . 8 `[8]uc 1 buffer 8 0 `S1337 1 members 8 0 ]
+[s S1343 . 105 `E7272 1 activationType 1 0 `S1334 1 deviceAddress 4 1 `[16]uc 1 networkSessionKey 16 5 `[16]uc 1 applicationSessionKey 16 21 `[16]uc 1 applicationKey 16 37 `S1340 1 applicationEui 8 53 `S1340 1 deviceEui 8 61 `S1334 1 mcastDeviceAddress 4 69 `[16]uc 1 mcastNetworkSessionKey 16 73 `[16]uc 1 mcastApplicationSessionKey 16 89 ]
+[s S1258 . 1 `uc 1 min 1 0 :4:0 
+`uc 1 max 1 0 :4:4 
+]
+[u S1261 . 1 `uc 1 value 1 0 `S1258 1 . 1 0 ]
+[s S1264 . 14 `ul 1 frequency 4 0 `uc 1 status 1 4 `S1261 1 dataRange 1 5 `ui 1 dutyCycle 2 6 `ul 1 channelTimer 4 8 `uc 1 joinRequestChannel 1 12 `uc 1 parametersDefined 1 13 ]
+[s S1354 . 16 `ui 1 receiveDelay1 2 0 `ui 1 receiveDelay2 2 2 `ui 1 joinAcceptDelay1 2 4 `ui 1 joinAcceptDelay2 2 6 `ui 1 maxFcntGap 2 8 `ui 1 maxMultiFcntGap 2 10 `ui 1 ackTimeout 2 12 `uc 1 adrAckLimit 1 14 `uc 1 adrAckDelay 1 15 ]
+[s S1367 . 2 `uc 1 deviceEui 1 0 :1:0 
+`uc 1 applicationEui 1 0 :1:1 
+`uc 1 deviceAddress 1 0 :1:2 
+`uc 1 applicationKey 1 0 :1:3 
+`uc 1 networkSessionKey 1 0 :1:4 
+`uc 1 applicationSessionKey 1 0 :1:5 
+`uc 1 mcastApplicationSessionKey 1 0 :1:6 
+`uc 1 mcastNetworkSessionKey 1 0 :1:7 
+`uc 1 mcastDeviceAddress 1 1 :1:0 
+]
+[u S1377 . 2 `ui 1 value 2 0 `S1367 1 . 2 0 ]
+[s S1380 . 2 `uc 1 receivedCid 1 0 `uc 1 channelMaskAck 1 1 :1:0 
+`uc 1 dataRateAck 1 1 :1:1 
+`uc 1 powerAck 1 1 :1:2 
+`uc 1 channelAck 1 1 :1:3 
+`uc 1 dataRateReceiveWindowAck 1 1 :1:4 
+`uc 1 rx1DROffestAck 1 1 :1:5 
+`uc 1 dataRateRangeAck 1 1 :1:6 
+`uc 1 channelFrequencyAck 1 1 :1:7 
+]
+[s S1390 . 245 `S1295 1 lorawanMacStatus 2 0 `S1315 1 macStatus 4 2 `S1321 1 fCntUp 4 6 `S1321 1 fCntDown 4 10 `S1321 1 fMcastCntDown 4 14 `E7284 1 deviceClass 1 18 `S1328 1 receiveWindow1Parameters 5 19 `S1328 1 receiveWindow2Parameters 5 24 `S1343 1 activationParameters 105 29 `S1264 1 channelParameters 14 134 `S1354 1 protocolParameters 16 148 `E7280 1 ismBand 1 164 `S1377 1 macKeys 2 165 `uc 1 crtMacCmdIndex 1 167 `[16]S1380 1 macCommands 32 168 `ul 1 lastTimerValue 4 200 `ul 1 periodForLinkCheck 4 204 `ui 1 adrAckCnt 2 208 `ui 1 devNonce 2 210 `ui 1 lastPacketLength 2 212 `uc 1 maxRepetitionsUnconfirmedUplink 1 214 `uc 1 maxRepetitionsConfirmedUplink 1 215 `uc 1 counterRepetitionsUnconfirmedUplink 1 216 `uc 1 counterRepetitionsConfirmedUplink 1 217 `uc 1 lastUsedChannelIndex 1 218 `ui 1 prescaler 2 219 `uc 1 linkCheckMargin 1 221 `uc 1 linkCheckGwCnt 1 222 `uc 1 currentDataRate 1 223 `uc 1 batteryLevel 1 224 `uc 1 txPower 1 225 `uc 1 joinAccept1TimerId 1 226 `uc 1 joinAccept2TimerId 1 227 `uc 1 receiveWindow1TimerId 1 228 `uc 1 receiveWindow2TimerId 1 229 `uc 1 automaticReplyTimerId 1 230 `uc 1 linkCheckTimerId 1 231 `uc 1 ackTimeoutTimerId 1 232 `uc 1 dutyCycleTimerId 1 233 `uc 1 unconfirmedRetransmisionTimerId 1 234 `uc 1 minDataRate 1 235 `uc 1 maxDataRate 1 236 `uc 1 maxChannels 1 237 `uc 1 counterAdrAckDelay 1 238 `uc 1 offset 1 239 `uc 1 macInitialized 1 240 `uc 1 rx2DelayExpired 1 241 `uc 1 abpJoinStatus 1 242 `uc 1 abpJoinTimerId 1 243 `uc 1 syncWord 1 244 ]
+[v _loRa loRa `S1390  1 e 245 0 ]
+"56
+[v _macBuffer macBuffer `[271]uc  1 e 271 0 ]
+"57
+[v _radioBuffer radioBuffer `[271]uc  1 e 271 0 ]
+"58
+[v _aesBuffer aesBuffer `[16]uc  1 s 16 aesBuffer ]
+[s S1601 . 4 `*.37(v 1 RxAppData 2 0 `*.37(v 1 RxJoinResponse 2 2 ]
+"59
+[v _rxPayload rxPayload `S1601  1 e 4 0 ]
+"111
+[v _localDioStatus localDioStatus `uc  1 e 1 0 ]
+"43 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan_eu.c
+[v _rxWindowSize rxWindowSize `C[8]uc  1 e 8 0 ]
+"46
+[v _maxPayloadSize maxPayloadSize `C[8]uc  1 e 8 0 ]
+"49
+[v _Channels Channels `[16]S1264  1 e 224 0 ]
+"51
+[v _rxWindowOffset rxWindowOffset `C[8]c  1 s 8 rxWindowOffset ]
+"54
+[v _txPower868 txPower868 `C[6]c  1 s 6 txPower868 ]
+"59
+[v _spreadingFactor spreadingFactor `C[7]uc  1 s 7 spreadingFactor ]
+"62
+[v _bandwidth bandwidth `C[7]uc  1 s 7 bandwidth ]
+"65
+[v _modulation modulation `C[8]uc  1 s 8 modulation ]
+"67
+[v _DefaultChannels868 DefaultChannels868 `C[3]S1264  1 s 42 DefaultChannels868 ]
+"73
+[v _DefaultChannels433 DefaultChannels433 `C[3]S1264  1 s 42 DefaultChannels433 ]
+"79
+[v _FskSyncWordBuff FskSyncWordBuff `C[3]uc  1 s 3 FskSyncWordBuff ]
+[s S932 . 54 `ul 1 frequency 4 0 `ul 1 frequencyDeviation 4 4 `ul 1 bitRate 4 8 `ui 1 preambleLen 2 12 `uc 1 syncWordLoRa 1 14 `[8]uc 1 syncWord 8 15 `uc 1 syncWordLen 1 23 `E6984 1 modulation 1 24 `E6994 1 dataRate 1 25 `E7002 1 bandWidth 1 26 `c 1 outputPower 1 27 `uc 1 crcOn 1 28 `uc 1 paBoost 1 29 `ui 1 frequencyHopPeriod 2 30 `uc 1 iqInverted 1 32 `E6988 1 errorCodingRate 1 33 `uc 1 implicitHeaderMode 1 34 `uc 1 flags 1 35 `uc 1 dataBufferLen 1 36 `*.39uc 1 dataBuffer 2 37 `uc 1 timeOnAirTimerId 1 39 `uc 1 fskRxWindowTimerId 1 40 `uc 1 watchdogTimerId 1 41 `ul 1 watchdogTimerTimeout 4 42 `uc 1 initialized 1 46 `*.37(ul 1 fhssNextFrequency 2 47 `uc 1 regVersion 1 49 `c 1 packetSNR 1 50 `E7007 1 fskDataShaping 1 51 `E7013 1 rxBw 1 52 `E7013 1 afcBw 1 53 ]
+"103 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/radio_driver_SX1276.c
+[v _RadioConfiguration RadioConfiguration `S932  1 s 54 RadioConfiguration ]
+[s S715 . 8 `ul 1 ticksRemaining 4 0 `uc 1 running 1 4 `uc 1 callbackParameter 1 5 `*.37R(v 1 callback 2 6 ]
+"58 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/sw_timer.c
+[v _swTimers swTimers `VE[20]S715  1 s 160 swTimers ]
+"59
+[v _allocatedTimers allocatedTimers `VEuc  1 s 1 allocatedTimers ]
+"60
+[v _ticksAccounted ticksAccounted `VEul  1 s 4 ticksAccounted ]
+"49 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/tmr_lora_addons.c
+[v _timerOverflow timerOverflow `VEuc  1 e 1 0 ]
+"50
+[v _ticksToScheduledInterrupt ticksToScheduledInterrupt `VEul  1 e 4 0 ]
+"51
+[v _reloadVal reloadVal `VEui  1 e 2 0 ]
+"52
+[v _ticksAdded ticksAdded `VEul  1 e 4 0 ]
+"54 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/pin_manager.c
+[v _IOCB4_InterruptHandler IOCB4_InterruptHandler `*.37(v  1 e 2 0 ]
+[s S272 . 4 `uc 1 con1 1 0 `uc 1 stat 1 1 `uc 1 add 1 2 `uc 1 operation 1 3 ]
+"58 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/spi2.c
+[v _spi2_configuration spi2_configuration `C[1]S272  1 s 4 spi2_configuration ]
+"57 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/tmr1.c
+[v _timer1ReloadVal timer1ReloadVal `VEui  1 e 2 0 ]
+"58
+[v _TMR1_InterruptHandler TMR1_InterruptHandler `*.37(v  1 e 2 0 ]
+"49 D:\elektr_2019\LoRa_2019\LoRa_2019.X\main.c
+[v _main main `(v  1 e 1 0 ]
+{
+"74
+} 0
+"50 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/mcc.c
+[v _SYSTEM_Initialize SYSTEM_Initialize `(v  1 e 1 0 ]
+{
+"60
+} 0
+"64 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/tmr1.c
+[v _TMR1_Initialize TMR1_Initialize `(v  1 e 1 0 ]
+{
+"91
+} 0
+"62 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/spi2.c
+[v _SPI2_Initialize SPI2_Initialize `(v  1 e 1 0 ]
+{
+"70
+} 0
+"57 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/pin_manager.c
+[v _PIN_MANAGER_Initialize PIN_MANAGER_Initialize `(v  1 e 1 0 ]
+{
+"108
+} 0
+"62 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/mcc.c
+[v _OSCILLATOR_Initialize OSCILLATOR_Initialize `(v  1 e 1 0 ]
+{
+"70
+} 0
+"72 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan_init.c
+[v _LORAWAN_PlatformInit LORAWAN_PlatformInit `(v  1 e 1 0 ]
+{
+"82
+} 0
+"54 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/tmr_lora_addons.c
+[v _TMR_ISR_Lora_Init TMR_ISR_Lora_Init `(v  1 e 1 0 ]
+{
+"57
+} 0
+"186 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/tmr1.c
+[v _TMR1_SetInterruptHandler TMR1_SetInterruptHandler `(v  1 e 1 0 ]
+{
+[v TMR1_SetInterruptHandler@InterruptHandler InterruptHandler `*.37(v  1 p 2 0 ]
+"188
+} 0
+"135 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/sw_timer.c
+[v _SystemTimerInit SystemTimerInit `(v  1 e 1 0 ]
+{
+"138
+} 0
+"67 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan_init.c
+[v _DIO5_ISR_Lora_Init DIO5_ISR_Lora_Init `(v  1 e 1 0 ]
+{
+"70
+} 0
+"63
+[v _DIO4_ISR_Lora_Init DIO4_ISR_Lora_Init `(v  1 e 1 0 ]
+{
+"65
+} 0
+"59
+[v _DIO3_ISR_Lora_Init DIO3_ISR_Lora_Init `(v  1 e 1 0 ]
+{
+"61
+} 0
+"54
+[v _DIO2_ISR_Lora_Init DIO2_ISR_Lora_Init `(v  1 e 1 0 ]
+{
+"57
+} 0
+"138 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/pin_manager.c
+[v _IOCB4_SetInterruptHandler IOCB4_SetInterruptHandler `(v  1 e 1 0 ]
+{
+[v IOCB4_SetInterruptHandler@InterruptHandler InterruptHandler `*.37(v  1 p 2 0 ]
+"140
+} 0
+"49 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/lorawan_init.c
+[v _DIO1_ISR_Lora_Init DIO1_ISR_Lora_Init `(v  1 e 1 0 ]
+{
+"52
+} 0
+"44
+[v _DIO0_ISR_Lora_Init DIO0_ISR_Lora_Init `(v  1 e 1 0 ]
+{
+"47
+} 0
+"52 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/interrupt_manager.c
+[v _INTERRUPT_Initialize INTERRUPT_Initialize `(v  1 e 1 0 ]
+{
+"56
+} 0
+"113 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/ext_int.c
+[v _EXT_INT_Initialize EXT_INT_Initialize `(v  1 e 1 0 ]
+{
+"142
+} 0
+"104
+[v _INT2_SetInterruptHandler INT2_SetInterruptHandler `(v  1 e 1 0 ]
+{
+[v INT2_SetInterruptHandler@InterruptHandler InterruptHandler `*.37(v  1 p 2 0 ]
+"106
+} 0
+"78
+[v _INT1_SetInterruptHandler INT1_SetInterruptHandler `(v  1 e 1 0 ]
+{
+[v INT1_SetInterruptHandler@InterruptHandler InterruptHandler `*.37(v  1 p 2 0 ]
+"80
+} 0
+"52
+[v _INT0_SetInterruptHandler INT0_SetInterruptHandler `(v  1 e 1 0 ]
+{
+[v INT0_SetInterruptHandler@InterruptHandler InterruptHandler `*.37(v  1 p 2 0 ]
+"54
+} 0
+"58 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/interrupt_manager.c
+[v _INTERRUPT_InterruptManager INTERRUPT_InterruptManager `IIH(v  1 e 1 0 ]
+{
+"92
+} 0
+"158 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/tmr1.c
+[v _TMR1_ISR TMR1_ISR `(v  1 e 1 0 ]
+{
+"160
+[v TMR1_ISR@CountCallBack CountCallBack `VEui  1 s 2 CountCallBack ]
+"175
+} 0
+"177
+[v _TMR1_CallBack TMR1_CallBack `(v  1 e 1 0 ]
+{
+"184
+} 0
+"190
+[v _TMR1_DefaultInterruptHandler TMR1_DefaultInterruptHandler `(v  1 e 1 0 ]
+{
+"193
+} 0
+"59 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/tmr_lora_addons.c
+[v _TMR_ISR_lora TMR_ISR_lora `(v  1 e 1 0 ]
+{
+"70
+} 0
+"112 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/sw_timer.c
+[v _TMR_SwapTimer TMR_SwapTimer `(ui  1 e 2 0 ]
+{
+[v TMR_SwapTimer@timerVal timerVal `ui  1 p 2 8 ]
+"114
+[v TMR_SwapTimer@oldVal oldVal `ui  1 s 2 oldVal ]
+"115
+[v TMR_SwapTimer@retVal retVal `ui  1 s 2 retVal ]
+"133
+} 0
+"121 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/tmr1.c
+[v _TMR1_WriteTimer TMR1_WriteTimer `(v  1 e 1 0 ]
+{
+[v TMR1_WriteTimer@timerVal timerVal `ui  1 p 2 0 ]
+"141
+} 0
+"287 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/sw_timer.c
+[v _SwTimersInterrupt SwTimersInterrupt `(ul  1 e 4 0 ]
+{
+"291
+[v SwTimersInterrupt@ticksToNextTimerEvent ticksToNextTimerEvent `ul  1 a 4 44 ]
+"290
+[v SwTimersInterrupt@timeElapsed timeElapsed `ul  1 a 4 40 ]
+"289
+[v SwTimersInterrupt@i i `uc  1 a 1 48 ]
+"321
+} 0
+"88
+[v _TMR_GetDeltaTime TMR_GetDeltaTime `(ul  1 e 4 0 ]
+{
+"90
+[v TMR_GetDeltaTime@retVal retVal `ul  1 s 4 retVal ]
+"91
+[v TMR_GetDeltaTime@tmrVal tmrVal `ui  1 s 2 tmrVal ]
+"110
+} 0
+"105 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/tmr1.c
+[v _TMR1_ReadTimer TMR1_ReadTimer `(ui  1 e 2 0 ]
+{
+"107
+[v TMR1_ReadTimer@readVal readVal `ui  1 a 2 4 ]
+"109
+[v TMR1_ReadTimer@readValLow readValLow `uc  1 a 1 7 ]
+"108
+[v TMR1_ReadTimer@readValHigh readValHigh `uc  1 a 1 6 ]
+"119
+} 0
+"110 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/pin_manager.c
+[v _PIN_MANAGER_IOC PIN_MANAGER_IOC `(v  1 e 1 0 ]
+{
+"119
+} 0
+"124
+[v _IOCB4_ISR IOCB4_ISR `(v  1 e 1 0 ]
+{
+"133
+} 0
+"73 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/interrupt_manager_lora_addons.c
+[v _DIO2_ISR_Lora DIO2_ISR_Lora `(v  1 e 1 0 ]
+{
+"76
+} 0
+"145 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/pin_manager.c
+[v _IOCB4_DefaultInterruptHandler IOCB4_DefaultInterruptHandler `(v  1 e 1 0 ]
+{
+"148
+} 0
+"86 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/ext_int.c
+[v _INT2_ISR INT2_ISR `(v  1 e 1 0 ]
+{
+"92
+} 0
+"95
+[v _INT2_CallBack INT2_CallBack `(v  1 e 1 0 ]
+{
+"102
+} 0
+"68 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/interrupt_manager_lora_addons.c
+[v _DIO1_ISR_Lora DIO1_ISR_Lora `(v  1 e 1 0 ]
+{
+"71
+} 0
+"108 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/ext_int.c
+[v _INT2_DefaultInterruptHandler INT2_DefaultInterruptHandler `(v  1 e 1 0 ]
+{
+"111
+} 0
+"60
+[v _INT1_ISR INT1_ISR `(v  1 e 1 0 ]
+{
+"66
+} 0
+"69
+[v _INT1_CallBack INT1_CallBack `(v  1 e 1 0 ]
+{
+"76
+} 0
+"63 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/interrupt_manager_lora_addons.c
+[v _DIO0_ISR_Lora DIO0_ISR_Lora `(v  1 e 1 0 ]
+{
+"66
+} 0
+"82 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/ext_int.c
+[v _INT1_DefaultInterruptHandler INT1_DefaultInterruptHandler `(v  1 e 1 0 ]
+{
+"85
+} 0
+"34
+[v _INT0_ISR INT0_ISR `(v  1 e 1 0 ]
+{
+"40
+} 0
+"43
+[v _INT0_CallBack INT0_CallBack `(v  1 e 1 0 ]
+{
+"50
+} 0
+"88 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/LoRaWAN/interrupt_manager_lora_addons.c
+[v _DIO5_ISR_Lora DIO5_ISR_Lora `(v  1 e 1 0 ]
+{
+"91
+} 0
+"56 D:\elektr_2019\LoRa_2019\LoRa_2019.X\mcc_generated_files/ext_int.c
+[v _INT0_DefaultInterruptHandler INT0_DefaultInterruptHandler `(v  1 e 1 0 ]
+{
+"59
+} 0
