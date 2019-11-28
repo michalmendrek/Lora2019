@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <executable name="dist/default/production\LoRa_2019.X.production.hex">
+  <executable name="dist/default/production\Lora2019.production.hex">
     <memory name="program">
       <units>bytes</units>
       <length>65536</length>
-      <used>2694</used>
-      <free>62842</free>
+      <used>2860</used>
+      <free>62676</free>
     </memory>
     <memory name="data">
       <units>bytes</units>
       <length>3896</length>
-      <used>1382</used>
-      <free>2514</free>
+      <used>1393</used>
+      <free>2503</free>
     </memory>
   </executable>
 </project>

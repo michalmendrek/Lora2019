@@ -198,7 +198,7 @@ LorawanError_t LORAWAN_Send (TransmissionType_t confirmed, uint8_t port,  void *
 
     if (loRa.macStatus.networkJoined == DISABLED)          //The network needs to be joined before sending
     {
-        return NETWORK_NOT_JOINED;
+        //return NETWORK_NOT_JOINED;
     }
 
     if ( (port < FPORT_MIN) && (bufferLength != 0) )   //Port number should be <= 1 if there is data to send. If port number is 0, it indicates only Mac commands are inside FRM Payload

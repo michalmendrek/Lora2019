@@ -18,5 +18,6 @@ mcc_generated_files/LoRaWAN/lorawan_init.h  \
 mcc_generated_files/interrupt_manager.h  \
 mcc_generated_files/tmr1.h  \
 mcc_generated_files/pin_manager.h  \
+LoraSystenm.h  \
 mcc_generated_files/LoRaWAN/pin_manager_lora_addons.h  \
 mcc_generated_files/LoRaWAN/interrupt_manager_lora_addons.h 

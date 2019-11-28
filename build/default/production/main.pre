@@ -9672,13 +9672,67 @@ void SYSTEM_Initialize(void);
 # 94
 void OSCILLATOR_Initialize(void);
 
-# 49 "main.c"
+# 18 "LoraSystenm.h"
+typedef struct
+{
+uint32_t frequency;
+uint32_t frequencyDeviation;
+uint32_t bitRate;
+uint16_t preambleLen;
+uint8_t syncWordLoRa;
+uint8_t syncWord[8];
+uint8_t syncWordLen;
+RadioModulation_t modulation;
+RadioDataRate_t dataRate;
+RadioLoRaBandWidth_t bandWidth;
+int8_t outputPower;
+
+# 51
+} RadioConfiguration_t;
+
+typedef struct __channel_config__ {
+uint32_t frequency;
+uint32_t frequencyDeviation;
+uint32_t bitRate;
+uint16_t preambleLen;
+uint8_t syncWordLoRa;
+uint8_t syncWord[8];
+uint8_t syncWordLen;
+RadioModulation_t modulation;
+RadioDataRate_t dataRate;
+RadioLoRaBandWidth_t bandWidth;
+int8_t outputPower;
+} ChannelConfig;
+
+
+typedef struct __lora__ {
+
+RadioConfiguration_t CHANNELS[5];
+uint8_t DataToSend[200];
+bool Flags[4];
+
+} LORA;
+
+
+LORA * lora_open(ChannelConfig config[5], uint8_t config_len);
+uint8_t lora_send(LORA *ptr, uint8_t channel,uint8_t power, uint8_t *data, uint8_t len);
+void lora_close(LORA *ptr);
+
+# 4 "main.c"
 void main(void)
 {
 
 SYSTEM_Initialize();
 
-# 70
+LORA *ptr;
+
+if(ptr!=(0))
+{
+
+}
+memcpy((char *)ptr->DataToSend, "DUPSKO",sizeof("DUPSKO"));
+
+# 30
 while (1)
 {
 
