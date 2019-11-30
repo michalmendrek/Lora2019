@@ -97,8 +97,7 @@ void main(void)
       LORAWAN_Mainloop();
       //
 //      LORAWAN_Send(UNCNF, 2, "LoRa", 4);
-      LoRa_Send(bufor, sizeof(bufor));
-      
+      LoRa_Send(bufor, sizeof(bufor));      
     }
 }
 /**
