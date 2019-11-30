@@ -63,7 +63,7 @@ extern ChannelParams_t Channels[];
 extern const uint8_t rxWindowSize[];
 
 /************************ FUNCTION PROTOTYPES *************************/
-static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength);
+static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel);
 
 /**********************************************************************/
 
@@ -138,33 +138,25 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
     {
       return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
     }
+  uint8_t channel = Random(LoRa_Chann_nr) + 1;
 
-  result = SelectChannelForTransmission(1);
-  if(result != OK)
+  result = LoRa_SelectChannelForTransmission(0, channel);
+
+  //      AssemblePacket(confirmed, port, buffer, bufferLength);
+  LoRa_AssemblePacket(buffer, bufferLength, channel);
+
+  if(RADIO_Transmit(&loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
-      return result;
+      loRa.fCntUp.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
+
+      //      loRa.lorawanMacStatus.synchronization = ENABLED; //set the synchronization flag because one packet was sent (this is a guard for the the RxAppData of the user)
+      loRa.macStatus.macState = LoRa_Handshaking_start; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
     }
   else
     {
-      //      AssemblePacket(confirmed, port, buffer, bufferLength);
-      LoRa_AssemblePacket(buffer, bufferLength);
-
-      if(RADIO_Transmit(&macBuffer[16], loRa.lastPacketLength) == OK)
-        {
-          loRa.fCntUp.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
-
-          //          if(CNF == confirmed)
-          {
-            loRa.lorawanMacStatus.ackRequiredFromNextDownlinkMessage = ENABLED;
-          }
-          loRa.lorawanMacStatus.synchronization = ENABLED; //set the synchronization flag because one packet was sent (this is a guard for the the RxAppData of the user)
-          loRa.macStatus.macState = TRANSMISSION_OCCURRING; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
-        }
-      else
-        {
-          return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
-        }
+      return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
     }
+
 
   return OK;
 }
@@ -1911,7 +1903,7 @@ uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr)
   return(CRC);
 }
 
-static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength)
+static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel)
 {
   uint8_t bufferHeadIndex = 0;
   uint8_t bufferIndex = 0;
@@ -1920,16 +1912,16 @@ static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength)
   memset(&loRa.LoRa_HeaderBufor, 0, sizeof(loRa.LoRa_HeaderBufor)); //clear header
 
   loRa.LoRa_HeaderBufor[bufferHeadIndex++] = loRa.LoRa_Addres;
-  loRa.LoRa_HeaderBufor[bufferHeadIndex++] = Random(LoRa_Chann_nr) + 1;
+  loRa.LoRa_HeaderBufor[bufferHeadIndex++] = nxt_channel;
   //  loRa.LoRa_HeaderBufor[bufferHeadIndex] = LoRa_CRC(loRa.LoRa_HeaderBufor, bufferHeadIndex);
-  loRa.LoRa_HeaderLength=bufferHeadIndex;
+  loRa.LoRa_HeaderLength = bufferHeadIndex;
 
   loRa.LoRa_Bufor[1] = 0; //Random(LoRa_Chann_nr) + 1; //nxt channel
   memcpy(&loRa.LoRa_Bufor[2], buffer, bufferLength);
   bufferIndex = bufferLength + 3;
   loRa.LoRa_Bufor[0] = bufferIndex;
   loRa.LoRa_Bufor[bufferIndex] = LoRa_CRC(loRa.LoRa_Bufor, bufferIndex);
-  loRa.LoRa_BuforLength=bufferIndex+1;
+  loRa.LoRa_BuforLength = bufferIndex + 1;
 }
 
 static uint8_t PrepareJoinRequestFrame(void)

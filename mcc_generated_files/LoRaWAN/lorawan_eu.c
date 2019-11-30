@@ -941,6 +941,36 @@ void StartReTxTimer(void)
   SwTimerStart(loRa.automaticReplyTimerId);
 }
 
+LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t channelRx) // 
+{
+  LorawanError_t result = OK;
+  uint8_t channelTxIndex = LoRa_Chann_nr;
+  uint8_t channelRxIndex = LoRa_Chann_nr;
+
+  if(channelTx <= LoRa_Chann_nr)
+    {
+      channelTxIndex = channelTx;
+    }
+  if(channelRx <= LoRa_Chann_nr)
+    {
+      channelRxIndex = channelRx;
+    }
+
+  loRa.LoRa_lastUsedChannelIndex = channelRxIndex;
+  loRa.LoRa_receiveChannelParameters.frequency = Channels[channelRxIndex].frequency;
+  loRa.LoRa_receiveChannelParameters.dataRate = loRa.LoRa_currentDataRate;
+
+  if(channelTx == 0)
+    {
+      ConfigureRadioTx(loRa.LoRa_ch0_params.LoRa_datarate, loRa.LoRa_ch0_params.frequency);
+    }
+  else
+    {
+      ConfigureRadioTx(loRa.LoRa_currentDataRate, loRa.LoRa_ch0_params.frequency);
+    }
+  return result;
+}
+
 LorawanError_t SelectChannelForTransmission(bool transmissionType) // transmission type is 0 means join request, transmission type is 1 means data message mode
 {
   LorawanError_t result = OK;
@@ -971,10 +1001,10 @@ static void CreateAllSoftwareTimers(void)
   loRa.unconfirmedRetransmisionTimerId = SwTimerCreate();
   loRa.abpJoinTimerId = SwTimerCreate();
   loRa.dutyCycleTimerId = SwTimerCreate();
-  
-  loRa.LoRa_TimerHandshaking=SwTimerCreate();
-  loRa.LoRa_TimerReconnect=SwTimerCreate();
-  loRa.LoRa_TimerWaitAck=SwTimerCreate();
+
+  loRa.LoRa_TimerHandshaking = SwTimerCreate();
+  loRa.LoRa_TimerReconnect = SwTimerCreate();
+  loRa.LoRa_TimerWaitAck = SwTimerCreate();
 }
 
 static void SetCallbackSoftwareTimers(void)
@@ -989,10 +1019,10 @@ static void SetCallbackSoftwareTimers(void)
   SwTimerSetCallback(loRa.unconfirmedRetransmisionTimerId, UnconfirmedTransmissionCallback, 0);
   SwTimerSetCallback(loRa.abpJoinTimerId, UpdateJoinSuccessState, 0);
   SwTimerSetCallback(loRa.dutyCycleTimerId, DutyCycleCallback, 0);
-  
+
   SwTimerSetCallback(loRa.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback, 0);
-  SwTimerSetCallback(loRa.LoRa_TimerReconnect, LoRa_TimerReconnectCallback,0);
-  SwTimerSetCallback(loRa.LoRa_TimerWaitAck,  LoRa_TimerWaitAckCallback,0);
+  SwTimerSetCallback(loRa.LoRa_TimerReconnect, LoRa_TimerReconnectCallback, 0);
+  SwTimerSetCallback(loRa.LoRa_TimerWaitAck, LoRa_TimerWaitAckCallback, 0);
 }
 
 static void StopAllSoftwareTimers(void)
@@ -1007,7 +1037,7 @@ static void StopAllSoftwareTimers(void)
   SwTimerStop(loRa.unconfirmedRetransmisionTimerId);
   SwTimerStop(loRa.abpJoinTimerId);
   SwTimerStop(loRa.dutyCycleTimerId);
-  
+
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerReconnect);
   SwTimerStop(loRa.LoRa_TimerWaitAck);

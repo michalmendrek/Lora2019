@@ -132,6 +132,9 @@ extern "C"
     ABP_DELAY, //used for delaying in calling the join callback for ABP
     CLASS_C_RX2_1_OPEN,
     CLASS_C_RX2_2_OPEN,
+
+    LoRa_Idle,
+    LoRa_Handshaking_start,
   } LoRaMacState_t;
 
   // types of frames
@@ -372,6 +375,8 @@ extern "C"
   LorawanError_t ValidateTxPower(uint8_t txPowerNew);
 
   //Initialization functions
+  
+  LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t channelRx);
 
   void ResetParametersForConfirmedTransmission(void);
 

@@ -106,6 +106,7 @@ typedef struct
         uint32_t channelTimer;
         bool joinRequestChannel;
         uint8_t parametersDefined;
+        uint8_t LoRa_datarate;
 } ChannelParams_t;
 
 typedef union
@@ -125,8 +126,8 @@ typedef union
 typedef struct
 {
     LorawanMacStatus_t lorawanMacStatus;
-    LorawanStatus_t macStatus;
-    FCnt_t fCntUp;
+    
+    
     FCnt_t fCntDown;
     FCnt_t fMcastCntDown;
     LoRaClass_t deviceClass;                                                    //del
@@ -154,7 +155,7 @@ typedef struct
     uint8_t linkCheckGwCnt;
     uint8_t currentDataRate;
     uint8_t batteryLevel;
-    uint8_t txPower;
+    
     uint8_t joinAccept1TimerId;
     uint8_t joinAccept2TimerId;
     uint8_t receiveWindow1TimerId;
@@ -174,6 +175,18 @@ typedef struct
     bool abpJoinStatus;
     uint8_t abpJoinTimerId;
     uint8_t syncWord;
+    
+    //LoRa
+    LorawanStatus_t macStatus;
+    FCnt_t fCntUp;
+    uint8_t txPower;      
+    uint8_t LoRa_lastUsedChannelIndex;
+    
+    
+    uint8_t LoRa_currentDataRate;
+    ReceiveWindowParameters_t LoRa_receiveChannelParameters;
+    ChannelParams_t LoRa_ch0_params;
+    
     
     uint8_t LoRa_Addres;                //LoRa  adres device
     uint8_t LoRa_TimerHandshaking;      //LoRa  czas do zakonczenia handshakingu
