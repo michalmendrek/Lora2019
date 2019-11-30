@@ -55,7 +55,7 @@ extern "C" {
 #define ADR_ACK_DELAY                               32
 #define ACK_TIMEOUT                                 2000
 
-
+#define LoRa_Chann_nr   4   //ilosc kanalow LoRa
 /***************************** TYPEDEFS ***************************************/
 typedef enum
 {
@@ -145,6 +145,23 @@ typedef void (*RxAppDataCb_t)(uint8_t* pData, uint8_t dataLength, OpStatus_t sta
 typedef void (*RxJoinResponseCb_t)(bool status);
 
 // Initialization functions
+/**
+ * @Summary
+    Bidirectional communication start.
+ * @Description
+    This function starts a bidirectional communication process.
+ * @Preconditions
+    None
+ * @Param
+    buffer - a data buffer used to store the data to be sent
+    bufferLength - the length in bytes of the data buffer (uint8_t)
+ * @Returns
+    Function returns the status of the operation (LorawanError_t).
+ * @Example
+    uint8_t dataToSend = 45;
+    LORAWAN_Send (UNCNF, 20, &dataToSend, sizeof(dataToSend));
+*/
+LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength);
 
 /**
  * @Summary

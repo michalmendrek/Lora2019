@@ -129,7 +129,7 @@ typedef struct
     FCnt_t fCntUp;
     FCnt_t fCntDown;
     FCnt_t fMcastCntDown;
-    LoRaClass_t deviceClass;
+    LoRaClass_t deviceClass;                                                    //del
     ReceiveWindowParameters_t receiveWindow1Parameters;
     ReceiveWindowParameters_t receiveWindow2Parameters;
     ActivationParameters_t activationParameters;
@@ -175,10 +175,12 @@ typedef struct
     uint8_t abpJoinTimerId;
     uint8_t syncWord;
     
-    
+    uint8_t LoRa_Addres;                //LoRa  adres device
     uint8_t LoRa_TimerHandshaking;      //LoRa  czas do zakonczenia handshakingu
     uint8_t LoRa_TimerReconnect;        //LoRa  czas po ktorym mozna probowac reconnect
     uint8_t LoRa_TimerWaitAck;          //LoRa  czas oczekiwania na ACK po wyslaniu danych
+    uint8_t LoRa_HeaderBufor[4];        //
+    uint8_t LoRa_Bufor[MAXIMUM_BUFFER_LENGTH];
     
 } LoRa_t;
 

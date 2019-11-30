@@ -42,6 +42,7 @@
  */
 
 #include "mcc_generated_files/mcc.h"
+#include <stdio.h>
 
 /*
                          Main application
@@ -88,13 +89,15 @@ void main(void)
   //  LORAWAN_SetApplicationSessionKey(appSKey);
   //  LORAWAN_SetDeviceAddress(devAddr);
   //  LORAWAN_Join(ABP);
-
+  uint8_t bufor[20];
+  sprintf(bufor,"test Lora");
   while(1)
     {
       // Add your application code
       LORAWAN_Mainloop();
       //
-      LORAWAN_Send(UNCNF, 2, "LoRa", 4);
+//      LORAWAN_Send(UNCNF, 2, "LoRa", 4);
+      LoRa_Send(bufor, sizeof(bufor));
     }
 }
 /**
