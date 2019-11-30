@@ -141,7 +141,20 @@ void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everythin
   srand(RADIO_ReadRandom()); // for the loRa random function we need a seed that is obtained from the radio
 
   LORAWAN_Reset(ISM_EU868);
+}
 
+void LoRa_TxDone(uint16_t timeOnAir)
+{
+  if(loRa.LoRa_Status == LoRa_Handshaking_TX)
+    {
+      loRa.LoRa_Status = LoRa_Handshaking_RX;
+      LoRa_EnterReceive();
+    }
+  if(loRa.LoRa_Status == LoRa_SendData_TX)
+    {
+      loRa.LoRa_Status = LoRa_SendData_RX;
+      LoRa_EnterReceive();
+    }
 }
 
 void LORAWAN_Init(RxAppDataCb_t RxPayload, RxJoinResponseCb_t RxJoinResponse) // this function resets everything to the default values

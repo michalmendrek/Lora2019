@@ -134,7 +134,12 @@ extern "C"
     CLASS_C_RX2_2_OPEN,
 
     LoRa_Idle,
-    LoRa_Handshaking_start,
+    LoRa_Handshaking_TX,
+    LoRa_Handshaking_RX,
+    LoRa_SendData_TX,
+    LoRa_SendData_RX,
+    LoRa_Wait_retrnsmit,
+    LoRa_transmit_Error
   } LoRaMacState_t;
 
   // types of frames
@@ -342,6 +347,8 @@ extern "C"
   void LoRa_TimerReconnectCallback(uint8_t param);
   void LoRa_TimerWaitAckCallback(uint8_t param);
 
+  void LoRa_EnterReceive(void);
+
   void LORAWAN_ReceiveWindow1Callback(uint8_t param);
 
   reentrant void LORAWAN_ReceiveWindow2Callback(uint8_t param);
@@ -375,7 +382,7 @@ extern "C"
   LorawanError_t ValidateTxPower(uint8_t txPowerNew);
 
   //Initialization functions
-  
+
   LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t channelRx);
 
   void ResetParametersForConfirmedTransmission(void);

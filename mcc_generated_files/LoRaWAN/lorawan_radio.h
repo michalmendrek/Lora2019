@@ -29,12 +29,13 @@
 #define	_LORAWAN_RADIO_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 
 
-/****************************** INCLUDES **************************************/
+  /****************************** INCLUDES **************************************/
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -43,22 +44,23 @@ extern "C" {
 #include <xc.h>
 
 #include "lorawan.h"
-    
-/****************************** DEFINES ***************************************/
+
+  /****************************** DEFINES ***************************************/
 
 
 
-/***************************** TYPEDEFS ***************************************/
+  /***************************** TYPEDEFS ***************************************/
 
 
 
-/*************************** FUNCTIONS PROTOTYPE ******************************/
+  /*************************** FUNCTIONS PROTOTYPE ******************************/
 
-void LORAWAN_TxDone (uint16_t timeOnAir);
+  void LORAWAN_TxDone(uint16_t timeOnAir);
+  void LoRa_TxDone(uint16_t timeOnAir);
 
-LorawanError_t LORAWAN_RxDone (uint8_t *buffer, uint8_t bufferLength);
+  LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength);
 
-void LORAWAN_RxTimeout (void);
+  void LORAWAN_RxTimeout(void);
 
 
 #ifdef	__cplusplus

@@ -98,6 +98,7 @@ void main(void)
       //
 //      LORAWAN_Send(UNCNF, 2, "LoRa", 4);
       LoRa_Send(bufor, sizeof(bufor));
+      
     }
 }
 /**

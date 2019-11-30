@@ -127,7 +127,7 @@ typedef struct
 {
     LorawanMacStatus_t lorawanMacStatus;
     
-    
+    LorawanStatus_t macStatus;
     FCnt_t fCntDown;
     FCnt_t fMcastCntDown;
     LoRaClass_t deviceClass;                                                    //del
@@ -177,7 +177,7 @@ typedef struct
     uint8_t syncWord;
     
     //LoRa
-    LorawanStatus_t macStatus;
+    LoRaMacState_t LoRa_Status;
     FCnt_t fCntUp;
     uint8_t txPower;      
     uint8_t LoRa_lastUsedChannelIndex;
@@ -200,7 +200,7 @@ typedef struct
 } LoRa_t;
 
 extern LoRa_t loRa;
-
+#define LoRa_Handshaking_timeout 20 //ms
 /*************************** FUNCTIONS PROTOTYPE ******************************/
 
 

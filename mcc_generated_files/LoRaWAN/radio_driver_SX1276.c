@@ -1087,7 +1087,8 @@ static void RADIO_TxDone(void)
   if((RadioConfiguration.flags & RADIO_FLAG_TIMEOUT) == 0)
     {
       timeOnAir = TIME_ON_AIR_LOAD_VALUE - TICKS_TO_MS(SwTimerReadValue(RadioConfiguration.timeOnAirTimerId));
-      LORAWAN_TxDone((uint16_t) timeOnAir);
+      //      LORAWAN_TxDone((uint16_t) timeOnAir);
+      LoRa_TxDone((uint16_t) timeOnAir);
     }
 }
 

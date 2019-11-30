@@ -118,23 +118,13 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
 {
   LorawanError_t result;
 
-  if(loRa.macStatus.macPause == ENABLED)
-    {
-      return MAC_PAUSED; // Any further transmissions or receptions cannot occur is macPaused is enabled.
-    }
-
-  if(loRa.macStatus.silentImmediately == ENABLED) // The server decided that any further uplink transmission is not possible from this end device.
-    {
-      return SILENT_IMMEDIATELY_ACTIVE;
-    }
-
   //validate date length using MaxPayloadSize
   if(bufferLength > LORAWAN_GetMaxPayloadSize())
     {
       return INVALID_BUFFER_LENGTH;
     }
 
-  if((loRa.macStatus.macState != IDLE))
+  if((loRa.LoRa_Status != LoRa_Idle))
     {
       return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
     }
@@ -150,15 +140,27 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
       loRa.fCntUp.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
 
       //      loRa.lorawanMacStatus.synchronization = ENABLED; //set the synchronization flag because one packet was sent (this is a guard for the the RxAppData of the user)
-      loRa.macStatus.macState = LoRa_Handshaking_start; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
+      loRa.LoRa_Status = LoRa_Handshaking_TX; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
+      SwTimerSetTimeout(loRa.LoRa_TimerHandshaking, MS_TO_TICKS_SHORT(LoRa_Handshaking_timeout));
     }
   else
     {
       return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
     }
-
-
   return OK;
+}
+
+void LoRa_EnterReceive(void)
+{
+  RADIO_ReceiveStop();
+  RADIO_ReleaseData();
+
+  ConfigureRadioRx(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
+
+  if(RADIO_ReceiveStart(CLASS_C_RX_WINDOW_SIZE) != OK)
+    {
+
+    }
 }
 
 /******************************************************************************/
@@ -859,9 +861,12 @@ void LORAWAN_ForceEnable(void)
   loRa.macStatus.silentImmediately = DISABLED;
 }
 
-void LoRa_TimerHandshakingCallback(uint8_t param)
+void LoRa_TimerHandshakingCallback(uint8_t param) //  timeout handshaking - nie nawi?zano polaczenia
 {
-
+  loRa.LoRa_Status = LoRa_transmit_Error;
+  RADIO_ReceiveStop();
+  RADIO_ReleaseData();
+  SwTimerStop(loRa.LoRa_TimerHandshaking);
 }
 
 void LoRa_TimerReconnectCallback(uint8_t param)
