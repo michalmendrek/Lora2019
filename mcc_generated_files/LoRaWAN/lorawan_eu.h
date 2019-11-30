@@ -180,7 +180,9 @@ typedef struct
     uint8_t LoRa_TimerReconnect;        //LoRa  czas po ktorym mozna probowac reconnect
     uint8_t LoRa_TimerWaitAck;          //LoRa  czas oczekiwania na ACK po wyslaniu danych
     uint8_t LoRa_HeaderBufor[4];        //
+    uint8_t LoRa_HeaderLength;
     uint8_t LoRa_Bufor[MAXIMUM_BUFFER_LENGTH];
+    uint8_t LoRa_BuforLength;
     
 } LoRa_t;
 

@@ -1913,128 +1913,23 @@ uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr)
 
 static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength)
 {
-  Mhdr_t mhdr;
-  uint8_t bufferIndex = 0;
-  FCtrl_t fCtrl;
-  uint8_t macCmdIdx = 0;
-
   uint8_t bufferHeadIndex = 0;
+  uint8_t bufferIndex = 0;
 
   memset(&loRa.LoRa_Bufor, 0, sizeof(loRa.LoRa_Bufor)); //clear bufor
   memset(&loRa.LoRa_HeaderBufor, 0, sizeof(loRa.LoRa_HeaderBufor)); //clear header
 
   loRa.LoRa_HeaderBufor[bufferHeadIndex++] = loRa.LoRa_Addres;
   loRa.LoRa_HeaderBufor[bufferHeadIndex++] = Random(LoRa_Chann_nr) + 1;
-  loRa.LoRa_HeaderBufor[bufferHeadIndex] = LoRa_CRC(loRa.LoRa_HeaderBufor, bufferHeadIndex);
+  //  loRa.LoRa_HeaderBufor[bufferHeadIndex] = LoRa_CRC(loRa.LoRa_HeaderBufor, bufferHeadIndex);
+  loRa.LoRa_HeaderLength=bufferHeadIndex;
 
-  memcpy(&macBuffer[bufferIndex], loRa.activationParameters.deviceAddress.buffer, sizeof(loRa.activationParameters.deviceAddress.buffer));
-  bufferIndex = bufferIndex + sizeof(loRa.activationParameters.deviceAddress.buffer);
-
-  fCtrl.value = 0; //clear the fCtrl value
-
-  if(loRa.macStatus.adr == ENABLED)
-    {
-      fCtrl.adr = ENABLED; // set the ADR bit in the packet
-      if(loRa.currentDataRate > loRa.minDataRate)
-        {
-          fCtrl.adrAckReq = ENABLED;
-          loRa.lorawanMacStatus.adrAckRequest = ENABLED; // set the flag that to remember that this bit was set
-          loRa.adrAckCnt++; // if adr is set, each time the uplink frame counter is incremented, the device increments the adr_ack_cnt, any received downlink frame following an uplink frame resets the ADR_ACK_CNT counter
-
-          if(loRa.adrAckCnt == loRa.protocolParameters.adrAckLimit)
-            {
-              loRa.counterAdrAckDelay = 0;
-              fCtrl.adrAckReq = DISABLED;
-              loRa.lorawanMacStatus.adrAckRequest = DISABLED;
-            }
-          else
-            {
-              if(loRa.adrAckCnt > loRa.protocolParameters.adrAckLimit)
-                {
-                  // the ADRACKREQ bit is set if ADR_ACK_CNT >= ADR_ACK_LIMIT and the current data rate is greater than the device defined minimum data rate, it is cleared in other conditions
-                  loRa.counterAdrAckDelay++; //we have to check how many packets we sent without any response            
-
-                  // If no reply is received within the next ADR_ACK_DELAY uplinks, the end device may try to regain connectivity by switching to the next lower data rate    
-                  if(loRa.counterAdrAckDelay > loRa.protocolParameters.adrAckDelay)
-                    {
-                      loRa.counterAdrAckDelay = 0;
-
-                      if(false == FindSmallestDataRate())
-                        {
-                          //Minimum data rate is reached
-                          loRa.adrAckCnt = 0;
-                          fCtrl.adrAckReq = DISABLED;
-                          loRa.lorawanMacStatus.adrAckRequest = DISABLED;
-                        }
-                    }
-                }
-              else
-                {
-                  fCtrl.adrAckReq = DISABLED;
-                  loRa.lorawanMacStatus.adrAckRequest = DISABLED;
-                }
-            }
-        }
-      else
-        {
-          loRa.lorawanMacStatus.adrAckRequest = DISABLED;
-        }
-    }
-
-  if(loRa.lorawanMacStatus.ackRequiredFromNextUplinkMessage == ENABLED)
-    {
-      fCtrl.ack = ENABLED;
-      loRa.lorawanMacStatus.ackRequiredFromNextUplinkMessage = DISABLED;
-    }
-
-  fCtrl.fPending = RESERVED_FOR_FUTURE_USE; //fPending bit is ignored for uplink packets
-
-  if((loRa.crtMacCmdIndex == 0) || (bufferLength == 0)) // there is no MAC command in the queue or there are MAC commands to respond, but the packet does not include application payload (in this case the response to MAC commands will be included inside FRM payload)
-    {
-      fCtrl.fOptsLen = 0; // fOpts field is absent
-    }
-
-  else
-    {
-      fCtrl.fOptsLen = CountfOptsLength();
-    }
-  macBuffer[bufferIndex++] = fCtrl.value;
-
-  memcpy(&macBuffer[bufferIndex], &loRa.fCntUp.members.valueLow, sizeof(loRa.fCntUp.members.valueLow));
-
-  bufferIndex = bufferIndex + sizeof(loRa.fCntUp.members.valueLow);
-
-  if((loRa.crtMacCmdIndex != 0) && (bufferLength != 0)) // the response to MAC commands will be included inside FOpts
-    {
-      IncludeMacCommandsResponse(macBuffer, &bufferIndex, 1);
-    }
-
-  //  macBuffer[bufferIndex++] = port; // the port field is present if the frame payload field is not empty
-
-  if(bufferLength != 0)
-    {
-      memcpy(&macBuffer[bufferIndex], buffer, bufferLength);
-      EncryptFRMPayload(buffer, bufferLength, 0, loRa.fCntUp.value, loRa.activationParameters.applicationSessionKey, bufferIndex, macBuffer, MCAST_DISABLED);
-      bufferIndex = bufferIndex + bufferLength;
-    }
-  else if((loRa.crtMacCmdIndex > 0)) // if answer is needed to MAC commands, include the answer here because there is no app payload
-    {
-      // Use networkSessionKey for port 0 data
-      //Use radioBuffer as a temporary buffer. The encrypted result is found in macBuffer
-      IncludeMacCommandsResponse(radioBuffer, &macCmdIdx, 0);
-      EncryptFRMPayload(radioBuffer, macCmdIdx, 0, loRa.fCntUp.value, loRa.activationParameters.networkSessionKey, bufferIndex, macBuffer, MCAST_DISABLED);
-      bufferIndex = bufferIndex + macCmdIdx;
-    }
-
-  AssembleEncryptionBlock(0, loRa.fCntUp.value, bufferIndex - 16, 0x49, MCAST_DISABLED);
-  memcpy(&macBuffer[0], aesBuffer, sizeof(aesBuffer));
-
-  AESCmac(loRa.activationParameters.networkSessionKey, aesBuffer, macBuffer, bufferIndex);
-
-  memcpy(&macBuffer[bufferIndex], aesBuffer, 4);
-  bufferIndex = bufferIndex + 4; // 4 is the size of MIC
-
-  loRa.lastPacketLength = bufferIndex - 16;
+  loRa.LoRa_Bufor[1] = 0; //Random(LoRa_Chann_nr) + 1; //nxt channel
+  memcpy(&loRa.LoRa_Bufor[2], buffer, bufferLength);
+  bufferIndex = bufferLength + 3;
+  loRa.LoRa_Bufor[0] = bufferIndex;
+  loRa.LoRa_Bufor[bufferIndex] = LoRa_CRC(loRa.LoRa_Bufor, bufferIndex);
+  loRa.LoRa_BuforLength=bufferIndex+1;
 }
 
 static uint8_t PrepareJoinRequestFrame(void)

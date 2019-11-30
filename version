@@ -3,10 +3,10 @@
     device  <-->    gateway
             -->     <SNR CH_nr>                     @ch 0                       handshaking
             <--     <SNR CMND CRC>                  @ch CH_nr                   ACK
-            -->     <LNGHT DATA... nxt_CH CRC>      @ch CH_nr                   dane 1
+            -->     <LNGHT nxt_CH DATA... CRC>      @ch CH_nr                   dane 1
             <--     <SNR nxt_CH CRC>                @ch CH_nr                   ACK, continue
             <--     <SNR 0 CRC>                     @ch CH_nr                   ACK, end
-            -->     <LNGHT DATA... nxt_CH CRC>      @ch nxt_CH                  dane 2
+            -->     <LNGHT nxt_CH DATA... CRC>      @ch nxt_CH                  dane 2
             <--     <SNR nxt_CH CRC>                @ch nxt_CH                  ACK, continue
             <--     <SNR 0 CRC>                     @ch nxt_CH                  ACK, end
             .......
