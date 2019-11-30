@@ -120,6 +120,30 @@ static void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
 /****************************** FUNCTIONS *************************************/
 
+void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everything to the default values
+{
+  // Allocate software timers and their callbacks
+  if(loRa.macInitialized == DISABLED)
+    {
+      CreateAllSoftwareTimers();
+      SetCallbackSoftwareTimers();
+      loRa.macInitialized = ENABLED;
+    }
+  else
+    {
+      StopAllSoftwareTimers();
+    }
+
+  rxPayload.RxAppData = RxPayload;
+
+  RADIO_Init(&radioBuffer[16], EU868_CALIBRATION_FREQ);
+
+  srand(RADIO_ReadRandom()); // for the loRa random function we need a seed that is obtained from the radio
+
+  LORAWAN_Reset(ISM_EU868);
+
+}
+
 void LORAWAN_Init(RxAppDataCb_t RxPayload, RxJoinResponseCb_t RxJoinResponse) // this function resets everything to the default values
 {
   // Allocate software timers and their callbacks
@@ -947,6 +971,10 @@ static void CreateAllSoftwareTimers(void)
   loRa.unconfirmedRetransmisionTimerId = SwTimerCreate();
   loRa.abpJoinTimerId = SwTimerCreate();
   loRa.dutyCycleTimerId = SwTimerCreate();
+  
+  loRa.LoRa_TimerHandshaking=SwTimerCreate();
+  loRa.LoRa_TimerReconnect=SwTimerCreate();
+  loRa.LoRa_TimerWaitAck=SwTimerCreate();
 }
 
 static void SetCallbackSoftwareTimers(void)
@@ -961,6 +989,10 @@ static void SetCallbackSoftwareTimers(void)
   SwTimerSetCallback(loRa.unconfirmedRetransmisionTimerId, UnconfirmedTransmissionCallback, 0);
   SwTimerSetCallback(loRa.abpJoinTimerId, UpdateJoinSuccessState, 0);
   SwTimerSetCallback(loRa.dutyCycleTimerId, DutyCycleCallback, 0);
+  
+  SwTimerSetCallback(loRa.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback, 0);
+  SwTimerSetCallback(loRa.LoRa_TimerReconnect, LoRa_TimerReconnectCallback,0);
+  SwTimerSetCallback(loRa.LoRa_TimerWaitAck,  LoRa_TimerWaitAckCallback,0);
 }
 
 static void StopAllSoftwareTimers(void)
@@ -975,6 +1007,10 @@ static void StopAllSoftwareTimers(void)
   SwTimerStop(loRa.unconfirmedRetransmisionTimerId);
   SwTimerStop(loRa.abpJoinTimerId);
   SwTimerStop(loRa.dutyCycleTimerId);
+  
+  SwTimerStop(loRa.LoRa_TimerHandshaking);
+  SwTimerStop(loRa.LoRa_TimerReconnect);
+  SwTimerStop(loRa.LoRa_TimerWaitAck);
 }
 
 static void InitDefault868Channels(void)

@@ -1,4 +1,4 @@
- /********************************************************************
+/********************************************************************
  * Copyright (C) 2016 Microchip Technology Inc. and its subsidiaries
  * (Microchip).  All rights reserved.
  *
@@ -29,14 +29,15 @@
 #define	_LORAWAN_PRIVATE_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
-    
-/****************************** INCLUDES **************************************/    
+
+  /****************************** INCLUDES **************************************/
 #include "lorawan_defs.h"
 
-/****************************** DEFINES ***************************************/    
-    
+  /****************************** DEFINES ***************************************/
+
 #define INVALID_VALUE                           0xFF
 
 #define ENABLED                                 1
@@ -60,7 +61,7 @@ extern "C" {
 
 #define CLASS_C_RX_WINDOW_SIZE                  0
 
-//Data rate (DR) encoding 
+  //Data rate (DR) encoding 
 #define DR0                                     0  
 #define DR1                                     1  
 #define DR2                                     2  
@@ -77,27 +78,27 @@ extern "C" {
 #define DR13                                    13 
 #define DR14                                    14
 #define DR15                                    15    
-    
+
 #define MAJOR_VERSION3                          0
 
 #define LAST_NIBBLE                             0x0F
 #define FIRST_NIBBLE                            0xF0 
-    
-// bit mask for MAC commands
-// link ADR and RX2 setup
+
+  // bit mask for MAC commands
+  // link ADR and RX2 setup
 #define CHANNEL_MASK_ACK                        0x01
 #define DATA_RATE_ACK                           0x02
 #define RX1_DR_OFFSET_ACK                       0x04
 #define POWER_ACK                               0x04
-    
+
 #define FPORT_MIN                               1
 #define FPORT_MAX                               223
-    
+
 #define MAX_NB_CMD_TO_PROCESS                   16     
-    
-//13 = sizeof(MIC) + MHDR + FHDR + sizeof (fPort);
+
+  //13 = sizeof(MIC) + MHDR + FHDR + sizeof (fPort);
 #define HDRS_MIC_PORT_MIN_SIZE 13 
-    
+
 #define ABP_TIMEOUT_MS                          20    
 
 #define JA_APP_NONCE_SIZE                       3    
@@ -105,284 +106,305 @@ extern "C" {
 
 #define MAX_FOPTS_LEN                           0x0F
 
-/***************************** TYPEDEFS ***************************************/
-    
-typedef union
-{
+  /***************************** TYPEDEFS ***************************************/
+
+  typedef union
+  {
     uint8_t value;
+
     struct
     {
-       unsigned nbRep:4;
-       unsigned chMaskCntl:3;
-       unsigned rfu:1;
+      unsigned nbRep : 4;
+      unsigned chMaskCntl : 3;
+      unsigned rfu : 1;
     };
-} Redundancy_t;
+  } Redundancy_t;
 
-typedef enum
-{
-    IDLE                      =0,
-    TRANSMISSION_OCCURRING      ,
-    BEFORE_RX1                  ,         //between TX and RX1, FSK can occur
-    RX1_OPEN                    ,
-    BETWEEN_RX1_RX2             ,         //FSK can occur
-    RX2_OPEN                    ,
-    RETRANSMISSION_DELAY        ,         //used for ADR_ACK delay, FSK can occur
-    ABP_DELAY                   ,         //used for delaying in calling the join callback for ABP
-    CLASS_C_RX2_1_OPEN          ,
-    CLASS_C_RX2_2_OPEN          ,
-} LoRaMacState_t;   
+  typedef enum
+  {
+    IDLE = 0,
+    TRANSMISSION_OCCURRING,
+    BEFORE_RX1, //between TX and RX1, FSK can occur
+    RX1_OPEN,
+    BETWEEN_RX1_RX2, //FSK can occur
+    RX2_OPEN,
+    RETRANSMISSION_DELAY, //used for ADR_ACK delay, FSK can occur
+    ABP_DELAY, //used for delaying in calling the join callback for ABP
+    CLASS_C_RX2_1_OPEN,
+    CLASS_C_RX2_2_OPEN,
+  } LoRaMacState_t;
 
-// types of frames
-typedef enum
-{
-    FRAME_TYPE_JOIN_REQ         =0x00 ,
-    FRAME_TYPE_JOIN_ACCEPT            ,
-    FRAME_TYPE_DATA_UNCONFIRMED_UP    ,
-    FRAME_TYPE_DATA_UNCONFIRMED_DOWN  ,
-    FRAME_TYPE_DATA_CONFIRMED_UP      ,
-    FRAME_TYPE_DATA_CONFIRMED_DOWN    ,
-    FRAME_TYPE_RFU                    ,
-    FRAME_TYPE_PROPRIETARY            ,
-}LoRaMacFrameType_t;
+  // types of frames
 
-// MAC commands CID
-typedef enum
-{
-    LINK_CHECK_CID              = 0x02,
-    LINK_ADR_CID                = 0x03,
-    DUTY_CYCLE_CID              = 0x04,
-    RX2_SETUP_CID               = 0x05,
-    DEV_STATUS_CID              = 0x06,
-    NEW_CHANNEL_CID             = 0x07,
-    RX_TIMING_SETUP_CID         = 0x08,
-}LoRaMacCid_t;
+  typedef enum
+  {
+    FRAME_TYPE_JOIN_REQ = 0x00,
+    FRAME_TYPE_JOIN_ACCEPT,
+    FRAME_TYPE_DATA_UNCONFIRMED_UP,
+    FRAME_TYPE_DATA_UNCONFIRMED_DOWN,
+    FRAME_TYPE_DATA_CONFIRMED_UP,
+    FRAME_TYPE_DATA_CONFIRMED_DOWN,
+    FRAME_TYPE_RFU,
+    FRAME_TYPE_PROPRIETARY,
+  } LoRaMacFrameType_t;
 
-//activation parameters
-typedef union
-{
+  // MAC commands CID
+
+  typedef enum
+  {
+    LINK_CHECK_CID = 0x02,
+    LINK_ADR_CID = 0x03,
+    DUTY_CYCLE_CID = 0x04,
+    RX2_SETUP_CID = 0x05,
+    DEV_STATUS_CID = 0x06,
+    NEW_CHANNEL_CID = 0x07,
+    RX_TIMING_SETUP_CID = 0x08,
+  } LoRaMacCid_t;
+
+  //activation parameters
+
+  typedef union
+  {
     uint32_t value;
     uint8_t buffer[4];
-} DeviceAddress_t;
+  } DeviceAddress_t;
 
-typedef union
-{
+  typedef union
+  {
     uint32_t value;
+
     struct
     {
-        uint16_t valueLow;
-        uint16_t valueHigh;
+      uint16_t valueLow;
+      uint16_t valueHigh;
     } members;
-} FCnt_t;
+  } FCnt_t;
 
-//union used for instantiation of DeviceEui and Application Eui
-typedef union
-{
+  //union used for instantiation of DeviceEui and Application Eui
+
+  typedef union
+  {
     uint8_t buffer[8];
+
     struct
     {
-        uint32_t genericEuiL;
-        uint32_t genericEuiH;
-    }members;
-} GenericEui_t;
+      uint32_t genericEuiL;
+      uint32_t genericEuiH;
+    } members;
+  } GenericEui_t;
 
-typedef struct
-{
+  typedef struct
+  {
     ActivationType_t activationType;
     DeviceAddress_t deviceAddress;
     uint8_t networkSessionKey[16];
     uint8_t applicationSessionKey[16];
-    uint8_t applicationKey[16];   
+    uint8_t applicationKey[16];
     GenericEui_t applicationEui;
     GenericEui_t deviceEui;
     DeviceAddress_t mcastDeviceAddress;
     uint8_t mcastNetworkSessionKey[16];
     uint8_t mcastApplicationSessionKey[16];
-} ActivationParameters_t;
+  } ActivationParameters_t;
 
-typedef union
-{
+  typedef union
+  {
     uint8_t value;
+
     struct
     {
-       unsigned fOptsLen:4;
-       unsigned fPending:1;
-       unsigned ack:1;
-       unsigned adrAckReq:1;
-       unsigned adr:1;
+      unsigned fOptsLen : 4;
+      unsigned fPending : 1;
+      unsigned ack : 1;
+      unsigned adrAckReq : 1;
+      unsigned adr : 1;
     };
-} FCtrl_t;
+  } FCtrl_t;
 
-// Mac header structure
-typedef union
-{
+  // Mac header structure
+
+  typedef union
+  {
     uint8_t value;
+
     struct
     {
-        uint8_t major           : 2;
-        uint8_t rfu             : 3;
-        uint8_t mType           : 3;
-    }bits;
-} Mhdr_t;
+      uint8_t major : 2;
+      uint8_t rfu : 3;
+      uint8_t mType : 3;
+    } bits;
+  } Mhdr_t;
 
-typedef union
-{
+  typedef union
+  {
     uint8_t fHdrCounter[23];
+
     struct
     {
-        Mhdr_t mhdr             ;
-        DeviceAddress_t devAddr ;
-        FCtrl_t fCtrl           ;
-        uint16_t fCnt           ;
-        uint8_t MacCommands[15] ;
-    }members;
-} Hdr_t;
+      Mhdr_t mhdr;
+      DeviceAddress_t devAddr;
+      FCtrl_t fCtrl;
+      uint16_t fCnt;
+      uint8_t MacCommands[15];
+    } members;
+  } Hdr_t;
 
-typedef union
-{
+  typedef union
+  {
     uint8_t value;
+
     struct
     {
-        uint8_t rx2DataRate     : 4;
-        uint8_t rx1DROffset     : 3;
-        uint8_t rfu             : 1;
-    }bits;
-} DlSettings_t;
+      uint8_t rx2DataRate : 4;
+      uint8_t rx1DROffset : 3;
+      uint8_t rfu : 1;
+    } bits;
+  } DlSettings_t;
 
-//Protocol parameters
-typedef struct
-{
-    uint16_t receiveDelay1     ;
-    uint16_t receiveDelay2     ;
-    uint16_t joinAcceptDelay1  ;
-    uint16_t joinAcceptDelay2  ;
-    uint16_t maxFcntGap        ;
-    uint16_t maxMultiFcntGap   ;
-    uint16_t ackTimeout        ;
-    uint8_t adrAckLimit        ;
-    uint8_t adrAckDelay        ;
-} ProtocolParams_t;
+  //Protocol parameters
 
-typedef struct
-{
+  typedef struct
+  {
+    uint16_t receiveDelay1;
+    uint16_t receiveDelay2;
+    uint16_t joinAcceptDelay1;
+    uint16_t joinAcceptDelay2;
+    uint16_t maxFcntGap;
+    uint16_t maxMultiFcntGap;
+    uint16_t ackTimeout;
+    uint8_t adrAckLimit;
+    uint8_t adrAckDelay;
+  } ProtocolParams_t;
+
+  typedef struct
+  {
     uint8_t receivedCid;
-    unsigned channelMaskAck :1;             // used for link adr answer
-    unsigned dataRateAck :1;                // used for link adr answer
-    unsigned powerAck :1;                   // used for link adr answer
-    unsigned channelAck :1;                 // used for RX param setup request
-    unsigned dataRateReceiveWindowAck :1;   // used for RX param setup request
-    unsigned rx1DROffestAck :1;             // used for RX param setup request
-    unsigned dataRateRangeAck :1;           // used for new channel answer
-    unsigned channelFrequencyAck :1;        // used for new channel answer
-} LorawanCommands_t;
+    unsigned channelMaskAck : 1; // used for link adr answer
+    unsigned dataRateAck : 1; // used for link adr answer
+    unsigned powerAck : 1; // used for link adr answer
+    unsigned channelAck : 1; // used for RX param setup request
+    unsigned dataRateReceiveWindowAck : 1; // used for RX param setup request
+    unsigned rx1DROffestAck : 1; // used for RX param setup request
+    unsigned dataRateRangeAck : 1; // used for new channel answer
+    unsigned channelFrequencyAck : 1; // used for new channel answer
+  } LorawanCommands_t;
 
-typedef union
-{
+  typedef union
+  {
     uint16_t value;
+
     struct
     {
-        unsigned deviceEui: 1;              //if set, device EUI was defined
-        unsigned applicationEui:1;
-        unsigned deviceAddress: 1;
-        unsigned applicationKey:1;
-        unsigned networkSessionKey:1;
-        unsigned applicationSessionKey:1;
-        unsigned mcastApplicationSessionKey:1;
-        unsigned mcastNetworkSessionKey:1;
-        unsigned mcastDeviceAddress:1;
+      unsigned deviceEui : 1; //if set, device EUI was defined
+      unsigned applicationEui : 1;
+      unsigned deviceAddress : 1;
+      unsigned applicationKey : 1;
+      unsigned networkSessionKey : 1;
+      unsigned applicationSessionKey : 1;
+      unsigned mcastApplicationSessionKey : 1;
+      unsigned mcastNetworkSessionKey : 1;
+      unsigned mcastDeviceAddress : 1;
     };
-} LorawanMacKeys_t;
+  } LorawanMacKeys_t;
 
-typedef struct
-{
+  typedef struct
+  {
     uint32_t frequency;
     uint8_t dataRate;
-} ReceiveWindowParameters_t;
+  } ReceiveWindowParameters_t;
 
-// minimum and maximum data rate
-typedef union
-{
+  // minimum and maximum data rate
+
+  typedef union
+  {
     uint8_t value;
+
     struct
     {
-       unsigned min:4;
-       unsigned max:4;
+      unsigned min : 4;
+      unsigned max : 4;
     };
-} DataRange_t;
+  } DataRange_t;
 
-extern uint8_t macBuffer[];
-extern uint8_t radioBuffer[];
+  extern uint8_t macBuffer[];
+  extern uint8_t radioBuffer[];
 
-extern RxAppData_t rxPayload;
+  extern RxAppData_t rxPayload;
 
-/*************************** FUNCTIONS PROTOTYPE ******************************/
+  /*************************** FUNCTIONS PROTOTYPE ******************************/
 
-// Callback functions
-void LORAWAN_ReceiveWindow1Callback (uint8_t param);
+  // Callback functions
 
-reentrant void LORAWAN_ReceiveWindow2Callback (uint8_t param);
+  void LoRa_TimerHandshakingCallback(uint8_t param);
+  void LoRa_TimerReconnectCallback(uint8_t param);
+  void LoRa_TimerWaitAckCallback(uint8_t param);
 
-void LORAWAN_LinkCheckCallback (uint8_t param);
+  void LORAWAN_ReceiveWindow1Callback(uint8_t param);
 
-void AckRetransmissionCallback (uint8_t param);
+  reentrant void LORAWAN_ReceiveWindow2Callback(uint8_t param);
 
-void UnconfirmedTransmissionCallback (uint8_t param);
+  void LORAWAN_LinkCheckCallback(uint8_t param);
 
-void AutomaticReplyCallback (uint8_t param);
+  void AckRetransmissionCallback(uint8_t param);
 
-// Update and validation functions
+  void UnconfirmedTransmissionCallback(uint8_t param);
 
-void UpdateCurrentDataRate (uint8_t valueNew);
+  void AutomaticReplyCallback(uint8_t param);
 
-void UpdateTxPower (uint8_t txPowerNew);
+  // Update and validation functions
 
-void UpdateRetransmissionAckTimeoutState (void);
+  void UpdateCurrentDataRate(uint8_t valueNew);
 
-void UpdateJoinSuccessState(uint8_t param);
+  void UpdateTxPower(uint8_t txPowerNew);
 
-void UpdateMinMaxChDataRate (void);
+  void UpdateRetransmissionAckTimeoutState(void);
 
-void UpdateReceiveWindow2Parameters (uint32_t frequency, uint8_t dataRate);
+  void UpdateJoinSuccessState(uint8_t param);
 
-void UpdateDLSettings(uint8_t dlRx2Dr, uint8_t dlRx1DrOffset);
+  void UpdateMinMaxChDataRate(void);
 
-LorawanError_t ValidateDataRate (uint8_t dataRate);
+  void UpdateReceiveWindow2Parameters(uint32_t frequency, uint8_t dataRate);
 
-LorawanError_t ValidateTxPower (uint8_t txPowerNew);
+  void UpdateDLSettings(uint8_t dlRx2Dr, uint8_t dlRx1DrOffset);
 
-//Initialization functions
+  LorawanError_t ValidateDataRate(uint8_t dataRate);
 
-void ResetParametersForConfirmedTransmission (void);
+  LorawanError_t ValidateTxPower(uint8_t txPowerNew);
 
-void ResetParametersForUnconfirmedTransmission (void);
+  //Initialization functions
 
-void SetJoinFailState(void);
+  void ResetParametersForConfirmedTransmission(void);
 
-uint16_t Random (uint16_t max);
+  void ResetParametersForUnconfirmedTransmission(void);
+
+  void SetJoinFailState(void);
+
+  uint16_t Random(uint16_t max);
 
 
-LorawanError_t SelectChannelForTransmission (bool transmissionType);  // transmission type is 0 means join request, transmission type is 1 means data message mode
+  LorawanError_t SelectChannelForTransmission(bool transmissionType); // transmission type is 0 means join request, transmission type is 1 means data message mode
 
-void StartReTxTimer(void);
+  void StartReTxTimer(void);
 
-LorawanError_t SearchAvailableChannel (uint8_t maxChannels, bool transmissionType, uint8_t* channelIndex);
+  LorawanError_t SearchAvailableChannel(uint8_t maxChannels, bool transmissionType, uint8_t* channelIndex);
 
-//MAC commands functions
+  //MAC commands functions
 
-uint8_t* ExecuteDutyCycle (uint8_t *ptr);
+  uint8_t* ExecuteDutyCycle(uint8_t *ptr);
 
-uint8_t* ExecuteLinkAdr (uint8_t *ptr);
+  uint8_t* ExecuteLinkAdr(uint8_t *ptr);
 
-uint8_t* ExecuteDevStatus (uint8_t *ptr);
+  uint8_t* ExecuteDevStatus(uint8_t *ptr);
 
-uint8_t* ExecuteNewChannel (uint8_t *ptr);
+  uint8_t* ExecuteNewChannel(uint8_t *ptr);
 
-uint8_t* ExecuteRxParamSetupReq   (uint8_t *ptr);
+  uint8_t* ExecuteRxParamSetupReq(uint8_t *ptr);
 
-void ConfigureRadio(uint8_t dataRate, uint32_t freq);
+  void ConfigureRadio(uint8_t dataRate, uint32_t freq);
 
-uint32_t GetRx1Freq (void);
+  uint32_t GetRx1Freq(void);
 
-void LORAWAN_EnterContinuousReceive(void);
+  void LORAWAN_EnterContinuousReceive(void);
 
 #ifdef	__cplusplus
 }

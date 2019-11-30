@@ -174,6 +174,12 @@ typedef struct
     bool abpJoinStatus;
     uint8_t abpJoinTimerId;
     uint8_t syncWord;
+    
+    
+    uint8_t LoRa_TimerHandshaking;      //LoRa  czas do zakonczenia handshakingu
+    uint8_t LoRa_TimerReconnect;        //LoRa  czas po ktorym mozna probowac reconnect
+    uint8_t LoRa_TimerWaitAck;          //LoRa  czas oczekiwania na ACK po wyslaniu danych
+    
 } LoRa_t;
 
 extern LoRa_t loRa;

@@ -82,17 +82,18 @@ void main(void)
   // Disable the Peripheral Interrupts
   //INTERRUPT_PeripheralInterruptDisable();
 
-  LORAWAN_Init(RxData, RxJoinResponse);
-  LORAWAN_SetNetworkSessionKey(nwkSKey);
-  LORAWAN_SetApplicationSessionKey(appSKey);
-  LORAWAN_SetDeviceAddress(devAddr);
-  LORAWAN_Join(ABP);
+  //  LORAWAN_Init(RxData, RxJoinResponse);
+  LoRa_System_Init(RxData);
+  //  LORAWAN_SetNetworkSessionKey(nwkSKey);
+  //  LORAWAN_SetApplicationSessionKey(appSKey);
+  //  LORAWAN_SetDeviceAddress(devAddr);
+  //  LORAWAN_Join(ABP);
 
   while(1)
     {
       // Add your application code
       LORAWAN_Mainloop();
-//
+      //
       LORAWAN_Send(UNCNF, 2, "LoRa", 4);
     }
 }

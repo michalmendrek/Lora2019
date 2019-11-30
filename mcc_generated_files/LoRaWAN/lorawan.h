@@ -145,6 +145,22 @@ typedef void (*RxAppDataCb_t)(uint8_t* pData, uint8_t dataLength, OpStatus_t sta
 typedef void (*RxJoinResponseCb_t)(bool status);
 
 // Initialization functions
+
+/**
+ * @Summary
+    LoRaWAN Initialization function
+ * @Description
+    This function initializes LoRaWAN stack and the radio module.
+ * @Preconditions
+    None
+ * @Param
+    RxPayload - pointer to function that gets called after the bidirectional communication ended.
+ * @Return
+    None
+ * @Example
+*/
+void LoRa_System_Init(RxAppDataCb_t RxPayload);
+
 /**
  * @Summary
     LoRaWAN Initialization function
