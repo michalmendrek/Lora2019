@@ -163,6 +163,32 @@ void LoRa_EnterReceive(void)
     }
 }
 
+LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
+{
+  uint32_t computedMic, extractedMic;
+  Mhdr_t mhdr;
+  uint8_t fPort, bufferIndex, channelIndex;
+  uint8_t frmPayloadLength;
+  uint8_t *packet;
+  uint8_t temp;
+
+  RADIO_ReleaseData();
+
+  SwTimerStop(loRa.LoRa_TimerHandshaking);
+  SwTimerStop(loRa.LoRa_TimerWaitAck);
+
+  if(loRa.LoRa_Status == LoRa_Handshaking_RX)
+    {
+
+    }
+  else if(loRa.LoRa_Status == LoRa_SendData_RX)
+    {
+
+    }
+
+  return OK;
+}
+
 /******************************************************************************/
 
 LorawanError_t LORAWAN_Join(ActivationType_t activationTypeNew)
