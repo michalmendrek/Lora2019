@@ -208,12 +208,14 @@ typedef struct
     uint8_t LoRa_minDataRate;
     uint8_t LoRa_maxDataRate;
     uint8_t LoRa_maxChannels;
+    uint8_t LoRa_Command;
     
     
 } LoRa_t;
 
 extern LoRa_t loRa;
 #define LoRa_Handshaking_timeout 20 //ms
+#define LoRa_Transmit_timeout 200 //ms
 /*************************** FUNCTIONS PROTOTYPE ******************************/
 
 

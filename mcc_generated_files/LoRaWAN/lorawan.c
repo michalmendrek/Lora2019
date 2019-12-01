@@ -65,6 +65,7 @@ extern const uint8_t rxWindowSize[];
 /************************ FUNCTION PROTOTYPES *************************/
 static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel);
 static uint8_t LoRa_GetMaxPayloadSize(void);
+uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr);
 /**********************************************************************/
 
 static void UpdateReceiveDelays(uint8_t delay);
@@ -134,8 +135,8 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
 
   //      AssemblePacket(confirmed, port, buffer, bufferLength);
   LoRa_AssemblePacket(buffer, bufferLength, channel);
-  
-  if(RADIO_Transmit(&loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+
+  if(RADIO_Transmit(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.fCntUp.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
 
@@ -177,9 +178,26 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
 
+
   if(loRa.LoRa_Status == LoRa_Handshaking_RX)
     {
+      if((*buffer == loRa.LoRa_Addres)&&(bufferLength == 3))
+        {
+          if(buffer[2] == LoRa_CRC(buffer, 2))
+            {
+              loRa.LoRa_Command = buffer[1];
+              if(loRa.LoRa_Command == 0)
+                {
+                  LoRa_SelectChannelForTransmission(loRa.LoRa_lastUsedChannelIndex, loRa.LoRa_lastUsedChannelIndex);
 
+                  if(RADIO_Transmit(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
+                    {
+                      loRa.LoRa_Status = LoRa_SendData_TX;
+                      SwTimerSetTimeout(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_Transmit_timeout));
+                    }
+                }
+            }
+        }
     }
   else if(loRa.LoRa_Status == LoRa_SendData_RX)
     {
@@ -188,6 +206,7 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
 
   return OK;
 }
+
 void LoRa_UpdateMinMaxChDataRate(void)
 {
   uint8_t i;
@@ -208,12 +227,13 @@ void LoRa_UpdateMinMaxChDataRate(void)
         }
     }
 }
+
 static uint8_t LoRa_GetMaxPayloadSize(void)
 {
   uint8_t result = 0;
 
-      result = maxPayloadSize[loRa.LoRa_currentDataRate];
-  
+  result = maxPayloadSize[loRa.LoRa_currentDataRate];
+
   return result;
 }
 
@@ -247,6 +267,7 @@ static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength, uint8_t 
   loRa.LoRa_Bufor[bufferIndex] = LoRa_CRC(loRa.LoRa_Bufor, bufferIndex);
   loRa.LoRa_BuforLength = bufferIndex + 1;
 }
+
 /******************************************************************************/
 
 LorawanError_t LORAWAN_Join(ActivationType_t activationTypeNew)
@@ -1981,8 +2002,6 @@ static void AssemblePacket(bool confirmed, uint8_t port, uint8_t *buffer, uint16
 
   loRa.lastPacketLength = bufferIndex - 16;
 }
-
-
 
 static uint8_t PrepareJoinRequestFrame(void)
 {
