@@ -43,7 +43,7 @@ extern "C" {
 #include <xc.h>
 
 /****************************** DEFINES ***************************************/
-
+#define LoRaDeviceAddress   0xaf
 // Recommended protocol parameters
 #define RECEIVE_DELAY1                              1000UL
 #define RECEIVE_DELAY2                              2000UL

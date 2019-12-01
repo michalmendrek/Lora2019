@@ -188,6 +188,26 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
 
   return OK;
 }
+void LoRa_UpdateMinMaxChDataRate(void)
+{
+  uint8_t i;
+  // after updating the data range of a channel we need to check if the minimum dataRange has changed or not.
+  // The user cannot set the current data rate outside the range of the data range
+  loRa.LoRa_minDataRate = DR7;
+  loRa.LoRa_maxDataRate = DR0;
+
+  for(i = 0; i < loRa.LoRa_maxChannels; i++)
+    {
+      if((Channels[i].dataRange.min < loRa.LoRa_minDataRate) && (Channels[i].status == ENABLED))
+        {
+          loRa.LoRa_minDataRate = Channels[i].dataRange.min;
+        }
+      if((Channels[i].dataRange.max > loRa.LoRa_maxDataRate) && (Channels[i].status == ENABLED))
+        {
+          loRa.LoRa_maxDataRate = Channels[i].dataRange.max;
+        }
+    }
+}
 
 /******************************************************************************/
 

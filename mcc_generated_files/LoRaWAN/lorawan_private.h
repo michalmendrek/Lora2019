@@ -348,6 +348,8 @@ extern "C"
   void LoRa_TimerWaitAckCallback(uint8_t param);
 
   void LoRa_EnterReceive(void);
+  
+  void LoRa_UpdateMinMaxChDataRate(void);
 
   void LORAWAN_ReceiveWindow1Callback(uint8_t param);
 
@@ -372,6 +374,7 @@ extern "C"
   void UpdateJoinSuccessState(uint8_t param);
 
   void UpdateMinMaxChDataRate(void);
+  
 
   void UpdateReceiveWindow2Parameters(uint32_t frequency, uint8_t dataRate);
 

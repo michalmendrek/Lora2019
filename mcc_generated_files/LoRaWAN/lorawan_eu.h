@@ -175,17 +175,21 @@ typedef struct
     bool abpJoinStatus;
     uint8_t abpJoinTimerId;
     uint8_t syncWord;
+    uint8_t txPower; 
     
     //LoRa
     LoRaMacState_t LoRa_Status;
+    
+    bool LoRa_initialised;
     FCnt_t fCntUp;
-    uint8_t txPower;      
-    uint8_t LoRa_lastUsedChannelIndex;
     
     
-    uint8_t LoRa_currentDataRate;
+    
+    
     ReceiveWindowParameters_t LoRa_receiveChannelParameters;
+    uint8_t LoRa_lastUsedChannelIndex;
     ChannelParams_t LoRa_ch0_params;
+    uint8_t LoRa_txPower;  
     
     
     uint8_t LoRa_Addres;                //LoRa  adres device
@@ -196,6 +200,14 @@ typedef struct
     uint8_t LoRa_HeaderLength;
     uint8_t LoRa_Bufor[MAXIMUM_BUFFER_LENGTH];
     uint8_t LoRa_BuforLength;
+    uint8_t LoRa_syncWord;
+    uint8_t LoRa_batteryLevel;
+    IsmBand_t LoRa_ismBand;
+    uint8_t LoRa_currentDataRate;
+    uint8_t LoRa_minDataRate;
+    uint8_t LoRa_maxDataRate;
+    uint8_t LoRa_maxChannels;
+    
     
 } LoRa_t;
 
