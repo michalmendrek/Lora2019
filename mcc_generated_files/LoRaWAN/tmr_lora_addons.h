@@ -7,7 +7,7 @@
 
   @Summary:
     This is the TMR1 LoRa Addons header file which serves as an extension for TMR1
-	module files generated using MPLAB(c) Code Configurator
+    module files generated using MPLAB(c) Code Configurator
 
   @Description:
     This header file provides LoRa-specific defines for TMR1 APIs.
@@ -42,20 +42,21 @@
 #define	TMR1_LORA_ADDONS_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <stdbool.h>
 #include <stdint.h>
 
-extern volatile uint8_t timerOverflow;
-extern volatile uint32_t ticksToScheduledInterrupt;
-extern volatile uint16_t reloadVal;
-extern volatile uint32_t ticksAdded;
-    
-void TMR_ISR_lora(void);
-void TMR_ISR_Lora_Init(void);
-    
+  extern volatile uint8_t timerOverflow;
+  extern volatile uint32_t ticksToScheduledInterrupt;
+  extern volatile uint16_t reloadVal;
+  extern volatile uint32_t ticksAdded;
+
+  void TMR_ISR_lora(void);
+  void TMR_ISR_Lora_Init(void);
+
 #ifdef	__cplusplus
 }
 #endif
@@ -64,4 +65,4 @@ void TMR_ISR_Lora_Init(void);
 
 /**
  End of File
-*/
+ */

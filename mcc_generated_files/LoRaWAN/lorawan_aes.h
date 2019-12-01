@@ -29,22 +29,23 @@
 #define	_LORAWAN_AES_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 
 
-/****************************** INCLUDES **************************************/
+  /****************************** INCLUDES **************************************/
 
-    
-/****************************** DEFINES ***************************************/
+
+  /****************************** DEFINES ***************************************/
 #define AES_BLOCKSIZE 16
 
-/***************************** TYPEDEFS ***************************************/
+  /***************************** TYPEDEFS ***************************************/
 
 
-/*************************** FUNCTIONS PROTOTYPE ******************************/
-void AESEncodeLoRa(unsigned char* block, unsigned char* key);
+  /*************************** FUNCTIONS PROTOTYPE ******************************/
+  void AESEncodeLoRa(unsigned char* block, unsigned char* key);
 
 
 #ifdef	__cplusplus

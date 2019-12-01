@@ -61,6 +61,7 @@ extern "C"
   LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength);
   LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength);
   void LORAWAN_RxTimeout(void);
+  void LoRa_RxTimeout(void);
 
 
 #ifdef	__cplusplus

@@ -41,20 +41,21 @@
 #define	MCC_LORA_CONFIG_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/******************************* SPI ******************************************/
+  /******************************* SPI ******************************************/
 #define SPI_Initialize                      SPI2_Initialize
 #define SPI_Exchange8bit                    SPI2_ExchangeByte
 #define SPI_Exchange8bitBuffer              SPI2_Exchange8bitBuffer
 #define SPI_IsBufferFull                    SPI2_IsBufferFull
 #define SPI_HasWriteCollisionOccured        SPI2_HasWriteCollisionOccured
 #define SPI_ClearWriteCollisionStatus       SPI2_ClearWriteCollisionStatus
-/******************************* SPI ******************************************/
-    
-    
-/******************************* TMR ******************************************/
+  /******************************* SPI ******************************************/
+
+
+  /******************************* TMR ******************************************/
 #define TMR_Initialize                      TMR1_Initialize
 #define TMR_StartTimer                      TMR1_StartTimer
 #define TMR_StopTimer                       TMR1_StopTimer

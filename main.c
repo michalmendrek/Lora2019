@@ -90,14 +90,13 @@ void main(void)
   //  LORAWAN_SetDeviceAddress(devAddr);
   //  LORAWAN_Join(ABP);
   uint8_t bufor[20];
-  sprintf(bufor,"test Lora");
+  sprintf(bufor, "test Lora");
   while(1)
     {
       // Add your application code
       LORAWAN_Mainloop();
-      //
-//      LORAWAN_Send(UNCNF, 2, "LoRa", 4);
-      LoRa_Send(bufor, sizeof(bufor));      
+      //      LORAWAN_Send(UNCNF, 2, "LoRa", 4);
+      LoRa_Send(bufor, sizeof(bufor));
     }
 }
 /**

@@ -41,7 +41,8 @@
 #define	MCC_LORA_DEFS_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #define SHIFT0                                  (0)
@@ -161,4 +162,4 @@ extern "C" {
 
 /**
  End of File
-*/
+ */

@@ -19,7 +19,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.05 and above or later
         MPLAB             :  MPLAB X 5.20
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -42,96 +42,98 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #include "spi2.h"
 #include <xc.h>
 
-typedef struct { 
-    uint8_t con1; 
-    uint8_t stat;
-    uint8_t add;
-    uint8_t operation;
+typedef struct
+{
+  uint8_t con1;
+  uint8_t stat;
+  uint8_t add;
+  uint8_t operation;
 } spi2_configuration_t;
 
 //con1 == SSPxCON1, stat == SSPxSTAT, add == SSPxADD, operation == Master/Slave
-static const spi2_configuration_t spi2_configuration[] = {   
-    { 0xa, 0x40, 0x27, 0 }
+static const spi2_configuration_t spi2_configuration[] = {
+  { 0xa, 0x40, 0x27, 0}
 };
 
 void SPI2_Initialize(void)
 {
-    //SPI setup
-    SSP2STAT = 0x40;
-    SSP2CON1 = 0x00;
-    SSP2ADD = 0x01;
-    TRISDbits.TRISD0 = 0;
-    SSP2CON1bits.SSPEN = 0;
+  //SPI setup
+  SSP2STAT = 0x40;
+  SSP2CON1 = 0x00;
+  SSP2ADD = 0x01;
+  TRISDbits.TRISD0 = 0;
+  SSP2CON1bits.SSPEN = 0;
 }
 
 bool SPI2_Open(spi2_modes_t spi2UniqueConfiguration)
 {
-    if(!SSP2CON1bits.SSPEN)
+  if(!SSP2CON1bits.SSPEN)
     {
-        SSP2STAT = spi2_configuration[spi2UniqueConfiguration].stat;
-        SSP2CON1 = spi2_configuration[spi2UniqueConfiguration].con1;
-        SSP2CON2 = 0x00;
-        SSP2ADD  = spi2_configuration[spi2UniqueConfiguration].add;
-        TRISDbits.TRISD0 = spi2_configuration[spi2UniqueConfiguration].operation;
-        SSP2CON1bits.SSPEN = 1;
-        return true;
+      SSP2STAT = spi2_configuration[spi2UniqueConfiguration].stat;
+      SSP2CON1 = spi2_configuration[spi2UniqueConfiguration].con1;
+      SSP2CON2 = 0x00;
+      SSP2ADD = spi2_configuration[spi2UniqueConfiguration].add;
+      TRISDbits.TRISD0 = spi2_configuration[spi2UniqueConfiguration].operation;
+      SSP2CON1bits.SSPEN = 1;
+      return true;
     }
-    return false;
+  return false;
 }
 
 void SPI2_Close(void)
 {
-    SSP2CON1bits.SSPEN = 0;
+  SSP2CON1bits.SSPEN = 0;
 }
 
 uint8_t SPI2_ExchangeByte(uint8_t data)
 {
-    SSP2BUF = data;
-    while(!PIR3bits.SSP2IF);
-    PIR3bits.SSP2IF = 0;
-    return SSP2BUF;
+  SSP2BUF = data;
+  while(!PIR3bits.SSP2IF);
+  PIR3bits.SSP2IF = 0;
+  return SSP2BUF;
 }
 
 void SPI2_ExchangeBlock(void *block, size_t blockSize)
 {
-    uint8_t *data = block;
-    while(blockSize--)
+  uint8_t *data = block;
+  while(blockSize--)
     {
-        *data = SPI2_ExchangeByte(*data );
-        data++;
+      *data = SPI2_ExchangeByte(*data);
+      data++;
     }
 }
 
 // Half Duplex SPI Functions
+
 void SPI2_WriteBlock(void *block, size_t blockSize)
 {
-    uint8_t *data = block;
-    while(blockSize--)
+  uint8_t *data = block;
+  while(blockSize--)
     {
-        SPI2_ExchangeByte(*data++);
+      SPI2_ExchangeByte(*data++);
     }
 }
 
 void SPI2_ReadBlock(void *block, size_t blockSize)
 {
-    uint8_t *data = block;
-    while(blockSize--)
+  uint8_t *data = block;
+  while(blockSize--)
     {
-        *data++ = SPI2_ExchangeByte(0);
+      *data++ = SPI2_ExchangeByte(0);
     }
 }
 
 void SPI2_WriteByte(uint8_t byte)
 {
-    SSP2BUF = byte;
+  SSP2BUF = byte;
 }
 
 uint8_t SPI2_ReadByte(void)
 {
-    return SSP2BUF;
+  return SSP2BUF;
 }

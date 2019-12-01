@@ -41,7 +41,8 @@
 #define	SW_TIMER_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <stdbool.h>
@@ -60,26 +61,26 @@ extern "C" {
 
 #define MS_TO_TICKS(n)                                  ((n) < MS_TO_TICKS_LONG_THRESHOLD ? MS_TO_TICKS_SHORT(n) : MS_TO_TICKS_LONG(n) )
 #define TICKS_TO_MS(n)                                  ((n) < TICKS_TO_MS_LONG_THRESHOLD ? TICKS_TO_MS_SHORT(n) : TICKS_TO_MS_LONG(n) )
-    
+
 #define HW_MAX_TIMER_VAL                                ((uint32_t)0x10000)
 
-void SystemBlockingWaitMs(uint32_t ms);
-void SystemTimerInit(void);
+  void SystemBlockingWaitMs(uint32_t ms);
+  void SystemTimerInit(void);
 
-uint8_t SwTimerCreate(void);
-void SwTimerSetCallback(uint8_t timerId, void (*callback)(uint8_t), uint8_t callbackParameter);
-void SwTimerSetTimeout(uint8_t timerId, uint32_t msTimeout);
-uint32_t SwTimerReadValue(uint8_t timerId);
-uint8_t SwTimerIsRunning(uint8_t timerId);
-void SwTimerStart(uint8_t timerId);
-void SwTimerStop(uint8_t timerId);
-void SwTimersExecute(void);
-uint8_t SwTimersCanSleep(void);
-uint32_t SwTimersInterrupt(void);
-    
-void TMR_OverrideRemaining(uint32_t ticksRemaining);
-uint32_t TMR_GetDeltaTime(void);
-uint16_t TMR_SwapTimer(uint16_t timerVal);
+  uint8_t SwTimerCreate(void);
+  void SwTimerSetCallback(uint8_t timerId, void (*callback)(uint8_t), uint8_t callbackParameter);
+  void SwTimerSetTimeout(uint8_t timerId, uint32_t msTimeout);
+  uint32_t SwTimerReadValue(uint8_t timerId);
+  uint8_t SwTimerIsRunning(uint8_t timerId);
+  void SwTimerStart(uint8_t timerId);
+  void SwTimerStop(uint8_t timerId);
+  void SwTimersExecute(void);
+  uint8_t SwTimersCanSleep(void);
+  uint32_t SwTimersInterrupt(void);
+
+  void TMR_OverrideRemaining(uint32_t ticksRemaining);
+  uint32_t TMR_GetDeltaTime(void);
+  uint16_t TMR_SwapTimer(uint16_t timerVal);
 
 #ifdef	__cplusplus
 }
@@ -89,4 +90,4 @@ uint16_t TMR_SwapTimer(uint16_t timerVal);
 
 /**
  End of File
-*/
+ */

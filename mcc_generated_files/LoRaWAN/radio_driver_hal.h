@@ -42,7 +42,8 @@
 #define	RADIO_DRIVER_HAL_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <xc.h>
@@ -51,18 +52,18 @@ extern "C" {
 #include "../pin_manager.h"
 #include "pin_manager_lora_addons.h"
 
-    
-void HALResetPinMakeOutput(void);
-void HALResetPinMakeInput(void);
-void HALResetPinOutputValue(uint8_t value);
 
-void HALSPICSAssert(void);
-void HALSPICSDeassert(void);
-uint8_t HALSPISend(uint8_t data);
-uint8_t HALDIO0PinValue(void);
-uint8_t HALDIO1PinValue(void);
-uint8_t HALDIO2PinValue(void);
-uint8_t HALDIO5PinValue(void);
+  void HALResetPinMakeOutput(void);
+  void HALResetPinMakeInput(void);
+  void HALResetPinOutputValue(uint8_t value);
+
+  void HALSPICSAssert(void);
+  void HALSPICSDeassert(void);
+  uint8_t HALSPISend(uint8_t data);
+  uint8_t HALDIO0PinValue(void);
+  uint8_t HALDIO1PinValue(void);
+  uint8_t HALDIO2PinValue(void);
+  uint8_t HALDIO5PinValue(void);
 #ifdef	__cplusplus
 }
 #endif
@@ -71,4 +72,4 @@ uint8_t HALDIO5PinValue(void);
 
 /**
  End of File
-*/
+ */

@@ -42,7 +42,8 @@
 #define	RADIO_INTERFACE_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 
@@ -56,4 +57,4 @@ extern "C" {
 
 /**
  End of File
-*/
+ */

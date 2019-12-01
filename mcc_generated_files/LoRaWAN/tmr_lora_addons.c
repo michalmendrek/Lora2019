@@ -7,7 +7,7 @@
 
   @Summary:
     This is the TMR1 LoRa Addons source file which serves as an extension for TMR1
-	module files generated using MPLAB(c) Code Configurator
+        module files generated using MPLAB(c) Code Configurator
 
   @Description:
     This source file provides LoRa-specific implementations for TMR1 APIs.
@@ -53,22 +53,22 @@ volatile uint32_t ticksAdded = 0;
 
 void TMR_ISR_Lora_Init(void)
 {
-    TMR_SetInterruptHandler(TMR_ISR_lora);
+  TMR_SetInterruptHandler(TMR_ISR_lora);
 }
 
 void TMR_ISR_lora(void)
 {
-    timerOverflow = 1;
-    // This could be the registered interrupt. Call software timers
-    ticksToScheduledInterrupt = SwTimersInterrupt();
-    
-    if (ticksToScheduledInterrupt < HW_MAX_TIMER_VAL)
+  timerOverflow = 1;
+  // This could be the registered interrupt. Call software timers
+  ticksToScheduledInterrupt = SwTimersInterrupt();
+
+  if(ticksToScheduledInterrupt < HW_MAX_TIMER_VAL)
     {
-        reloadVal = HW_MAX_TIMER_VAL - ticksToScheduledInterrupt;
-        ticksAdded = TMR_SwapTimer(reloadVal);
+      reloadVal = HW_MAX_TIMER_VAL - ticksToScheduledInterrupt;
+      ticksAdded = TMR_SwapTimer(reloadVal);
     }
 }
 
 /**
  End of File
-*/
+ */

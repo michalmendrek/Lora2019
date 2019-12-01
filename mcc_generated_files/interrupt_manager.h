@@ -21,7 +21,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.05 and above or later
         MPLAB 	          :  MPLAB X 5.20
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -44,7 +44,7 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #ifndef INTERRUPT_MANAGER_H
 #define INTERRUPT_MANAGER_H
@@ -107,9 +107,9 @@
  * @Example
     INTERRUPT_Initialize();
  */
-void INTERRUPT_Initialize (void);
+void INTERRUPT_Initialize(void);
 
 #endif  // INTERRUPT_MANAGER_H
 /**
  End of File
-*/
+ */

@@ -47,49 +47,49 @@ volatile uint8_t dioStatus = 0;
 
 uint8_t INTERRUPT_GetDioStatus(void)
 {
-    uint8_t a;
-    INTERRUPT_GlobalInterruptDisable();
-    a = dioStatus;
-    dioStatus = 0;
-    INTERRUPT_GlobalInterruptEnable();
-    return a;
+  uint8_t a;
+  INTERRUPT_GlobalInterruptDisable();
+  a = dioStatus;
+  dioStatus = 0;
+  INTERRUPT_GlobalInterruptEnable();
+  return a;
 }
 
 uint8_t INTERRUPT_PeekDioStatus(void)
 {
-    return dioStatus;
+  return dioStatus;
 }
 
 void DIO0_ISR_Lora(void)
 {
-    dioStatus |= DIO0;
+  dioStatus |= DIO0;
 }
 
 void DIO1_ISR_Lora(void)
 {
-    dioStatus |= DIO1;
+  dioStatus |= DIO1;
 }
 
 void DIO2_ISR_Lora(void)
 {
-    dioStatus |= DIO2;
+  dioStatus |= DIO2;
 }
 
 void DIO3_ISR_Lora(void)
 {
-    dioStatus |= DIO3;
+  dioStatus |= DIO3;
 }
 
 void DIO4_ISR_Lora(void)
 {
-    dioStatus |= DIO4;
+  dioStatus |= DIO4;
 }
 
 void DIO5_ISR_Lora(void)
 {
-    dioStatus |= DIO5;
+  dioStatus |= DIO5;
 }
 
 /**
  End of File
-*/
+ */

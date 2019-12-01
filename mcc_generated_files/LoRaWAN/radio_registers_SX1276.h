@@ -42,13 +42,14 @@
 #define	RADIO_REGISTERS_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 
 #define REG_WRITE                                       0x80
 
-// Common registers
+  // Common registers
 #define REG_FIFO                                        0x00
 #define REG_OPMODE                                      0x01
 #define REG_FRFMSB                                      0x06
@@ -70,7 +71,7 @@ extern "C" {
 #define REG_AGCTHRESH3                                  0x64
 #define REG_PLL                                         0x70
 
-// FSK only registers
+  // FSK only registers
 #define REG_FSK_BITRATEMSB                              0x02
 #define REG_FSK_BITRATELSB                              0x03
 #define REG_FSK_FDEVMSB                                 0x04
@@ -129,7 +130,7 @@ extern "C" {
 #define REG_FSK_PLLHOP                                  0x44
 #define REG_FSK_BITRATEFRAC                             0x5D
 
-// LoRa only registers
+  // LoRa only registers
 #define REG_LORA_FIFOADDRPTR                            0x0D
 #define REG_LORA_FIFOTXBASEADDR                         0x0E
 #define REG_LORA_FIFORXBASEADDR                         0x0F
@@ -165,8 +166,8 @@ extern "C" {
 #define REG_LORA_DETECTIONTHRESHOLD                     0x37
 #define REG_LORA_SYNCWORD                               0x39
 #define REG_LORA_INVERTIQ2                              0x3B 
-    
-//Register specific values
+
+  //Register specific values
 #define REG_LORA_INVERTIQ2_VALUE_ON                     0x19
 #define REG_LORA_INVERTIQ2_VALUE_OFF                    0x1D   
 #define REG_LORA_INVERTIQ_VALUE_RX_ON                   0x40
@@ -183,4 +184,4 @@ extern "C" {
 
 /**
  End of File
-*/
+ */

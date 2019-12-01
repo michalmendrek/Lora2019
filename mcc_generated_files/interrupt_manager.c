@@ -21,7 +21,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.05 and above or later
         MPLAB 	          :  MPLAB X 5.20
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -44,52 +44,52 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #include "interrupt_manager.h"
 #include "mcc.h"
 
-void  INTERRUPT_Initialize (void)
+void INTERRUPT_Initialize(void)
 {
-    // Disable Interrupt Priority Vectors (16CXXX Compatibility Mode)
-    RCONbits.IPEN = 0;
+  // Disable Interrupt Priority Vectors (16CXXX Compatibility Mode)
+  RCONbits.IPEN = 0;
 }
 
-void __interrupt() INTERRUPT_InterruptManager (void)
+void __interrupt() INTERRUPT_InterruptManager(void)
 {
-    // interrupt handler
-    if(INTCONbits.INT0IE == 1 && INTCONbits.INT0IF == 1)
+  // interrupt handler
+  if(INTCONbits.INT0IE == 1 && INTCONbits.INT0IF == 1)
     {
-        INT0_ISR();
+      INT0_ISR();
     }
-    else if(INTCON3bits.INT1IE == 1 && INTCON3bits.INT1IF == 1)
+  else if(INTCON3bits.INT1IE == 1 && INTCON3bits.INT1IF == 1)
     {
-        INT1_ISR();
+      INT1_ISR();
     }
-    else if(INTCON3bits.INT2IE == 1 && INTCON3bits.INT2IF == 1)
+  else if(INTCON3bits.INT2IE == 1 && INTCON3bits.INT2IF == 1)
     {
-        INT2_ISR();
+      INT2_ISR();
     }
-    else if(INTCONbits.RBIE == 1 && INTCONbits.RBIF == 1)
+  else if(INTCONbits.RBIE == 1 && INTCONbits.RBIF == 1)
     {
-        PIN_MANAGER_IOC();
+      PIN_MANAGER_IOC();
     }
-    else if(INTCONbits.PEIE == 1)
+  else if(INTCONbits.PEIE == 1)
     {
-        if(PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1)
+      if(PIE1bits.TMR1IE == 1 && PIR1bits.TMR1IF == 1)
         {
-            TMR1_ISR();
-        } 
-        else
-        {
-            //Unhandled Interrupt
+          TMR1_ISR();
         }
-    }      
-    else
+      else
+        {
+          //Unhandled Interrupt
+        }
+    }
+  else
     {
-        //Unhandled Interrupt
+      //Unhandled Interrupt
     }
 }
 /**
  End of File
-*/
+ */

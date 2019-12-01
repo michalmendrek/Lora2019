@@ -19,7 +19,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.05 and above or later
         MPLAB             :  MPLAB X 5.20
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -42,22 +42,23 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #ifndef SPI2_H
 #define SPI2_H
 
 /**
   Section: Included Files
-*/
+ */
 
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
 /* SPI interfaces */
-typedef enum { 
-    SPI2_DEFAULT
+typedef enum
+{
+  SPI2_DEFAULT
 } spi2_modes_t;
 
 void SPI2_Initialize(void);

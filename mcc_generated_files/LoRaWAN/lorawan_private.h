@@ -139,6 +139,7 @@ extern "C"
     LoRa_SendData_TX,
     LoRa_SendData_RX,
     LoRa_Sent,
+    LoRa_SendFailed,
     LoRa_Wait_retrnsmit,
     LoRa_transmit_Error
   } LoRaMacState_t;

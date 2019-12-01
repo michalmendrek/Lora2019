@@ -44,60 +44,58 @@
 
 void HALResetPinMakeOutput(void)
 {
-    RADIO_nReset_SetDigitalOutput();
+  RADIO_nReset_SetDigitalOutput();
 }
 
 void HALResetPinMakeInput(void)
 {
-    RADIO_nReset_SetDigitalInput();
+  RADIO_nReset_SetDigitalInput();
 }
 
 void HALResetPinOutputValue(uint8_t value)
 {
-    if (value == 0)
-        RADIO_nReset_SetLow();
-    else if (value == 1)
-        RADIO_nReset_SetHigh();
+  if(value == 0)
+    RADIO_nReset_SetLow();
+  else if(value == 1)
+    RADIO_nReset_SetHigh();
 }
 
 void HALSPICSAssert(void)
 {
-   RADIO_nCS_SetLow();
+  RADIO_nCS_SetLow();
 }
 
 void HALSPICSDeassert(void)
 {
-    RADIO_nCS_SetHigh();
+  RADIO_nCS_SetHigh();
 }
 
 uint8_t HALSPISend(uint8_t data)
 {
-    return SPI_Exchange8bit(data);
+  return SPI_Exchange8bit(data);
 }
 
 uint8_t HALDIO0PinValue(void)
 {
-    return RADIO_DIO0_GetValue();
+  return RADIO_DIO0_GetValue();
 }
 
 uint8_t HALDIO1PinValue(void)
 {
-    return RADIO_DIO1_GetValue();
+  return RADIO_DIO1_GetValue();
 }
 
 uint8_t HALDIO2PinValue(void)
 {
-    return RADIO_DIO2_GetValue();
+  return RADIO_DIO2_GetValue();
 }
-
-
 
 uint8_t HALDIO5PinValue(void)
 {
-    return RADIO_DIO5_GetValue();
+  return RADIO_DIO5_GetValue();
 }
 
 
 /**
  End of File
-*/
+ */

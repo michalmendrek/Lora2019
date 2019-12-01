@@ -1004,7 +1004,7 @@ static void RADIO_RxDone(void)
         }
       RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
-//      LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
+      //      LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
       LoRa_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
     }
 }
@@ -1074,7 +1074,8 @@ static void RADIO_RxTimeout(void)
   RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
   RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
 
-  LORAWAN_RxTimeout();
+  //  LORAWAN_RxTimeout();
+  LoRa_RxTimeout();
 }
 
 static void RADIO_TxDone(void)

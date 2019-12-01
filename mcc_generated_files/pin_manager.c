@@ -21,7 +21,7 @@
         MPLAB             :  MPLAB X 5.20
 
     Copyright (c) 2013 - 2015 released Microchip Technology Inc.  All rights reserved.
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -44,7 +44,7 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #include "pin_manager.h"
 
@@ -53,100 +53,102 @@
 
 void (*IOCB4_InterruptHandler)(void);
 
-
 void PIN_MANAGER_Initialize(void)
 {
-    /**
-    LATx registers
-    */
-    LATE = 0x00;
-    LATD = 0x00;
-    LATA = 0x00;
-    LATB = 0x00;
-    LATC = 0x00;
+  /**
+  LATx registers
+   */
+  LATE = 0x00;
+  LATD = 0x00;
+  LATA = 0x00;
+  LATB = 0x00;
+  LATC = 0x00;
 
-    /**
-    TRISx registers
-    */
-    TRISE = 0x05;
-    TRISA = 0xFD;
-    TRISB = 0xFF;
-    TRISC = 0xFF;
-    TRISD = 0xE6;
+  /**
+  TRISx registers
+   */
+  TRISE = 0x05;
+  TRISA = 0xFD;
+  TRISB = 0xFF;
+  TRISC = 0xFF;
+  TRISD = 0xE6;
 
-    /**
-    ANSELx registers
-    */
-    ANSELD = 0xE4;
-    ANSELC = 0xF8;
-    ANSELB = 0x28;
-    ANSELE = 0x07;
-    ANSELA = 0x2F;
+  /**
+  ANSELx registers
+   */
+  ANSELD = 0xE4;
+  ANSELC = 0xF8;
+  ANSELB = 0x28;
+  ANSELE = 0x07;
+  ANSELA = 0x2F;
 
-    /**
-    WPUx registers
-    */
-    WPUB = 0x00;
-    INTCON2bits.nRBPU = 1;
-
-
-
-    /**
-    IOCx registers 
-    */
-    //interrupt on change for group IOCB - flag
-    IOCBbits.IOCB4 = 1;
+  /**
+  WPUx registers
+   */
+  WPUB = 0x00;
+  INTCON2bits.nRBPU = 1;
 
 
 
-    // register default IOC callback functions at runtime; use these methods to register a custom function
-    IOCB4_SetInterruptHandler(IOCB4_DefaultInterruptHandler);
-   
-    // Enable RBI interrupt 
-    INTCONbits.RBIE = 1; 
-    
+  /**
+  IOCx registers 
+   */
+  //interrupt on change for group IOCB - flag
+  IOCBbits.IOCB4 = 1;
+
+
+
+  // register default IOC callback functions at runtime; use these methods to register a custom function
+  IOCB4_SetInterruptHandler(IOCB4_DefaultInterruptHandler);
+
+  // Enable RBI interrupt 
+  INTCONbits.RBIE = 1;
+
 }
-  
+
 void PIN_MANAGER_IOC(void)
-{   
-	// interrupt on change for pin IOCB4
-    if(IOCBbits.IOCB4 == 1)
+{
+  // interrupt on change for pin IOCB4
+  if(IOCBbits.IOCB4 == 1)
     {
-        IOCB4_ISR();  
-    }	
-	// Clear global Interrupt-On-Change flag
-    INTCONbits.RBIF = 0;
+      IOCB4_ISR();
+    }
+  // Clear global Interrupt-On-Change flag
+  INTCONbits.RBIF = 0;
 }
 
 /**
    IOCB4 Interrupt Service Routine
-*/
-void IOCB4_ISR(void) {
+ */
+void IOCB4_ISR(void)
+{
 
-    // Add custom IOCB4 code
+  // Add custom IOCB4 code
 
-    // Call the interrupt handler for the callback registered at runtime
-    if(IOCB4_InterruptHandler)
+  // Call the interrupt handler for the callback registered at runtime
+  if(IOCB4_InterruptHandler)
     {
-        IOCB4_InterruptHandler();
+      IOCB4_InterruptHandler();
     }
 }
 
 /**
   Allows selecting an interrupt handler for IOCB4 at application runtime
-*/
-void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void)){
-    IOCB4_InterruptHandler = InterruptHandler;
+ */
+void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void))
+{
+  IOCB4_InterruptHandler = InterruptHandler;
 }
 
 /**
   Default interrupt handler for IOCB4
-*/
-void IOCB4_DefaultInterruptHandler(void){
-    // add your IOCB4 interrupt custom code
-    // or set custom function using IOCB4_SetInterruptHandler()
+ */
+void IOCB4_DefaultInterruptHandler(void)
+{
+  // add your IOCB4 interrupt custom code
+  // or set custom function using IOCB4_SetInterruptHandler()
 }
 
 /**
  End of File
-*/
+ */

@@ -341,6 +341,20 @@ void LoRa_TxDone(uint16_t timeOnAir)
     }
 }
 
+void LoRa_RxTimeout(void)
+{
+  if(loRa.LoRa_Status == LoRa_Handshaking_RX)
+    {
+      SwTimerStop(loRa.LoRa_TimerHandshaking);
+      loRa.LoRa_Status = LoRa_SendFailed;
+    }
+  if(loRa.LoRa_Status == LoRa_SendData_RX)
+    {
+      SwTimerStop(loRa.LoRa_TimerWaitAck);
+      loRa.LoRa_Status = LoRa_SendFailed;
+    }
+}
+
 void LORAWAN_Init(RxAppDataCb_t RxPayload, RxJoinResponseCb_t RxJoinResponse) // this function resets everything to the default values
 {
   // Allocate software timers and their callbacks

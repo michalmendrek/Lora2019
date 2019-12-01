@@ -7,7 +7,7 @@
 
   @Summary:
     This is the Interrupt Manager LoRa Addons header file which serves as an extension for Interrupt Manager
-	module files generated using MPLAB(c) Code Configurator
+    module files generated using MPLAB(c) Code Configurator
 
   @Description:
     This header file provides LoRa-specific defines for TMR1 APIs.
@@ -44,7 +44,8 @@
 #include <stdint.h>
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 
@@ -55,47 +56,47 @@ extern "C" {
 #define DIO4        0x10
 #define DIO5        0x20
 
-volatile uint8_t dioStatus;
+  volatile uint8_t dioStatus;
 
-/**
- * @Summary
-    Returns the status of DIO's.
- * @Description
-    This function returns a bitfield representing the status of the DIO's used 
-    between the radio and microcontroller.
-    This also resets the bitfield value to 0. While this happens interrupts are disabled.
-    bit x corresponds to DIOx in the bitfield.
- * @Preconditions
- * @Param
-    None
- * @Returns
-    DIO status.
- * @Example
-*/
-uint8_t INTERRUPT_GetDioStatus(void);
+  /**
+   * @Summary
+      Returns the status of DIO's.
+   * @Description
+      This function returns a bitfield representing the status of the DIO's used 
+      between the radio and microcontroller.
+      This also resets the bitfield value to 0. While this happens interrupts are disabled.
+      bit x corresponds to DIOx in the bitfield.
+   * @Preconditions
+   * @Param
+      None
+   * @Returns
+      DIO status.
+   * @Example
+   */
+  uint8_t INTERRUPT_GetDioStatus(void);
 
-/**
- * @Summary
-    Returns the status of DIO's.
- * @Description
-    This function returns a bitfield representing the status of the DIO's used 
-    between the radio and microcontroller.
-    bit x corresponds to DIOx in the bitfield.
- * @Preconditions
- * @Param
-    None
- * @Returns
-    DIO status.
- * @Example
-*/
-uint8_t INTERRUPT_PeekDioStatus(void);
+  /**
+   * @Summary
+      Returns the status of DIO's.
+   * @Description
+      This function returns a bitfield representing the status of the DIO's used 
+      between the radio and microcontroller.
+      bit x corresponds to DIOx in the bitfield.
+   * @Preconditions
+   * @Param
+      None
+   * @Returns
+      DIO status.
+   * @Example
+   */
+  uint8_t INTERRUPT_PeekDioStatus(void);
 
-void DIO0_ISR_Lora(void);
-void DIO1_ISR_Lora(void);
-void DIO2_ISR_Lora(void);
-void DIO3_ISR_Lora(void);
-void DIO4_ISR_Lora(void);
-void DIO5_ISR_Lora(void);
+  void DIO0_ISR_Lora(void);
+  void DIO1_ISR_Lora(void);
+  void DIO2_ISR_Lora(void);
+  void DIO3_ISR_Lora(void);
+  void DIO4_ISR_Lora(void);
+  void DIO5_ISR_Lora(void);
 
 
 #ifdef	__cplusplus
@@ -106,4 +107,4 @@ void DIO5_ISR_Lora(void);
 
 /**
  End of File
-*/
+ */

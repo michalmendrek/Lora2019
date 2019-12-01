@@ -41,10 +41,11 @@
 #define	MCC_LORA_INIT_H
 
 #ifdef	__cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-void LORAWAN_PlatformInit(void);
+  void LORAWAN_PlatformInit(void);
 
 
 #ifdef	__cplusplus
@@ -55,4 +56,4 @@ void LORAWAN_PlatformInit(void);
 
 /**
  End of File
-*/
+ */

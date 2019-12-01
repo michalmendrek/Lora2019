@@ -19,7 +19,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.05 and above
         MPLAB 	          :  MPLAB X 5.20	
-*/
+ */
 
 /*
     (c) 2018 Microchip Technology Inc. and its subsidiaries. 
@@ -42,14 +42,14 @@
     CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT 
     OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS 
     SOFTWARE.
-*/
+ */
 
 #ifndef PIN_MANAGER_H
 #define PIN_MANAGER_H
 
 /**
   Section: Included Files
-*/
+ */
 
 #include <xc.h>
 
@@ -213,7 +213,7 @@
    @Example
     PIN_MANAGER_Initialize();
  */
-void PIN_MANAGER_Initialize (void);
+void PIN_MANAGER_Initialize(void);
 
 /**
  * @Param
@@ -260,7 +260,7 @@ void IOCB4_ISR(void);
     PIN_MANAGER_Initialize();
     IOCB4_SetInterruptHandler(MyInterruptHandler);
 
-*/
+ */
 void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
 
 /**
@@ -284,7 +284,7 @@ void IOCB4_SetInterruptHandler(void (* InterruptHandler)(void));
     PIN_MANAGER_Initialize();
     IOCB4_SetInterruptHandler(IOCB4_InterruptHandler);
 
-*/
+ */
 extern void (*IOCB4_InterruptHandler)(void);
 
 /**
@@ -308,7 +308,7 @@ extern void (*IOCB4_InterruptHandler)(void);
     PIN_MANAGER_Initialize();
     IOCB4_SetInterruptHandler(IOCB4_DefaultInterruptHandler);
 
-*/
+ */
 void IOCB4_DefaultInterruptHandler(void);
 
 
@@ -316,4 +316,4 @@ void IOCB4_DefaultInterruptHandler(void);
 #endif // PIN_MANAGER_H
 /**
  End of File
-*/
+ */
