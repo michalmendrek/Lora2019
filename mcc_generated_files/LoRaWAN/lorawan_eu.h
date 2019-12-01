@@ -189,6 +189,7 @@ typedef struct
     
     ReceiveWindowParameters_t LoRa_receiveChannelParameters;
     uint8_t LoRa_lastUsedChannelIndex;
+    uint8_t LoRa_nextUsedChannel;
     ReceiveWindowParameters_t LoRa_ch0_params;
     uint8_t LoRa_txPower;  
     

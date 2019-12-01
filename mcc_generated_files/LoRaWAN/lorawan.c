@@ -166,13 +166,6 @@ void LoRa_EnterReceive(void)
 
 LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
 {
-  uint32_t computedMic, extractedMic;
-  Mhdr_t mhdr;
-  uint8_t fPort, bufferIndex, channelIndex;
-  uint8_t frmPayloadLength;
-  uint8_t *packet;
-  uint8_t temp;
-
   RADIO_ReleaseData();
 
   SwTimerStop(loRa.LoRa_TimerHandshaking);
@@ -201,7 +194,17 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
     }
   else if(loRa.LoRa_Status == LoRa_SendData_RX)
     {
+      if((*buffer == loRa.LoRa_Addres))
+        {
+          if(buffer[bufferLength - 1] == LoRa_CRC(buffer, bufferLength - 1))
+            {
 
+              if(loRa.LoRa_nextUsedChannel == buffer[1])
+                {
+                  loRa.LoRa_Status = LoRa_Sent;
+                }
+            }
+        }
     }
 
   return OK;
