@@ -45,7 +45,8 @@ extern "C" {
 #include "lorawan_defs.h"
 
 /****************************** DEFINES ***************************************/     
-
+#define LoRa_CH0_frequency  868100000
+#define LoRa_CH0_datarate  DR5
 
 //maximum number of channels
 #define MAX_EU_SINGLE_BAND_CHANNELS             16 // 16 channels numbered from 0 to 15
@@ -188,7 +189,7 @@ typedef struct
     
     ReceiveWindowParameters_t LoRa_receiveChannelParameters;
     uint8_t LoRa_lastUsedChannelIndex;
-    ChannelParams_t LoRa_ch0_params;
+    ReceiveWindowParameters_t LoRa_ch0_params;
     uint8_t LoRa_txPower;  
     
     

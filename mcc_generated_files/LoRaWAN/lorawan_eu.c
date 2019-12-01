@@ -130,10 +130,10 @@ static void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everything to the default values
 {
   // Allocate software timers and their callbacks
-  loRa.LoRa_Status=LoRa_Idle;
+  loRa.LoRa_Status = LoRa_Idle;
   if(loRa.LoRa_initialised == DISABLED)
     {
-//      CreateAllSoftwareTimers();
+      //      CreateAllSoftwareTimers();
       LoRa_CreateSoftwareTimers();
       LoRa_SetCallbackSoftwareTimers();
       loRa.LoRa_initialised = ENABLED;
@@ -142,8 +142,10 @@ void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everythin
     {
       LoRa_StopAllSoftwareTimers();
     }
-  loRa.LoRa_Addres=LoRaDeviceAddress;
-//  loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
+  loRa.LoRa_Addres = LoRaDeviceAddress;
+  loRa.LoRa_ch0_params.frequency = LoRa_CH0_frequency;
+  loRa.LoRa_ch0_params.dataRate = LoRa_CH0_datarate;
+  //  loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
 
   rxPayload.RxAppData = RxPayload;
 
@@ -153,18 +155,19 @@ void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everythin
 
   LoRa_Reset(ISM_EU868);
 }
+
 static void LoRa_CreateSoftwareTimers(void)
 {
-//  loRa.joinAccept1TimerId = SwTimerCreate();
-//  loRa.joinAccept2TimerId = SwTimerCreate();
-//  loRa.receiveWindow1TimerId = SwTimerCreate();
-//  loRa.receiveWindow2TimerId = SwTimerCreate();
-//  loRa.linkCheckTimerId = SwTimerCreate();
-//  loRa.ackTimeoutTimerId = SwTimerCreate();
-//  loRa.automaticReplyTimerId = SwTimerCreate();
-//  loRa.unconfirmedRetransmisionTimerId = SwTimerCreate();
-//  loRa.abpJoinTimerId = SwTimerCreate();
-//  loRa.dutyCycleTimerId = SwTimerCreate();
+  //  loRa.joinAccept1TimerId = SwTimerCreate();
+  //  loRa.joinAccept2TimerId = SwTimerCreate();
+  //  loRa.receiveWindow1TimerId = SwTimerCreate();
+  //  loRa.receiveWindow2TimerId = SwTimerCreate();
+  //  loRa.linkCheckTimerId = SwTimerCreate();
+  //  loRa.ackTimeoutTimerId = SwTimerCreate();
+  //  loRa.automaticReplyTimerId = SwTimerCreate();
+  //  loRa.unconfirmedRetransmisionTimerId = SwTimerCreate();
+  //  loRa.abpJoinTimerId = SwTimerCreate();
+  //  loRa.dutyCycleTimerId = SwTimerCreate();
 
   loRa.LoRa_TimerHandshaking = SwTimerCreate();
   loRa.LoRa_TimerReconnect = SwTimerCreate();
@@ -173,16 +176,16 @@ static void LoRa_CreateSoftwareTimers(void)
 
 static void LoRa_SetCallbackSoftwareTimers(void)
 {
-//  SwTimerSetCallback(loRa.joinAccept1TimerId, LORAWAN_ReceiveWindow1Callback, 0);
-//  SwTimerSetCallback(loRa.joinAccept2TimerId, LORAWAN_ReceiveWindow2Callback, 0);
-//  SwTimerSetCallback(loRa.linkCheckTimerId, LORAWAN_LinkCheckCallback, 0);
-//  SwTimerSetCallback(loRa.receiveWindow1TimerId, LORAWAN_ReceiveWindow1Callback, 0);
-//  SwTimerSetCallback(loRa.receiveWindow2TimerId, LORAWAN_ReceiveWindow2Callback, 0);
-//  SwTimerSetCallback(loRa.ackTimeoutTimerId, AckRetransmissionCallback, 0);
-//  SwTimerSetCallback(loRa.automaticReplyTimerId, AutomaticReplyCallback, 0);
-//  SwTimerSetCallback(loRa.unconfirmedRetransmisionTimerId, UnconfirmedTransmissionCallback, 0);
-//  SwTimerSetCallback(loRa.abpJoinTimerId, UpdateJoinSuccessState, 0);
-//  SwTimerSetCallback(loRa.dutyCycleTimerId, DutyCycleCallback, 0);
+  //  SwTimerSetCallback(loRa.joinAccept1TimerId, LORAWAN_ReceiveWindow1Callback, 0);
+  //  SwTimerSetCallback(loRa.joinAccept2TimerId, LORAWAN_ReceiveWindow2Callback, 0);
+  //  SwTimerSetCallback(loRa.linkCheckTimerId, LORAWAN_LinkCheckCallback, 0);
+  //  SwTimerSetCallback(loRa.receiveWindow1TimerId, LORAWAN_ReceiveWindow1Callback, 0);
+  //  SwTimerSetCallback(loRa.receiveWindow2TimerId, LORAWAN_ReceiveWindow2Callback, 0);
+  //  SwTimerSetCallback(loRa.ackTimeoutTimerId, AckRetransmissionCallback, 0);
+  //  SwTimerSetCallback(loRa.automaticReplyTimerId, AutomaticReplyCallback, 0);
+  //  SwTimerSetCallback(loRa.unconfirmedRetransmisionTimerId, UnconfirmedTransmissionCallback, 0);
+  //  SwTimerSetCallback(loRa.abpJoinTimerId, UpdateJoinSuccessState, 0);
+  //  SwTimerSetCallback(loRa.dutyCycleTimerId, DutyCycleCallback, 0);
 
   SwTimerSetCallback(loRa.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback, 0);
   SwTimerSetCallback(loRa.LoRa_TimerReconnect, LoRa_TimerReconnectCallback, 0);
@@ -191,16 +194,16 @@ static void LoRa_SetCallbackSoftwareTimers(void)
 
 static void LoRa_StopAllSoftwareTimers(void)
 {
-//  SwTimerStop(loRa.joinAccept1TimerId);
-//  SwTimerStop(loRa.joinAccept2TimerId);
-//  SwTimerStop(loRa.linkCheckTimerId);
-//  SwTimerStop(loRa.receiveWindow1TimerId);
-//  SwTimerStop(loRa.receiveWindow2TimerId);
-//  SwTimerStop(loRa.ackTimeoutTimerId);
-//  SwTimerStop(loRa.automaticReplyTimerId);
-//  SwTimerStop(loRa.unconfirmedRetransmisionTimerId);
-//  SwTimerStop(loRa.abpJoinTimerId);
-//  SwTimerStop(loRa.dutyCycleTimerId);
+  //  SwTimerStop(loRa.joinAccept1TimerId);
+  //  SwTimerStop(loRa.joinAccept2TimerId);
+  //  SwTimerStop(loRa.linkCheckTimerId);
+  //  SwTimerStop(loRa.receiveWindow1TimerId);
+  //  SwTimerStop(loRa.receiveWindow2TimerId);
+  //  SwTimerStop(loRa.ackTimeoutTimerId);
+  //  SwTimerStop(loRa.automaticReplyTimerId);
+  //  SwTimerStop(loRa.unconfirmedRetransmisionTimerId);
+  //  SwTimerStop(loRa.abpJoinTimerId);
+  //  SwTimerStop(loRa.dutyCycleTimerId);
 
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerReconnect);
@@ -217,37 +220,37 @@ void LoRa_Reset(IsmBand_t ismBandNew)
   loRa.LoRa_syncWord = 0x34;
   RADIO_SetLoRaSyncWord(loRa.LoRa_syncWord);
 
-//  loRa.macStatus.value = 0;
-//  loRa.linkCheckMargin = 255; // reserved
-//  loRa.linkCheckGwCnt = 0;
-//  loRa.lastTimerValue = 0;
-//  loRa.lastPacketLength = 0;
-//  loRa.fCntDown.value = 0;
-//  loRa.fCntUp.value = 0;
-//  loRa.devNonce = 0;
-//  loRa.prescaler = 1;
-//  loRa.adrAckCnt = 0;
-//  loRa.counterAdrAckDelay = 0;
-//  loRa.offset = 0;
-//  loRa.lastTimerValue = 0;
+  //  loRa.macStatus.value = 0;
+  //  loRa.linkCheckMargin = 255; // reserved
+  //  loRa.linkCheckGwCnt = 0;
+  //  loRa.lastTimerValue = 0;
+  //  loRa.lastPacketLength = 0;
+  //  loRa.fCntDown.value = 0;
+  //  loRa.fCntUp.value = 0;
+  //  loRa.devNonce = 0;
+  //  loRa.prescaler = 1;
+  //  loRa.adrAckCnt = 0;
+  //  loRa.counterAdrAckDelay = 0;
+  //  loRa.offset = 0;
+  //  loRa.lastTimerValue = 0;
 
   // link check mechanism should be disabled
-//  loRa.macStatus.linkCheck = DISABLED;
+  //  loRa.macStatus.linkCheck = DISABLED;
 
   //flags all 0-es
-//  loRa.macStatus.value = 0;
-//  loRa.lorawanMacStatus.value = 0;
+  //  loRa.macStatus.value = 0;
+  //  loRa.lorawanMacStatus.value = 0;
 
-//  loRa.maxRepetitionsConfirmedUplink = 7; // 7 retransmissions should occur for each confirmed frame sent until ACK is received
-//  loRa.maxRepetitionsUnconfirmedUplink = 0; // 0 retransmissions should occur for each unconfirmed frame sent until a response is received
-//  loRa.counterRepetitionsConfirmedUplink = 1;
-//  loRa.counterRepetitionsUnconfirmedUplink = 1;
+  //  loRa.maxRepetitionsConfirmedUplink = 7; // 7 retransmissions should occur for each confirmed frame sent until ACK is received
+  //  loRa.maxRepetitionsUnconfirmedUplink = 0; // 0 retransmissions should occur for each unconfirmed frame sent until a response is received
+  //  loRa.counterRepetitionsConfirmedUplink = 1;
+  //  loRa.counterRepetitionsUnconfirmedUplink = 1;
 
   loRa.LoRa_batteryLevel = BATTERY_LEVEL_INVALID; // the end device was not able to measure the battery level
 
   loRa.LoRa_ismBand = ismBandNew;
 
-//  loRa.deviceClass = CLASS_A;
+  //  loRa.deviceClass = CLASS_A;
 
   // initialize default channels
   loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
@@ -257,8 +260,8 @@ void LoRa_Reset(IsmBand_t ismBandNew)
 
       LoRa_InitDefault868Channels();
 
-//      loRa.receiveWindow2Parameters.dataRate = EU868_DEFAULT_RX_WINDOW2_DR;
-//      loRa.receiveWindow2Parameters.frequency = EU868_DEFAULT_RX_WINDOW2_FREQ;
+      //      loRa.receiveWindow2Parameters.dataRate = EU868_DEFAULT_RX_WINDOW2_DR;
+      //      loRa.receiveWindow2Parameters.frequency = EU868_DEFAULT_RX_WINDOW2_FREQ;
     }
   else
     {
@@ -266,8 +269,8 @@ void LoRa_Reset(IsmBand_t ismBandNew)
 
       LoRa_InitDefault433Channels();
 
-//      loRa.receiveWindow2Parameters.dataRate = EU433_DEFAULT_RX_WINDOW2_DR;
-//      loRa.receiveWindow2Parameters.frequency = EU433_DEFAULT_RX_WINDOW2_FREQ;
+      //      loRa.receiveWindow2Parameters.dataRate = EU433_DEFAULT_RX_WINDOW2_DR;
+      //      loRa.receiveWindow2Parameters.frequency = EU433_DEFAULT_RX_WINDOW2_FREQ;
     }
 
   loRa.LoRa_txPower = 1;
@@ -277,21 +280,21 @@ void LoRa_Reset(IsmBand_t ismBandNew)
   UpdateMinMaxChDataRate();
 
   //keys will be filled with 0
-//  loRa.macKeys.value = 0; //no keys are set
-//  memset(&loRa.activationParameters, 0, sizeof(loRa.activationParameters));
+  //  loRa.macKeys.value = 0; //no keys are set
+  //  memset(&loRa.activationParameters, 0, sizeof(loRa.activationParameters));
 
   //protocol parameters receive the default values
-//  loRa.protocolParameters.receiveDelay1 = RECEIVE_DELAY1;
-//  loRa.protocolParameters.receiveDelay2 = RECEIVE_DELAY2;
-//  loRa.protocolParameters.joinAcceptDelay1 = JOIN_ACCEPT_DELAY1;
-//  loRa.protocolParameters.joinAcceptDelay2 = JOIN_ACCEPT_DELAY2;
-//  loRa.protocolParameters.ackTimeout = ACK_TIMEOUT;
-//  loRa.protocolParameters.adrAckDelay = ADR_ACK_DELAY;
-//  loRa.protocolParameters.adrAckLimit = ADR_ACK_LIMIT;
-//  loRa.protocolParameters.maxFcntGap = MAX_FCNT_GAP;
-//  loRa.protocolParameters.maxMultiFcntGap = MAX_MCAST_FCNT_GAP;
+  //  loRa.protocolParameters.receiveDelay1 = RECEIVE_DELAY1;
+  //  loRa.protocolParameters.receiveDelay2 = RECEIVE_DELAY2;
+  //  loRa.protocolParameters.joinAcceptDelay1 = JOIN_ACCEPT_DELAY1;
+  //  loRa.protocolParameters.joinAcceptDelay2 = JOIN_ACCEPT_DELAY2;
+  //  loRa.protocolParameters.ackTimeout = ACK_TIMEOUT;
+  //  loRa.protocolParameters.adrAckDelay = ADR_ACK_DELAY;
+  //  loRa.protocolParameters.adrAckLimit = ADR_ACK_LIMIT;
+  //  loRa.protocolParameters.maxFcntGap = MAX_FCNT_GAP;
+  //  loRa.protocolParameters.maxMultiFcntGap = MAX_MCAST_FCNT_GAP;
 
-//  LORAWAN_LinkCheckConfigure(DISABLED); // disable the link check mechanism
+  //  LORAWAN_LinkCheckConfigure(DISABLED); // disable the link check mechanism
 }
 
 static void LoRa_InitDefault868Channels(void)
@@ -323,6 +326,7 @@ static void LoRa_InitDefault433Channels(void)
       Channels[i].dataRange.value = UINT8_MAX;
     }
 }
+
 void LoRa_TxDone(uint16_t timeOnAir)
 {
   if(loRa.LoRa_Status == LoRa_Handshaking_TX)
@@ -1089,7 +1093,7 @@ void ConfigureRadio(uint8_t dataRate, uint32_t freq)
       //LoRa modulation
       RADIO_SetSpreadingFactor(spreadingFactor[dataRate]);
       RADIO_SetBandwidth(bandwidth[dataRate]);
-      RADIO_SetLoRaSyncWord(loRa.syncWord);
+      RADIO_SetLoRaSyncWord(loRa.LoRa_syncWord);
     }
   else
     {
@@ -1155,11 +1159,11 @@ LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t chan
 
   if(channelTx == 0)
     {
-      ConfigureRadioTx(loRa.LoRa_ch0_params.LoRa_datarate, loRa.LoRa_ch0_params.frequency);
+      ConfigureRadioTx(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
     }
   else
     {
-      ConfigureRadioTx(loRa.LoRa_currentDataRate, loRa.LoRa_ch0_params.frequency);
+      ConfigureRadioTx(loRa.LoRa_currentDataRate, loRa.LoRa_receiveChannelParameters.frequency);
     }
   return result;
 }
@@ -1520,11 +1524,11 @@ static void ConfigureRadioTx(uint8_t dataRate, uint32_t freq)
 
   if(ISM_EU868 == loRa.ismBand)
     {
-      txPower = txPower868[loRa.txPower];
+      txPower = txPower868[loRa.LoRa_txPower];
     }
   else
     {
-      txPower = txPower868[loRa.txPower];
+      txPower = txPower868[loRa.LoRa_txPower];
     }
 
   RADIO_SetOutputPower(txPower);

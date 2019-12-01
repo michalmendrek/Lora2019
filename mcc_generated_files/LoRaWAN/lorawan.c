@@ -64,7 +64,7 @@ extern const uint8_t rxWindowSize[];
 
 /************************ FUNCTION PROTOTYPES *************************/
 static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel);
-
+static uint8_t LoRa_GetMaxPayloadSize(void);
 /**********************************************************************/
 
 static void UpdateReceiveDelays(uint8_t delay);
@@ -119,7 +119,7 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
   LorawanError_t result;
 
   //validate date length using MaxPayloadSize
-  if(bufferLength > LORAWAN_GetMaxPayloadSize())
+  if(bufferLength > LoRa_GetMaxPayloadSize())
     {
       return INVALID_BUFFER_LENGTH;
     }
@@ -134,7 +134,7 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
 
   //      AssemblePacket(confirmed, port, buffer, bufferLength);
   LoRa_AssemblePacket(buffer, bufferLength, channel);
-
+  
   if(RADIO_Transmit(&loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.fCntUp.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
@@ -208,7 +208,45 @@ void LoRa_UpdateMinMaxChDataRate(void)
         }
     }
 }
+static uint8_t LoRa_GetMaxPayloadSize(void)
+{
+  uint8_t result = 0;
 
+      result = maxPayloadSize[loRa.LoRa_currentDataRate];
+  
+  return result;
+}
+
+uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr)
+{
+  uint8_t CRC = 0;
+  for(uint8_t i = 0; i < cntr; i++)
+    {
+      CRC ^= *(buf++);
+    }
+  return(CRC);
+}
+
+static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel)
+{
+  uint8_t bufferHeadIndex = 0;
+  uint8_t bufferIndex = 0;
+
+  memset(&loRa.LoRa_Bufor, 0, sizeof(loRa.LoRa_Bufor)); //clear bufor
+  memset(&loRa.LoRa_HeaderBufor, 0, sizeof(loRa.LoRa_HeaderBufor)); //clear header
+
+  loRa.LoRa_HeaderBufor[bufferHeadIndex++] = loRa.LoRa_Addres;
+  loRa.LoRa_HeaderBufor[bufferHeadIndex++] = nxt_channel;
+  //  loRa.LoRa_HeaderBufor[bufferHeadIndex] = LoRa_CRC(loRa.LoRa_HeaderBufor, bufferHeadIndex);
+  loRa.LoRa_HeaderLength = bufferHeadIndex;
+
+  loRa.LoRa_Bufor[1] = 0; //Random(LoRa_Chann_nr) + 1; //nxt channel
+  memcpy(&loRa.LoRa_Bufor[2], buffer, bufferLength);
+  bufferIndex = bufferLength + 3;
+  loRa.LoRa_Bufor[0] = bufferIndex;
+  loRa.LoRa_Bufor[bufferIndex] = LoRa_CRC(loRa.LoRa_Bufor, bufferIndex);
+  loRa.LoRa_BuforLength = bufferIndex + 1;
+}
 /******************************************************************************/
 
 LorawanError_t LORAWAN_Join(ActivationType_t activationTypeNew)
@@ -1944,36 +1982,7 @@ static void AssemblePacket(bool confirmed, uint8_t port, uint8_t *buffer, uint16
   loRa.lastPacketLength = bufferIndex - 16;
 }
 
-uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr)
-{
-  uint8_t CRC = 0;
-  for(uint8_t i = 0; i < cntr; i++)
-    {
-      CRC ^= *(buf++);
-    }
-  return(CRC);
-}
 
-static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel)
-{
-  uint8_t bufferHeadIndex = 0;
-  uint8_t bufferIndex = 0;
-
-  memset(&loRa.LoRa_Bufor, 0, sizeof(loRa.LoRa_Bufor)); //clear bufor
-  memset(&loRa.LoRa_HeaderBufor, 0, sizeof(loRa.LoRa_HeaderBufor)); //clear header
-
-  loRa.LoRa_HeaderBufor[bufferHeadIndex++] = loRa.LoRa_Addres;
-  loRa.LoRa_HeaderBufor[bufferHeadIndex++] = nxt_channel;
-  //  loRa.LoRa_HeaderBufor[bufferHeadIndex] = LoRa_CRC(loRa.LoRa_HeaderBufor, bufferHeadIndex);
-  loRa.LoRa_HeaderLength = bufferHeadIndex;
-
-  loRa.LoRa_Bufor[1] = 0; //Random(LoRa_Chann_nr) + 1; //nxt channel
-  memcpy(&loRa.LoRa_Bufor[2], buffer, bufferLength);
-  bufferIndex = bufferLength + 3;
-  loRa.LoRa_Bufor[0] = bufferIndex;
-  loRa.LoRa_Bufor[bufferIndex] = LoRa_CRC(loRa.LoRa_Bufor, bufferIndex);
-  loRa.LoRa_BuforLength = bufferIndex + 1;
-}
 
 static uint8_t PrepareJoinRequestFrame(void)
 {
