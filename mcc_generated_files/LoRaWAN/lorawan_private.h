@@ -138,6 +138,7 @@ extern "C"
     LoRa_Handshaking_RX,
     LoRa_SendData_TX,
     LoRa_SendData_RX,
+    LoRa_Sent,
     LoRa_Wait_retrnsmit,
     LoRa_transmit_Error
   } LoRaMacState_t;
@@ -348,7 +349,7 @@ extern "C"
   void LoRa_TimerWaitAckCallback(uint8_t param);
 
   void LoRa_EnterReceive(void);
-  
+
   void LoRa_UpdateMinMaxChDataRate(void);
 
   void LORAWAN_ReceiveWindow1Callback(uint8_t param);
@@ -374,7 +375,7 @@ extern "C"
   void UpdateJoinSuccessState(uint8_t param);
 
   void UpdateMinMaxChDataRate(void);
-  
+
 
   void UpdateReceiveWindow2Parameters(uint32_t frequency, uint8_t dataRate);
 
