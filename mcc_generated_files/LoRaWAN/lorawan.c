@@ -115,6 +115,26 @@ extern void UpdateCfList(uint8_t bufferLength, JoinAccept_t *joinAccept);
 uint8_t localDioStatus;
 
 /****************************** PUBLIC FUNCTIONS ******************************/
+LorawanError_t LoRa_Send_Header(void)
+{
+  LorawanError_t result;
+
+  if(RADIO_Transmit(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+    {
+      loRa.LoRa_StatusDanych = LoRa_transmiting;
+      loRa.LoRa_Counnter.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
+
+      //      loRa.lorawanMacStatus.synchronization = ENABLED; //set the synchronization flag because one packet was sent (this is a guard for the the RxAppData of the user)
+      loRa.LoRa_transmitStatus = LoRa_Handshaking_TX; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
+      SwTimerSetTimeout(loRa.LoRa_TimerHandshaking, MS_TO_TICKS_SHORT(LoRa_Handshaking_timeout));
+    }
+  else
+    {
+      return LoRa_Seend_problem;
+    }
+  return OK;
+}
+
 LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
 {
   LorawanError_t result;
@@ -137,20 +157,14 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
   //      AssemblePacket(confirmed, port, buffer, bufferLength);
   LoRa_AssemblePacket(buffer, bufferLength, channel);
 
-  if(RADIO_Transmit(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+  if(LoRa_Send_Header() == OK)
     {
-      loRa.LoRa_StatusDanych = LoRa_transmiting;
-      loRa.fCntUp.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
-
-      //      loRa.lorawanMacStatus.synchronization = ENABLED; //set the synchronization flag because one packet was sent (this is a guard for the the RxAppData of the user)
-      loRa.LoRa_transmitStatus = LoRa_Handshaking_TX; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
-      SwTimerSetTimeout(loRa.LoRa_TimerHandshaking, MS_TO_TICKS_SHORT(LoRa_Handshaking_timeout));
+      return OK;
     }
   else
     {
-      return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
+      return LoRa_Seend_problem;
     }
-  return OK;
 }
 
 void LoRa_EnterReceive(void)

@@ -131,6 +131,9 @@ void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everythin
 {
   // Allocate software timers and their callbacks
   loRa.LoRa_transmitStatus = LoRa_Idle;
+  loRa.LoRa_StatusDanych = LoRa_transmitIdle;
+  loRa.LoRa_Counnter.value=0;
+  
   if(loRa.LoRa_initialised == DISABLED)
     {
       //      CreateAllSoftwareTimers();
@@ -154,6 +157,7 @@ void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everythin
   srand(RADIO_ReadRandom()); // for the loRa random function we need a seed that is obtained from the radio
 
   LoRa_Reset(ISM_EU868);
+  
 }
 
 static void LoRa_CreateSoftwareTimers(void)
@@ -220,37 +224,9 @@ void LoRa_Reset(IsmBand_t ismBandNew)
   loRa.LoRa_syncWord = 0x34;
   RADIO_SetLoRaSyncWord(loRa.LoRa_syncWord);
 
-  //  loRa.macStatus.value = 0;
-  //  loRa.linkCheckMargin = 255; // reserved
-  //  loRa.linkCheckGwCnt = 0;
-  //  loRa.lastTimerValue = 0;
-  //  loRa.lastPacketLength = 0;
-  //  loRa.fCntDown.value = 0;
-  //  loRa.fCntUp.value = 0;
-  //  loRa.devNonce = 0;
-  //  loRa.prescaler = 1;
-  //  loRa.adrAckCnt = 0;
-  //  loRa.counterAdrAckDelay = 0;
-  //  loRa.offset = 0;
-  //  loRa.lastTimerValue = 0;
-
-  // link check mechanism should be disabled
-  //  loRa.macStatus.linkCheck = DISABLED;
-
-  //flags all 0-es
-  //  loRa.macStatus.value = 0;
-  //  loRa.lorawanMacStatus.value = 0;
-
-  //  loRa.maxRepetitionsConfirmedUplink = 7; // 7 retransmissions should occur for each confirmed frame sent until ACK is received
-  //  loRa.maxRepetitionsUnconfirmedUplink = 0; // 0 retransmissions should occur for each unconfirmed frame sent until a response is received
-  //  loRa.counterRepetitionsConfirmedUplink = 1;
-  //  loRa.counterRepetitionsUnconfirmedUplink = 1;
-
   loRa.LoRa_batteryLevel = BATTERY_LEVEL_INVALID; // the end device was not able to measure the battery level
 
   loRa.LoRa_ismBand = ismBandNew;
-
-  //  loRa.deviceClass = CLASS_A;
 
   // initialize default channels
   loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
@@ -259,18 +235,12 @@ void LoRa_Reset(IsmBand_t ismBandNew)
       RADIO_Init(&radioBuffer[16], EU868_CALIBRATION_FREQ);
 
       LoRa_InitDefault868Channels();
-
-      //      loRa.receiveWindow2Parameters.dataRate = EU868_DEFAULT_RX_WINDOW2_DR;
-      //      loRa.receiveWindow2Parameters.frequency = EU868_DEFAULT_RX_WINDOW2_FREQ;
     }
   else
     {
       RADIO_Init(&radioBuffer[16], EU433_CALIBRATION_FREQ);
 
       LoRa_InitDefault433Channels();
-
-      //      loRa.receiveWindow2Parameters.dataRate = EU433_DEFAULT_RX_WINDOW2_DR;
-      //      loRa.receiveWindow2Parameters.frequency = EU433_DEFAULT_RX_WINDOW2_FREQ;
     }
 
   loRa.LoRa_txPower = 1;
@@ -278,23 +248,6 @@ void LoRa_Reset(IsmBand_t ismBandNew)
   loRa.LoRa_currentDataRate = DR0;
 
   UpdateMinMaxChDataRate();
-
-  //keys will be filled with 0
-  //  loRa.macKeys.value = 0; //no keys are set
-  //  memset(&loRa.activationParameters, 0, sizeof(loRa.activationParameters));
-
-  //protocol parameters receive the default values
-  //  loRa.protocolParameters.receiveDelay1 = RECEIVE_DELAY1;
-  //  loRa.protocolParameters.receiveDelay2 = RECEIVE_DELAY2;
-  //  loRa.protocolParameters.joinAcceptDelay1 = JOIN_ACCEPT_DELAY1;
-  //  loRa.protocolParameters.joinAcceptDelay2 = JOIN_ACCEPT_DELAY2;
-  //  loRa.protocolParameters.ackTimeout = ACK_TIMEOUT;
-  //  loRa.protocolParameters.adrAckDelay = ADR_ACK_DELAY;
-  //  loRa.protocolParameters.adrAckLimit = ADR_ACK_LIMIT;
-  //  loRa.protocolParameters.maxFcntGap = MAX_FCNT_GAP;
-  //  loRa.protocolParameters.maxMultiFcntGap = MAX_MCAST_FCNT_GAP;
-
-  //  LORAWAN_LinkCheckConfigure(DISABLED); // disable the link check mechanism
 }
 
 static void LoRa_InitDefault868Channels(void)

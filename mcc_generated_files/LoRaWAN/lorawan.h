@@ -58,10 +58,11 @@ extern "C"
 
 #define LoRa_Chann_nr   4   //ilosc kanalow LoRa
 
-/***************************** TYPEDEFS ***************************************/
+    /***************************** TYPEDEFS ***************************************/
   typedef enum
   {
     OK = 0,
+    LoRa_Seend_problem,
     NETWORK_NOT_JOINED,
     MAC_STATE_NOT_READY_FOR_TRANSMISSION,
     INVALID_PARAMETER,
@@ -180,7 +181,7 @@ extern "C"
    * @Example
    */
   void LoRa_System_Init(RxAppDataCb_t RxPayload);
-  
+
   void LoRa_Reset(IsmBand_t ismBandNew);
 
   /**
