@@ -180,6 +180,8 @@ extern "C"
    * @Example
    */
   void LoRa_System_Init(RxAppDataCb_t RxPayload);
+  
+  void LoRa_Reset(IsmBand_t ismBandNew);
 
   /**
    * @Summary

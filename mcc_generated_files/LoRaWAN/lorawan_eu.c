@@ -130,7 +130,7 @@ static void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everything to the default values
 {
   // Allocate software timers and their callbacks
-  loRa.LoRa_Status = LoRa_Idle;
+  loRa.LoRa_transmitStatus = LoRa_Idle;
   if(loRa.LoRa_initialised == DISABLED)
     {
       //      CreateAllSoftwareTimers();
@@ -329,29 +329,29 @@ static void LoRa_InitDefault433Channels(void)
 
 void LoRa_TxDone(uint16_t timeOnAir)
 {
-  if(loRa.LoRa_Status == LoRa_Handshaking_TX)
+  if(loRa.LoRa_transmitStatus == LoRa_Handshaking_TX)
     {
-      loRa.LoRa_Status = LoRa_Handshaking_RX;
+      loRa.LoRa_transmitStatus = LoRa_Handshaking_RX;
       LoRa_EnterReceive();
     }
-  if(loRa.LoRa_Status == LoRa_SendData_TX)
+  if(loRa.LoRa_transmitStatus == LoRa_SendData_TX)
     {
-      loRa.LoRa_Status = LoRa_SendData_RX;
+      loRa.LoRa_transmitStatus = LoRa_SendData_RX;
       LoRa_EnterReceive();
     }
 }
 
 void LoRa_RxTimeout(void)
 {
-  if(loRa.LoRa_Status == LoRa_Handshaking_RX)
+  if(loRa.LoRa_transmitStatus == LoRa_Handshaking_RX)
     {
       SwTimerStop(loRa.LoRa_TimerHandshaking);
-      loRa.LoRa_Status = LoRa_SendFailed;
+      loRa.LoRa_transmitStatus = LoRa_SendFailed;
     }
-  if(loRa.LoRa_Status == LoRa_SendData_RX)
+  if(loRa.LoRa_transmitStatus == LoRa_SendData_RX)
     {
       SwTimerStop(loRa.LoRa_TimerWaitAck);
-      loRa.LoRa_Status = LoRa_SendFailed;
+      loRa.LoRa_transmitStatus = LoRa_SendFailed;
     }
  RADIO_clearReceiveFlag();
 }

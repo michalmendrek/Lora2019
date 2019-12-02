@@ -140,9 +140,19 @@ extern "C"
     LoRa_SendData_RX,
     LoRa_Sent,
     LoRa_SendFailed,
-    LoRa_Wait_retrnsmit,
-    LoRa_transmit_Error
-  } LoRaMacState_t;
+    LoRa_Wait_retransmit,
+    LoRa_transmit_Error,
+//    LoRa_transmit_OK,
+//    LoRa_Transmit_Fail
+  } LoRaTransmitState_t;
+
+  typedef enum
+  {
+    LoRa_transmitIdle = 0,
+    LoRa_transmiting,
+    LoRa_transmit_OK,
+    LoRa_transmit_Fail
+  } LoRaStatus_t;
 
   // types of frames
 

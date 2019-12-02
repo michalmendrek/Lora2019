@@ -42,6 +42,7 @@
  */
 
 #include "mcc_generated_files/mcc.h"
+#include "mcc_generated_files/LoRaWAN/lorawan_eu.h"
 #include <stdio.h>
 
 /*
@@ -96,7 +97,22 @@ void main(void)
       // Add your application code
       LORAWAN_Mainloop();
       //      LORAWAN_Send(UNCNF, 2, "LoRa", 4);
-      LoRa_Send(bufor, sizeof(bufor));
+      if(loRa.LoRa_StatusDanych == LoRa_transmitIdle)
+        {
+          LoRa_Reset(ISM_EU868);
+          loRa.LoRa_transmitStatus = LoRa_Idle;
+          if(LoRa_Send(bufor, sizeof(bufor)) == OK)
+            {
+            }
+        }
+      if(loRa.LoRa_StatusDanych == LoRa_transmit_OK)
+        {
+          //wyslane
+        }
+      if(loRa.LoRa_StatusDanych == LoRa_transmit_Fail)
+        {
+          //niewyslane
+        }
     }
 }
 /**

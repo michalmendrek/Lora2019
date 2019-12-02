@@ -183,7 +183,8 @@ extern "C"
     uint8_t txPower;
 
     //LoRa
-    LoRaMacState_t LoRa_Status;
+    LoRaTransmitState_t LoRa_transmitStatus;
+    LoRaStatus_t LoRa_StatusDanych;
 
     bool LoRa_initialised;
     FCnt_t fCntUp;

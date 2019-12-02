@@ -119,13 +119,14 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
 {
   LorawanError_t result;
 
+  loRa.LoRa_StatusDanych = LoRa_transmit_Fail;
   //validate date length using MaxPayloadSize
   if(bufferLength > LoRa_GetMaxPayloadSize())
     {
       return INVALID_BUFFER_LENGTH;
     }
 
-  if((loRa.LoRa_Status != LoRa_Idle))
+  if((loRa.LoRa_transmitStatus != LoRa_Idle))
     {
       return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
     }
@@ -138,10 +139,11 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
 
   if(RADIO_Transmit(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
+      loRa.LoRa_StatusDanych = LoRa_transmiting;
       loRa.fCntUp.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
 
       //      loRa.lorawanMacStatus.synchronization = ENABLED; //set the synchronization flag because one packet was sent (this is a guard for the the RxAppData of the user)
-      loRa.LoRa_Status = LoRa_Handshaking_TX; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
+      loRa.LoRa_transmitStatus = LoRa_Handshaking_TX; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
       SwTimerSetTimeout(loRa.LoRa_TimerHandshaking, MS_TO_TICKS_SHORT(LoRa_Handshaking_timeout));
     }
   else
@@ -172,7 +174,7 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
   SwTimerStop(loRa.LoRa_TimerWaitAck);
 
 
-  if(loRa.LoRa_Status == LoRa_Handshaking_RX)
+  if(loRa.LoRa_transmitStatus == LoRa_Handshaking_RX)
     {
       if((*buffer == loRa.LoRa_Addres)&&(bufferLength == 3))
         {
@@ -185,14 +187,14 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
 
                   if(RADIO_Transmit(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
                     {
-                      loRa.LoRa_Status = LoRa_SendData_TX;
+                      loRa.LoRa_transmitStatus = LoRa_SendData_TX;
                       SwTimerSetTimeout(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_Transmit_timeout));
                     }
                 }
             }
         }
     }
-  else if(loRa.LoRa_Status == LoRa_SendData_RX)
+  else if(loRa.LoRa_transmitStatus == LoRa_SendData_RX)
     {
       if((*buffer == loRa.LoRa_Addres))
         {
@@ -201,7 +203,7 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
 
               if(loRa.LoRa_nextUsedChannel == buffer[1])
                 {
-                  loRa.LoRa_Status = LoRa_Sent;
+                  loRa.LoRa_transmitStatus = LoRa_Sent;
                 }
             }
         }
@@ -971,7 +973,7 @@ void LORAWAN_ForceEnable(void)
 
 void LoRa_TimerHandshakingCallback(uint8_t param) //  timeout handshaking - nie nawi?zano polaczenia
 {
-  loRa.LoRa_Status = LoRa_transmit_Error;
+  loRa.LoRa_transmitStatus = LoRa_transmit_Error;
 
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   RADIO_standby();
@@ -986,7 +988,7 @@ void LoRa_TimerReconnectCallback(uint8_t param)
 
 void LoRa_TimerWaitAckCallback(uint8_t param)
 {
-loRa.LoRa_Status = LoRa_transmit_Error;
+  loRa.LoRa_transmitStatus = LoRa_transmit_Error;
 
   SwTimerStop(loRa.LoRa_TimerWaitAck);
   RADIO_standby();
