@@ -986,7 +986,12 @@ void LoRa_TimerReconnectCallback(uint8_t param)
 
 void LoRa_TimerWaitAckCallback(uint8_t param)
 {
+loRa.LoRa_Status = LoRa_transmit_Error;
 
+  SwTimerStop(loRa.LoRa_TimerWaitAck);
+  RADIO_standby();
+  RADIO_clearTransmitFlag();
+  RADIO_clearReceiveFlag();
 }
 
 void LORAWAN_ReceiveWindow1Callback(uint8_t param)
