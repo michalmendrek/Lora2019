@@ -1425,6 +1425,27 @@ static void RADIO_WatchdogTimeout(uint8_t param)
     }
 }
 
+void RADIO_clearTransmittingFlag(void)
+{
+  if((RadioConfiguration.flags & RADIO_FLAG_TRANSMITTING) != 0)
+    {
+      RadioConfiguration.flags &= ~RADIO_FLAG_TRANSMITTING;
+    }
+}
+
+void RADIO_clearReceivingFlag(void)
+{
+  if((RadioConfiguration.flags & RADIO_FLAG_RECEIVING) != 0)
+    {
+      RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
+    }
+}
+void RADIO_standby(void)
+{
+  RADIO_WriteMode(MODE_STANDBY, RadioConfiguration.modulation, 1);
+  RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+}
+
 int8_t RADIO_GetPacketSnr(void)
 {
   return RadioConfiguration.packetSNR;

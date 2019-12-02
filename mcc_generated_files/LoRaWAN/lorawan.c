@@ -972,9 +972,11 @@ void LORAWAN_ForceEnable(void)
 void LoRa_TimerHandshakingCallback(uint8_t param) //  timeout handshaking - nie nawi?zano polaczenia
 {
   loRa.LoRa_Status = LoRa_transmit_Error;
-  RADIO_ReceiveStop();
-  RADIO_ReleaseData();
+
   SwTimerStop(loRa.LoRa_TimerHandshaking);
+  RADIO_standby();
+  RADIO_clearTransmittingFlag();
+  RADIO_clearReceivingFlag();
 }
 
 void LoRa_TimerReconnectCallback(uint8_t param)
