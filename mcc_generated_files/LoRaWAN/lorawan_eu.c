@@ -127,7 +127,7 @@ static void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
 /****************************** FUNCTIONS *************************************/
 
-void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everything to the default values
+void LoRa_System_Init(void) // this function resets everything to the default values
 {
   // Allocate software timers and their callbacks
   loRa.LoRa_transmitStatus = LoRa_Idle;
@@ -150,9 +150,7 @@ void LoRa_System_Init(RxAppDataCb_t RxPayload) // this function resets everythin
   loRa.LoRa_ch0_params.dataRate = LoRa_CH0_datarate;
   //  loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
 
-  rxPayload.RxAppData = RxPayload;
-
-  RADIO_Init(&radioBuffer[16], EU868_CALIBRATION_FREQ);
+  RADIO_Init(LoRa_radioBuffer, EU868_CALIBRATION_FREQ);
 
   srand(RADIO_ReadRandom()); // for the loRa random function we need a seed that is obtained from the radio
 
@@ -232,13 +230,13 @@ void LoRa_Reset(IsmBand_t ismBandNew)
   loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
   if(ISM_EU868 == ismBandNew)
     {
-      RADIO_Init(&radioBuffer[16], EU868_CALIBRATION_FREQ);
+      RADIO_Init(LoRa_radioBuffer, EU868_CALIBRATION_FREQ);
 
       LoRa_InitDefault868Channels();
     }
   else
     {
-      RADIO_Init(&radioBuffer[16], EU433_CALIBRATION_FREQ);
+      RADIO_Init(LoRa_radioBuffer, EU433_CALIBRATION_FREQ);
 
       LoRa_InitDefault433Channels();
     }
@@ -326,7 +324,7 @@ void LORAWAN_Init(RxAppDataCb_t RxPayload, RxJoinResponseCb_t RxJoinResponse) //
   rxPayload.RxAppData = RxPayload;
   rxPayload.RxJoinResponse = RxJoinResponse;
 
-  RADIO_Init(&radioBuffer[16], EU868_CALIBRATION_FREQ);
+  RADIO_Init(&LoRa_radioBuffer[16], EU868_CALIBRATION_FREQ);
 
   srand(RADIO_ReadRandom()); // for the loRa random function we need a seed that is obtained from the radio
 
@@ -380,7 +378,7 @@ void LORAWAN_Reset(IsmBand_t ismBandNew)
   loRa.maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
   if(ISM_EU868 == ismBandNew)
     {
-      RADIO_Init(&radioBuffer[16], EU868_CALIBRATION_FREQ);
+      RADIO_Init(&LoRa_radioBuffer[16], EU868_CALIBRATION_FREQ);
 
       InitDefault868Channels();
 
@@ -389,7 +387,7 @@ void LORAWAN_Reset(IsmBand_t ismBandNew)
     }
   else
     {
-      RADIO_Init(&radioBuffer[16], EU433_CALIBRATION_FREQ);
+      RADIO_Init(&LoRa_radioBuffer[16], EU433_CALIBRATION_FREQ);
 
       InitDefault433Channels();
 

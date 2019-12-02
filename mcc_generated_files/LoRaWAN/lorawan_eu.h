@@ -182,16 +182,12 @@ extern "C"
     uint8_t syncWord;
     uint8_t txPower;
     FCnt_t fCntUp;
-
+/************************************************/
     //LoRa
     LoRaTransmitState_t LoRa_transmitStatus;
     LoRaStatus_t LoRa_StatusDanych;
-
     bool LoRa_initialised;
     FCnt_t LoRa_Counnter;
-
-
-
 
     ReceiveWindowParameters_t LoRa_receiveChannelParameters;
     uint8_t LoRa_lastUsedChannelIndex;

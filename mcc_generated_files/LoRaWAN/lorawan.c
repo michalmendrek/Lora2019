@@ -54,7 +54,7 @@ static const uint8_t macEndDevCmdReplyLen[] = {1, 2, 1, 2, 3, 2, 1};
 LoRa_t loRa;
 
 uint8_t macBuffer[MAXIMUM_BUFFER_LENGTH];
-uint8_t radioBuffer[MAXIMUM_BUFFER_LENGTH];
+uint8_t LoRa_radioBuffer[MAXIMUM_BUFFER_LENGTH];
 static uint8_t aesBuffer[AES_BLOCKSIZE];
 RxAppData_t rxPayload;
 
@@ -130,7 +130,7 @@ LorawanError_t LoRa_Send_Header(void)
     }
   else
     {
-      return LoRa_Seend_problem;
+      return LoRa_Send_problem;
     }
   return OK;
 }
@@ -163,7 +163,7 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
     }
   else
     {
-      return LoRa_Seend_problem;
+      return LoRa_Send_problem;
     }
 }
 
@@ -1425,9 +1425,9 @@ LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength)
                 }
 
               AssembleEncryptionBlock(1, hdr->members.fCnt, bufferLength - sizeof(computedMic), 0x49, MCAST_ENABLED);
-              memcpy(&radioBuffer[0], aesBuffer, sizeof(aesBuffer));
-              memcpy(&radioBuffer[16], buffer, bufferLength - sizeof(computedMic));
-              AESCmac(loRa.activationParameters.mcastNetworkSessionKey, aesBuffer, &radioBuffer[0], bufferLength - sizeof(computedMic) + sizeof(aesBuffer));
+              memcpy(&LoRa_radioBuffer[0], aesBuffer, sizeof(aesBuffer));
+              memcpy(&LoRa_radioBuffer[16], buffer, bufferLength - sizeof(computedMic));
+              AESCmac(loRa.activationParameters.mcastNetworkSessionKey, aesBuffer, &LoRa_radioBuffer[0], bufferLength - sizeof(computedMic) + sizeof(aesBuffer));
 
               memcpy(&computedMic, aesBuffer, sizeof(computedMic));
               extractedMic = ExtractMic(&buffer[0], bufferLength);
@@ -1508,7 +1508,7 @@ LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength)
                   frmPayloadLength = bufferLength - 8 - sizeof(extractedMic); //frmPayloadLength includes port
                   bufferIndex = 16 + 9;
 
-                  EncryptFRMPayload(buffer, frmPayloadLength - 1, 1, loRa.fMcastCntDown.value, loRa.activationParameters.mcastApplicationSessionKey, bufferIndex, radioBuffer, MCAST_ENABLED);
+                  EncryptFRMPayload(buffer, frmPayloadLength - 1, 1, loRa.fMcastCntDown.value, loRa.activationParameters.mcastApplicationSessionKey, bufferIndex, LoRa_radioBuffer, MCAST_ENABLED);
                   packet = buffer - 1;
                 }
               else
@@ -1543,9 +1543,9 @@ LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength)
             }
 
           AssembleEncryptionBlock(1, hdr->members.fCnt, bufferLength - sizeof(computedMic), 0x49, MCAST_DISABLED);
-          memcpy(&radioBuffer[0], aesBuffer, sizeof(aesBuffer));
-          memcpy(&radioBuffer[16], buffer, bufferLength - sizeof(computedMic));
-          AESCmac(loRa.activationParameters.networkSessionKey, aesBuffer, &radioBuffer[0], bufferLength - sizeof(computedMic) + sizeof(aesBuffer));
+          memcpy(&LoRa_radioBuffer[0], aesBuffer, sizeof(aesBuffer));
+          memcpy(&LoRa_radioBuffer[16], buffer, bufferLength - sizeof(computedMic));
+          AESCmac(loRa.activationParameters.networkSessionKey, aesBuffer, &LoRa_radioBuffer[0], bufferLength - sizeof(computedMic) + sizeof(aesBuffer));
 
           memcpy(&computedMic, aesBuffer, sizeof(computedMic));
           extractedMic = ExtractMic(&buffer[0], bufferLength);
@@ -1651,7 +1651,7 @@ LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength)
 
               if(fPort != 0)
                 {
-                  EncryptFRMPayload(buffer, frmPayloadLength - 1, 1, loRa.fCntDown.value, loRa.activationParameters.applicationSessionKey, bufferIndex, radioBuffer, MCAST_DISABLED);
+                  EncryptFRMPayload(buffer, frmPayloadLength - 1, 1, loRa.fCntDown.value, loRa.activationParameters.applicationSessionKey, bufferIndex, LoRa_radioBuffer, MCAST_DISABLED);
                   packet = buffer - 1;
                 }
               else
@@ -1660,7 +1660,7 @@ LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength)
                   if(bufferLength > (HDRS_MIC_PORT_MIN_SIZE + hdr->members.fCtrl.fOptsLen))
                     {
                       // Decrypt port 0 payload
-                      EncryptFRMPayload(buffer, frmPayloadLength - 1, 1, loRa.fCntDown.value, loRa.activationParameters.networkSessionKey, bufferIndex, radioBuffer, MCAST_DISABLED);
+                      EncryptFRMPayload(buffer, frmPayloadLength - 1, 1, loRa.fCntDown.value, loRa.activationParameters.networkSessionKey, bufferIndex, LoRa_radioBuffer, MCAST_DISABLED);
                       buffer = MacExecuteCommands(buffer, frmPayloadLength - 1);
                     }
 
@@ -2013,8 +2013,8 @@ static void AssemblePacket(bool confirmed, uint8_t port, uint8_t *buffer, uint16
     {
       // Use networkSessionKey for port 0 data
       //Use radioBuffer as a temporary buffer. The encrypted result is found in macBuffer
-      IncludeMacCommandsResponse(radioBuffer, &macCmdIdx, 0);
-      EncryptFRMPayload(radioBuffer, macCmdIdx, 0, loRa.fCntUp.value, loRa.activationParameters.networkSessionKey, bufferIndex, macBuffer, MCAST_DISABLED);
+      IncludeMacCommandsResponse(LoRa_radioBuffer, &macCmdIdx, 0);
+      EncryptFRMPayload(LoRa_radioBuffer, macCmdIdx, 0, loRa.fCntUp.value, loRa.activationParameters.networkSessionKey, bufferIndex, macBuffer, MCAST_DISABLED);
       bufferIndex = bufferIndex + macCmdIdx;
     }
 

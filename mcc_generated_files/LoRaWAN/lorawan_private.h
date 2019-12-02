@@ -347,7 +347,7 @@ extern "C"
   } DataRange_t;
 
   extern uint8_t macBuffer[];
-  extern uint8_t radioBuffer[];
+  extern uint8_t LoRa_radioBuffer[];
 
   extern RxAppData_t rxPayload;
 

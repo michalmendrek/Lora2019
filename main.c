@@ -85,7 +85,7 @@ void main(void)
   //INTERRUPT_PeripheralInterruptDisable();
 
   //  LORAWAN_Init(RxData, RxJoinResponse);
-  LoRa_System_Init(RxData);
+  LoRa_System_Init();
   //  LORAWAN_SetNetworkSessionKey(nwkSKey);
   //  LORAWAN_SetApplicationSessionKey(appSKey);
   //  LORAWAN_SetDeviceAddress(devAddr);
