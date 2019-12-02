@@ -353,6 +353,7 @@ void LoRa_RxTimeout(void)
       SwTimerStop(loRa.LoRa_TimerWaitAck);
       loRa.LoRa_Status = LoRa_SendFailed;
     }
+ RADIO_clearReceiveFlag();
 }
 
 void LORAWAN_Init(RxAppDataCb_t RxPayload, RxJoinResponseCb_t RxJoinResponse) // this function resets everything to the default values

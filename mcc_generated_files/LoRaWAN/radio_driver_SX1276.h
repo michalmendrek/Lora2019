@@ -219,6 +219,10 @@ extern "C"
 
   void RADIO_RegisterWrite(uint8_t reg, uint8_t value);
   uint8_t RADIO_RegisterRead(uint8_t reg);
+  
+  void RADIO_clearReceiveFlag(void);
+  void RADIO_clearTransmitFlag(void);
+  void RADIO_standby(void);
 
 
 #ifdef	__cplusplus
