@@ -527,7 +527,7 @@ void RADIO_SetLoRaSyncWord(uint8_t syncWord)
   RadioConfiguration.syncWordLoRa = syncWord;
 }
 
-void RADIO_flagsInit(void)
+void RADIO_clearFlag(void)
 {
   RadioConfiguration.flags=0;
 }
@@ -966,6 +966,7 @@ void RADIO_ReceiveStop(void)
 static void RADIO_RxDone(void)
 {
   uint8_t i, irqFlags;
+  bool Rx_success = false;
   irqFlags = RADIO_RegisterRead(REG_LORA_IRQFLAGS);
   // Clear RxDone interrupt (also CRC error and ValidHeader interrupts, if
   // they exist)
@@ -1000,6 +1001,7 @@ static void RADIO_RxDone(void)
 
           RadioConfiguration.packetSNR = RADIO_RegisterRead(REG_LORA_PKTSNRVALUE);
           RadioConfiguration.packetSNR /= (int8_t) 4;
+          Rx_success=true;
         }
       else
         {
@@ -1009,7 +1011,7 @@ static void RADIO_RxDone(void)
       RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
       //      LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
-      LoRa_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
+      LoRa_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, Rx_success);
     }
 }
 

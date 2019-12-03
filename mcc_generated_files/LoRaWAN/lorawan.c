@@ -192,7 +192,7 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
 
 void LoRa_EnterReceive(void)
 {
-  RADIO_flagsInit();
+  RADIO_clearFlag();
 
   ConfigureRadioRx(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
 
@@ -201,15 +201,28 @@ void LoRa_EnterReceive(void)
 
     }
 }
+LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength);
+LorawanError_t LoRa_RxDone_Fail(void);
 
-LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
+LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength, bool RX_success)
 {
-  RADIO_ReleaseData();
+  RADIO_clearFlag();
 
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
+  
+  if(RX_success)
+    {
+      LoRa_RxDone_OK(buffer, bufferLength);
+    }
+  else
+    {
+       LoRa_RxDone_Fail();
+    }
 
-
+}
+LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength)
+{
   if(loRa.LoRa_transmitStatus == LoRa_Handshaking_RX)
     {
       if((*buffer == loRa.LoRa_Addres)&&(bufferLength == 3))
@@ -219,7 +232,7 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
               loRa.LoRa_Command = buffer[1];
               if(loRa.LoRa_Command == 0)
                 {
-                  LoRa_SelectChannelForTransmission(loRa.LoRa_lastUsedChannelIndex, loRa.LoRa_lastUsedChannelIndex);
+                  ConfigureRadioTx(loRa.LoRa_sendChannelParameters.dataRate,loRa.LoRa_sendChannelParameters.frequency);
 
                   if(RADIO_Transmit(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
                     {
@@ -247,7 +260,10 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength)
 
   return OK;
 }
-
+LorawanError_t LoRa_RxDone_Fail(void)
+{
+  
+}
 void LoRa_UpdateMinMaxChDataRate(void)
 {
   uint8_t i;

@@ -59,7 +59,7 @@ extern "C"
   void LoRa_TxDone(uint16_t timeOnAir);
 
   LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength);
-  LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength);
+  LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength, bool RX_success);
   void LORAWAN_RxTimeout(void);
   void LoRa_RxTimeout(void);
 
