@@ -1036,8 +1036,10 @@ void LoRa_TimerHandshakingCallback(uint8_t param) //  timeout handshaking - nie 
   RADIO_clearFlag();
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
-
+  SwTimerStop(loRa.LoRa_TimerWaitAck);
   RADIO_standby();
+  RADIO_SwTimers_stop();
+  
   SwTimerSetTimeout(loRa.LoRa_TimerRetransmit, MS_TO_TICKS_LONG(LoRa_Retransmit_timeout));
   if(loRa.LoRa_Counnter.value < LoRa_Retransmit_trials)
     {
