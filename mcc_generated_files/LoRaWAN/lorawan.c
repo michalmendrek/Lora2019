@@ -252,7 +252,10 @@ LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength)
 
               if(loRa.LoRa_nextUsedChannel == buffer[1])
                 {
+                  SwTimerStop(loRa.LoRa_TimerWaitAck);
+                  RADIO_SwTimers_stop();
                   loRa.LoRa_transmitStatus = LoRa_Sent;
+                  loRa.LoRa_StatusDanych=LoRa_transmit_OK;
                 }
             }
         }

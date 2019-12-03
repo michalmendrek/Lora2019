@@ -962,7 +962,11 @@ void RADIO_ReceiveStop(void)
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
     }
 }
-
+void RADIO_SwTimers_stop(void)
+{
+  SwTimerStop(RadioConfiguration.timeOnAirTimerId);
+  SwTimerStop(RadioConfiguration.watchdogTimerId);
+}
 static void RADIO_RxDone(void)
 {
   uint8_t i, irqFlags;
