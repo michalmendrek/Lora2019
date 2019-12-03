@@ -210,17 +210,18 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength, bool RX_succes
 
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
-  
+
   if(RX_success)
     {
       LoRa_RxDone_OK(buffer, bufferLength);
     }
   else
     {
-       LoRa_RxDone_Fail();
+      LoRa_RxDone_Fail();
     }
 
 }
+
 LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength)
 {
   if(loRa.LoRa_transmitStatus == LoRa_Handshaking_RX)
@@ -232,7 +233,7 @@ LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength)
               loRa.LoRa_Command = buffer[1];
               if(loRa.LoRa_Command == 0)
                 {
-                  ConfigureRadioTx(loRa.LoRa_sendChannelParameters.dataRate,loRa.LoRa_sendChannelParameters.frequency);
+                  ConfigureRadioTx(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
                   if(RADIO_Transmit(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
                     {
@@ -255,7 +256,7 @@ LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength)
                   SwTimerStop(loRa.LoRa_TimerWaitAck);
                   RADIO_SwTimers_stop();
                   loRa.LoRa_transmitStatus = LoRa_Sent;
-                  loRa.LoRa_StatusDanych=LoRa_transmit_OK;
+                  loRa.LoRa_StatusDanych = LoRa_transmit_OK;
                 }
             }
         }
@@ -263,10 +264,12 @@ LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength)
 
   return OK;
 }
+
 LorawanError_t LoRa_RxDone_Fail(void)
 {
-  
+
 }
+
 void LoRa_UpdateMinMaxChDataRate(void)
 {
   uint8_t i;
@@ -1030,13 +1033,23 @@ void LoRa_TimerHandshakingCallback(uint8_t param) //  timeout handshaking - nie 
 {
   loRa.LoRa_transmitStatus = LoRa_transmit_Error;
 
+  RADIO_clearFlag();
   SwTimerStop(loRa.LoRa_TimerHandshaking);
+  SwTimerStop(loRa.LoRa_TimerWaitAck);
+
   RADIO_standby();
-  RADIO_clearTransmitFlag();
-  RADIO_clearReceiveFlag();
+  SwTimerSetTimeout(loRa.LoRa_TimerRetransmit, MS_TO_TICKS_LONG(LoRa_Retransmit_timeout));
+  if(loRa.LoRa_Counnter.value < LoRa_Retransmit_trials)
+    {
+      SwTimerStart(loRa.LoRa_TimerRetransmit);
+    }
+  else
+    {
+      loRa.LoRa_StatusDanych = LoRa_transmit_Fail;
+    }
 }
 
-void LoRa_TimerReconnectCallback(uint8_t param)
+void LoRa_TimerRetransmitCallback(uint8_t param)
 {
 
 }

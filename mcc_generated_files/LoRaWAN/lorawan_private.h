@@ -356,7 +356,7 @@ extern "C"
   // Callback functions
 
   void LoRa_TimerHandshakingCallback(uint8_t param);
-  void LoRa_TimerReconnectCallback(uint8_t param);
+  void LoRa_TimerRetransmitCallback(uint8_t param);
   void LoRa_TimerWaitAckCallback(uint8_t param);
 
   void LoRa_EnterReceive(void);

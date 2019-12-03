@@ -172,7 +172,7 @@ static void LoRa_CreateSoftwareTimers(void)
   //  loRa.dutyCycleTimerId = SwTimerCreate();
 
   loRa.LoRa_TimerHandshaking = SwTimerCreate();
-  loRa.LoRa_TimerReconnect = SwTimerCreate();
+  loRa.LoRa_TimerRetransmit = SwTimerCreate();
   loRa.LoRa_TimerWaitAck = SwTimerCreate();
 }
 
@@ -190,7 +190,7 @@ static void LoRa_SetCallbackSoftwareTimers(void)
   //  SwTimerSetCallback(loRa.dutyCycleTimerId, DutyCycleCallback, 0);
 
   SwTimerSetCallback(loRa.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback, 0);
-  SwTimerSetCallback(loRa.LoRa_TimerReconnect, LoRa_TimerReconnectCallback, 0);
+  SwTimerSetCallback(loRa.LoRa_TimerRetransmit, LoRa_TimerRetransmitCallback, 0);
   SwTimerSetCallback(loRa.LoRa_TimerWaitAck, LoRa_TimerWaitAckCallback, 0);
 }
 
@@ -208,7 +208,7 @@ static void LoRa_StopAllSoftwareTimers(void)
   //  SwTimerStop(loRa.dutyCycleTimerId);
 
   SwTimerStop(loRa.LoRa_TimerHandshaking);
-  SwTimerStop(loRa.LoRa_TimerReconnect);
+  SwTimerStop(loRa.LoRa_TimerRetransmit);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
 }
 
@@ -1160,7 +1160,7 @@ static void CreateAllSoftwareTimers(void)
   loRa.dutyCycleTimerId = SwTimerCreate();
 
   loRa.LoRa_TimerHandshaking = SwTimerCreate();
-  loRa.LoRa_TimerReconnect = SwTimerCreate();
+  loRa.LoRa_TimerRetransmit = SwTimerCreate();
   loRa.LoRa_TimerWaitAck = SwTimerCreate();
 }
 
@@ -1178,7 +1178,7 @@ static void SetCallbackSoftwareTimers(void)
   SwTimerSetCallback(loRa.dutyCycleTimerId, DutyCycleCallback, 0);
 
   SwTimerSetCallback(loRa.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback, 0);
-  SwTimerSetCallback(loRa.LoRa_TimerReconnect, LoRa_TimerReconnectCallback, 0);
+  SwTimerSetCallback(loRa.LoRa_TimerRetransmit, LoRa_TimerRetransmitCallback, 0);
   SwTimerSetCallback(loRa.LoRa_TimerWaitAck, LoRa_TimerWaitAckCallback, 0);
 }
 
@@ -1196,7 +1196,7 @@ static void StopAllSoftwareTimers(void)
   SwTimerStop(loRa.dutyCycleTimerId);
 
   SwTimerStop(loRa.LoRa_TimerHandshaking);
-  SwTimerStop(loRa.LoRa_TimerReconnect);
+  SwTimerStop(loRa.LoRa_TimerRetransmit);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
 }
 

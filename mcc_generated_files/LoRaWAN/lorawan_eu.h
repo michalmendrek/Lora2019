@@ -199,7 +199,7 @@ extern "C"
 
     uint8_t LoRa_Addres; //LoRa  adres device
     uint8_t LoRa_TimerHandshaking; //LoRa  czas do zakonczenia handshakingu
-    uint8_t LoRa_TimerReconnect; //LoRa  czas po ktorym mozna probowac reconnect
+    uint8_t LoRa_TimerRetransmit; //LoRa  czas po ktorym mozna probowac reconnect
     uint8_t LoRa_TimerWaitAck; //LoRa  czas oczekiwania na ACK po wyslaniu danych
     uint8_t LoRa_HeaderBufor[4]; //
     uint8_t LoRa_HeaderLength;
@@ -221,6 +221,8 @@ extern "C"
 #define LoRa_Handshaking_timeout 20 //ms
 #define LoRa_ACK_timeout  200 //ms
 #define LoRa_Transmit_timeout 200 //ms
+#define LoRa_Retransmit_timeout 500 //ms
+#define LoRa_Retransmit_trials  5
   /*************************** FUNCTIONS PROTOTYPE ******************************/
   void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
