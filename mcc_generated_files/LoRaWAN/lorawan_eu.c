@@ -123,7 +123,7 @@ static void EnableChannels1(uint16_t channelMask, uint8_t channelMaskCntl, uint8
 
 static void DutyCycleCallback(uint8_t param);
 
-static void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
+void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
 /****************************** FUNCTIONS *************************************/
 
@@ -132,8 +132,8 @@ void LoRa_System_Init(void) // this function resets everything to the default va
   // Allocate software timers and their callbacks
   loRa.LoRa_transmitStatus = LoRa_Idle;
   loRa.LoRa_StatusDanych = LoRa_transmitIdle;
-  loRa.LoRa_Counnter.value=0;
-  
+  loRa.LoRa_Counnter.value = 0;
+
   if(loRa.LoRa_initialised == DISABLED)
     {
       //      CreateAllSoftwareTimers();
@@ -155,7 +155,7 @@ void LoRa_System_Init(void) // this function resets everything to the default va
   srand(RADIO_ReadRandom()); // for the loRa random function we need a seed that is obtained from the radio
 
   LoRa_Reset(ISM_EU868);
-  
+
 }
 
 static void LoRa_CreateSoftwareTimers(void)
@@ -304,7 +304,7 @@ void LoRa_RxTimeout(void)
       SwTimerStop(loRa.LoRa_TimerWaitAck);
       loRa.LoRa_transmitStatus = LoRa_SendFailed;
     }
- RADIO_clearReceiveFlag();
+  RADIO_clearReceiveFlag();
 }
 
 void LORAWAN_Init(RxAppDataCb_t RxPayload, RxJoinResponseCb_t RxJoinResponse) // this function resets everything to the default values
@@ -1122,15 +1122,9 @@ LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t chan
   loRa.LoRa_lastUsedChannelIndex = channelRxIndex;
   loRa.LoRa_receiveChannelParameters.frequency = Channels[channelRxIndex].frequency;
   loRa.LoRa_receiveChannelParameters.dataRate = loRa.LoRa_currentDataRate;
+  loRa.LoRa_sendChannelParameters.frequency = Channels[channelRxIndex].frequency;
+  loRa.LoRa_sendChannelParameters.dataRate = loRa.LoRa_currentDataRate;
 
-  if(channelTx == 0)
-    {
-      ConfigureRadioTx(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
-    }
-  else
-    {
-      ConfigureRadioTx(loRa.LoRa_currentDataRate, loRa.LoRa_receiveChannelParameters.frequency);
-    }
   return result;
 }
 
@@ -1482,7 +1476,7 @@ static void DutyCycleCallback(uint8_t param)
     }
 }
 
-static void ConfigureRadioTx(uint8_t dataRate, uint32_t freq)
+void ConfigureRadioTx(uint8_t dataRate, uint32_t freq)
 {
   int8_t txPower;
 

@@ -115,9 +115,32 @@ extern void UpdateCfList(uint8_t bufferLength, JoinAccept_t *joinAccept);
 uint8_t localDioStatus;
 
 /****************************** PUBLIC FUNCTIONS ******************************/
+LorawanError_t LoRa_Send_Data(void)
+{
+  LorawanError_t result;
+
+  ConfigureRadioTx(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
+
+  if(RADIO_Transmit(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+    {
+      loRa.LoRa_StatusDanych = LoRa_transmiting;
+
+      //      loRa.lorawanMacStatus.synchronization = ENABLED; //set the synchronization flag because one packet was sent (this is a guard for the the RxAppData of the user)
+      loRa.LoRa_transmitStatus = LoRa_SendData_TX; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
+      SwTimerSetTimeout(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_ACK_timeout));
+    }
+  else
+    {
+      return LoRa_Send_problem;
+    }
+  return OK;
+}
+
 LorawanError_t LoRa_Send_Header(void)
 {
   LorawanError_t result;
+
+  ConfigureRadioTx(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
 
   if(RADIO_Transmit(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
@@ -152,7 +175,7 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
     }
   uint8_t channel = Random(LoRa_Chann_nr) + 1;
 
-  result = LoRa_SelectChannelForTransmission(0, channel);
+  result = LoRa_SelectChannelForTransmission(channel, channel);
 
   //      AssemblePacket(confirmed, port, buffer, bufferLength);
   LoRa_AssemblePacket(buffer, bufferLength, channel);

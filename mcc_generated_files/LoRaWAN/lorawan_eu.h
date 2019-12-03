@@ -182,17 +182,18 @@ extern "C"
     uint8_t syncWord;
     uint8_t txPower;
     FCnt_t fCntUp;
-/************************************************/
+    /************************************************/
     //LoRa
     LoRaTransmitState_t LoRa_transmitStatus;
     LoRaStatus_t LoRa_StatusDanych;
     bool LoRa_initialised;
     FCnt_t LoRa_Counnter;
 
-    ReceiveWindowParameters_t LoRa_receiveChannelParameters;
     uint8_t LoRa_lastUsedChannelIndex;
     uint8_t LoRa_nextUsedChannel;
     ReceiveWindowParameters_t LoRa_ch0_params;
+    ReceiveWindowParameters_t LoRa_sendChannelParameters;
+    ReceiveWindowParameters_t LoRa_receiveChannelParameters;
     uint8_t LoRa_txPower;
 
 
@@ -218,9 +219,10 @@ extern "C"
 
   extern LoRa_t loRa;
 #define LoRa_Handshaking_timeout 20 //ms
+#define LoRa_ACK_timeout  200 //ms
 #define LoRa_Transmit_timeout 200 //ms
   /*************************** FUNCTIONS PROTOTYPE ******************************/
-
+  void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
 #ifdef	__cplusplus
 }
