@@ -140,6 +140,7 @@ extern "C"
 
 
   void RADIO_Init(uint8_t *radioBuffer, uint32_t frequency);
+  void RADIO_flagsInit(void);
   void RADIO_SetLoRaSyncWord(uint8_t syncWord);
   uint8_t RADIO_GetLoRaSyncWord(void);
 

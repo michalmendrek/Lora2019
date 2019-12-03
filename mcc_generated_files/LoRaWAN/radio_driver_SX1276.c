@@ -527,6 +527,10 @@ void RADIO_SetLoRaSyncWord(uint8_t syncWord)
   RadioConfiguration.syncWordLoRa = syncWord;
 }
 
+void RADIO_flagsInit(void)
+{
+  RadioConfiguration.flags=0;
+}
 uint8_t RADIO_GetLoRaSyncWord(void)
 {
   return RadioConfiguration.syncWordLoRa;

@@ -192,12 +192,11 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
 
 void LoRa_EnterReceive(void)
 {
-  RADIO_ReceiveStop();
-  RADIO_ReleaseData();
+  RADIO_flagsInit();
 
   ConfigureRadioRx(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
 
-  if(RADIO_ReceiveStart(CLASS_C_RX_WINDOW_SIZE) != OK)
+  if(RADIO_ReceiveStart(4) != OK)
     {
 
     }
