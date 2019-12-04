@@ -363,18 +363,6 @@ extern "C"
 
   void LoRa_UpdateMinMaxChDataRate(void);
 
-  void LORAWAN_ReceiveWindow1Callback(uint8_t param);
-
-  reentrant void LORAWAN_ReceiveWindow2Callback(uint8_t param);
-
-  void LORAWAN_LinkCheckCallback(uint8_t param);
-
-  void AckRetransmissionCallback(uint8_t param);
-
-  void UnconfirmedTransmissionCallback(uint8_t param);
-
-  void AutomaticReplyCallback(uint8_t param);
-
   // Update and validation functions
 
   void UpdateCurrentDataRate(uint8_t valueNew);
@@ -382,8 +370,6 @@ extern "C"
   void UpdateTxPower(uint8_t txPowerNew);
 
   void UpdateRetransmissionAckTimeoutState(void);
-
-  void UpdateJoinSuccessState(uint8_t param);
 
   void UpdateMinMaxChDataRate(void);
 

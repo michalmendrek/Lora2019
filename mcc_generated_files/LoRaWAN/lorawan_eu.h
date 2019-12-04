@@ -156,29 +156,14 @@ extern "C"
     uint8_t counterRepetitionsConfirmedUplink;
     uint8_t lastUsedChannelIndex;
     uint16_t prescaler;
-    uint8_t linkCheckMargin;
-    uint8_t linkCheckGwCnt;
     uint8_t currentDataRate;
-    uint8_t batteryLevel;
-
-    uint8_t joinAccept1TimerId;
-    uint8_t joinAccept2TimerId;
-    uint8_t receiveWindow1TimerId;
-    uint8_t receiveWindow2TimerId;
-    uint8_t automaticReplyTimerId;
-    uint8_t linkCheckTimerId;
-    uint8_t ackTimeoutTimerId;
-    uint8_t dutyCycleTimerId;
-    uint8_t unconfirmedRetransmisionTimerId;
+    
     uint8_t minDataRate;
     uint8_t maxDataRate;
     uint8_t maxChannels;
     uint8_t counterAdrAckDelay;
     uint8_t offset;
     bool macInitialized;
-    bool rx2DelayExpired;
-    bool abpJoinStatus;
-    uint8_t abpJoinTimerId;
     uint8_t syncWord;
     uint8_t txPower;
     FCnt_t fCntUp;
