@@ -138,11 +138,6 @@ extern "C"
     LoRaClass_t deviceClass; //del
     ReceiveWindowParameters_t receiveWindow1Parameters;
     ReceiveWindowParameters_t receiveWindow2Parameters;
-    ActivationParameters_t activationParameters;
-
-    IsmBand_t ismBand;
-    uint8_t crtMacCmdIndex;
-    LorawanCommands_t macCommands[MAX_NB_CMD_TO_PROCESS];
 
     uint16_t devNonce;
     uint16_t lastPacketLength;
@@ -193,7 +188,7 @@ extern "C"
 #define LoRa_Retransmit_timeout 500 //ms
 #define LoRa_Retransmit_trials  5
   /*************************** FUNCTIONS PROTOTYPE ******************************/
-  void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
+  void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
 #ifdef	__cplusplus
 }

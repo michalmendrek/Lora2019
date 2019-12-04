@@ -103,7 +103,7 @@ static void LoRa_UpdateChannelIdStatus(uint8_t channelId, bool statusNew);
 
 static LorawanError_t ValidateRxOffset(uint8_t rxOffset);
 
-static LorawanError_t ValidateFrequency(uint32_t frequencyNew);
+static LorawanError_t LoRa_ValidateFrequency(uint32_t frequencyNew);
 
 static LorawanError_t ValidateDataRange(uint8_t dataRangeNew);
 
@@ -121,7 +121,7 @@ static LorawanError_t ValidateChannelMask(uint16_t channelMask);
 
 static void EnableChannels1(uint16_t channelMask, uint8_t channelMaskCntl, uint8_t channelIndexMin, uint8_t channelIndexMax);
 
-void ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
+void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
 /****************************** FUNCTIONS *************************************/
 
@@ -379,7 +379,7 @@ LorawanError_t LORAWAN_SetFrequency(uint8_t channelId, uint32_t frequencyNew)
 {
   LorawanError_t result = OK;
 
-  if((ValidateChannelId(channelId, 0) != OK) || (ValidateFrequency(frequencyNew) != OK))
+  if((ValidateChannelId(channelId, 0) != OK) || (LoRa_ValidateFrequency(frequencyNew) != OK))
     {
       return INVALID_PARAMETER;
     }
@@ -417,9 +417,9 @@ uint16_t LORAWAN_GetDutyCycle(uint8_t channelId)
   return result;
 }
 
-uint8_t LORAWAN_GetIsmBand(void) //returns the ISM band
+uint8_t LoRa_GetIsmBand(void) //returns the ISM band
 {
-  return loRa.ismBand;
+  return loRa.LoRa_ismBand;
 }
 
 void LORAWAN_TxDone(uint16_t timeOnAir)
@@ -446,11 +446,11 @@ LorawanError_t ValidateDataRate(uint8_t dataRate)
   return result;
 }
 
-LorawanError_t ValidateTxPower(uint8_t txPowerNew)
+LorawanError_t LoRa_ValidateTxPower(uint8_t txPowerNew)
 {
   LorawanError_t result = OK;
 
-  if(((ISM_EU868 == loRa.ismBand) && (0 == txPowerNew)) || (txPowerNew > 5))
+  if(((ISM_EU868 == loRa.LoRa_ismBand) && (0 == txPowerNew)) || (txPowerNew > 5))
     {
       result = INVALID_PARAMETER;
     }
@@ -506,7 +506,7 @@ void UpdateCfList(uint8_t bufferLength, JoinAccept_t *joinAccept)
           frequency *= 100;
           if(frequency != 0)
             {
-              if(ValidateFrequency(frequency) == OK)
+              if(LoRa_ValidateFrequency(frequency) == OK)
                 {
                   LoRa_Channels[i + channelIndex].frequency = frequency;
                   LoRa_Channels[i + channelIndex].dataRange.max = DR5;
@@ -711,11 +711,11 @@ static LorawanError_t ValidateRxOffset(uint8_t rxOffset)
   return result;
 }
 
-static LorawanError_t ValidateFrequency(uint32_t frequencyNew)
+static LorawanError_t LoRa_ValidateFrequency(uint32_t frequencyNew)
 {
   LorawanError_t result = OK;
 
-  if(ISM_EU868 == loRa.ismBand)
+  if(ISM_EU868 == loRa.LoRa_ismBand)
     {
       if((frequencyNew > FREQ_870000KHZ) || (frequencyNew < FREQ_863000KHZ))
         {
@@ -876,13 +876,13 @@ static void LoRa_DutyCycleCallback(uint8_t param)
     }
 }
 
-void ConfigureRadioTx(uint8_t dataRate, uint32_t freq)
+void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq)
 {
   int8_t txPower;
 
   ConfigureRadio(dataRate, freq);
 
-  if(ISM_EU868 == loRa.ismBand)
+  if(ISM_EU868 == loRa.LoRa_ismBand)
     {
       txPower = txPower868[loRa.LoRa_txPower];
     }

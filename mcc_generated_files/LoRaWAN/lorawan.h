@@ -250,53 +250,7 @@ extern "C"
    */
   LorawanError_t LORAWAN_SetMcast(bool status);
 
-  /**
-   * @Summary
-   *  Returns the status of multicast
-   * @Description
-   *  This function return the status of the multicast
-   * @Preconditions
-   *  None
-   * @Param
-      None
-   * @Returns
-      true: multicast is enabled
-      false: multicast is disabled
-   * @Example
-   */
-  bool LORAWAN_GetMcast(void);
-
-  /**
-   * @Summary
-   *  Multicast device address set.
-   * @Description
-   *  This function sets device multicast address.
-   * @Preconditions
-   *  None
-   * @Param
-      mcastDeviceAddressNew - new value of the multicast device address.
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetMcastDeviceAddress(uint32_t mcastDeviceAddressNew);
-
-  /**
-   * @Summary
-   *  Multicast device address get.
-   * @Description
-   *  This function returns the value of the device multicast address.
-   * @Preconditions
-   *  None
-   * @Param
-      None
-   * @Returns
-      Device multicast address value.
-   * @Example
-   */
-  uint32_t LORAWAN_GetMcastDeviceAddress(void);
-
-  /**
+       /**
    * @Summary
    *  Multicast network session key set.
    * @Description
@@ -311,118 +265,8 @@ extern "C"
    */
   void LORAWAN_SetMcastNetworkSessionKey(uint8_t *mcastNetworkSessionKeyNew);
 
-  /**
-   * @Summary
-   *  Multicast network session key get.
-   * @Description
-   *  This function gets the value of the multicast network session key.
-   * @Preconditions
-   *  None
-   * @Param
-      mcastNetworkSessionKey - address where the value will be copied.
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_GetMcastNetworkSessionKey(uint8_t *mcastNetworkSessionKey);
-
-  /**
-   * @Summary
-   *  Multicast application session key set.
-   * @Description
-   *  This function sets the value of the multicast application session key.
-   * @Preconditions
-   *  None
-   * @Param
-      mcastApplicationSessionKeyNew - address where the new value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetMcastApplicationSessionKey(uint8_t *mcastApplicationSessionKeyNew);
-
-  /**
-   * @Summary
-   *  Multicast application session key get.
-   * @Description
-   *  This function gets the value of the multicast application session key.
-   * @Preconditions
-   *  None
-   * @Param
-      mcastApplicationSessionKey - address where the value will be copied
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_GetMcastApplicationSessionKey(uint8_t *mcastApplicationSessionKey);
-
-  /**
-   * @Summary
-      Function sets the end-device identifier.
-   * @Description
-      This function sets the end-device identifier (DevEUI).
-      The DevEUI is a global end-device ID in IEEE EUI64 address space that uniquely identifies end-device.
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      deviceEuiNew - buffer where EUI is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetDeviceEui(uint8_t *deviceEuiNew);
-
-  /**
-   * @Summary
-      Gets the value of the end-device identifier.
-   * @Description
-      This function gets the end-device identifier (DevEUI).
-      The DevEUI is a global end-device ID in IEEE EUI64 address space that uniquely identifies end-device.
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      deviceEui - buffer where the value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_GetDeviceEui(uint8_t *deviceEui);
-
+   
     /**
-   * @Summary
-      Gets the value of the application identifier.
-   * @Description
-      This function gets the end-device Application identifier (AppEUI)
-      The AppEUI is a global application ID in IEEE EUI64 address space that uniquely
-      identifies the application provider (i.e. owner) of the end-device.
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      applicationEui - buffer where the value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_GetApplicationEui(uint8_t *applicationEui);
-
-  
-  /**
-   * @Summary
-      Returns the address of end-device.
-   * @Description
-      This function gets the end-device address (DevAddr)
-      The DevAddr is a 32bit identifier of the end-device within the current network.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      32 bits device address.
-   * @Example
-   */
-  uint32_t LORAWAN_GetDeviceAddress(void);
-
-  /**
     @Summary
    * Sets LoRa class.
     @Description
@@ -479,79 +323,7 @@ extern "C"
    */
   uint32_t LORAWAN_GetMcastDownCounter();
 
-    /**
-   * @Summary
-      Gets the network session key.
-   * @Description
-      This function gets the Network Session key (NwkSKey).
-      The NwkSKey is a network session key specific for the end-device and
-      it is used to calculate and verify the MIC (message integrity code).
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      networkSessionKey - buffer where the value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_GetNetworkSessionKey(uint8_t *networkSessionKey);
-
-  
-  /**
-   * @Summary
-      Gets the application key.
-   * @Description
-      This function gets the Application Key (AppKey).
-      The AppKey is an AES-128 application key specific for the end-device that is assigned by the application owner to the end-device.
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      applicationKey - buffer where the value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_GetApplicationKey(uint8_t *applicationKey);
-
-  /**
-   * @Summary
-      Sets the adaptive data rate mode
-   * @Description
-      This function sets the Adaptive Data Rate (ADR) mode.
-      LoRa network allows the end-devices to individually use any of the possible data rates, this is referred to as Adaptive Data Rate (ADR).
-      If the ADR is set, the network will control the data rate of the end-device through the appropriate MAC commands.
-      If the ADR is not set, the network will not attempt to control the data rate of the end-device regardless of the received signal quality.
-   * @Preconditions
-      None
-   * @Param
-      status - true/false
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetAdr(bool status);
-
-  /**
-   * @Summary
-      Returns the adaptive data rate mode
-   * @Description
-      This function returns the Adaptive Data Rate (ADR) mode.
-      LoRa network allows the end-devices to individually use any of the possible
-      data rates, this is referred to as Adaptive Data Rate (ADR).
-      If the ADR is set, the network will control the data rate of the end-device
-      through the appropriate MAC commands.
-      If the ADR is not set, the network will not attempt to control the data rate
-      of the end-device regardless of the received signal quality.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      true/false
-   * @Example
-   */
-  bool LORAWAN_GetAdr(void);
-
+    
   /**
    * @Summary
       Sets the data rate for the next uplink.
@@ -1384,7 +1156,7 @@ extern "C"
       Returns ISB Band Type (IsmBand_t)                       
    * @Example
    */
-  uint8_t LORAWAN_GetIsmBand(void);
+  uint8_t LoRa_GetIsmBand(void);
 
 
   /**

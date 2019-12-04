@@ -78,17 +78,12 @@ static uint8_t* ExecuteRxTimingSetup(uint8_t *ptr);
 
 static void PrepareSessionKeys(uint8_t* sessionKey, uint8_t* appNonce, uint8_t* networkId);
 
-static void ComputeSessionKeys(JoinAccept_t *joinAcceptBuffer);
-
-static uint8_t CountfOptsLength(void);
 
 static void UpdateJoinInProgress(uint8_t state);
 
 static void CheckFlags(Hdr_t* hdr);
 
 static uint8_t CheckMcastFlags(Hdr_t* hdr);
-
-static void AssembleEncryptionBlock(uint8_t dir, uint32_t frameCounter, uint8_t blockId, uint8_t firstByte, uint8_t multicastStatus);
 
 static uint32_t ExtractMic(uint8_t *buffer, uint8_t bufferLength);
 
@@ -111,7 +106,7 @@ LorawanError_t LoRa_Send_Data(void)
 {
   LorawanError_t result;
 
-  ConfigureRadioTx(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
+  LoRa_ConfigureRadioTx(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
   if(RADIO_Transmit(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
@@ -132,7 +127,7 @@ LorawanError_t LoRa_Send_Header(void)
 {
   LorawanError_t result;
 
-  ConfigureRadioTx(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
+  LoRa_ConfigureRadioTx(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
 
   if(RADIO_Transmit(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
@@ -224,7 +219,7 @@ LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength)
               loRa.LoRa_Command = buffer[1];
               if(loRa.LoRa_Command == 0)
                 {
-                  ConfigureRadioTx(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
+                  LoRa_ConfigureRadioTx(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
                   if(RADIO_Transmit(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
                     {
@@ -396,19 +391,6 @@ LorawanError_t LORAWAN_SetMcast(bool status)
 {
   }
 
-bool LORAWAN_GetMcast(void)
-{
-  }
-
-void LORAWAN_SetMcastDeviceAddress(uint32_t mcastDeviceAddressNew)
-{
-}
-
-uint32_t LORAWAN_GetMcastDeviceAddress(void)
-{
-  return loRa.activationParameters.mcastDeviceAddress.value;
-}
-
 void LORAWAN_SetMcastNetworkSessionKey(uint8_t *mcastNetworkSessionKeyNew)
 {
   }
@@ -417,61 +399,7 @@ void LORAWAN_SetMcastApplicationSessionKey(uint8_t *mcastApplicationSessionKeyNe
 {
 }
 
-void LORAWAN_GetMcastApplicationSessionKey(uint8_t *mcastApplicationSessionKey)
-{
-  if(mcastApplicationSessionKey != NULL)
-    {
-      memcpy(mcastApplicationSessionKey, loRa.activationParameters.mcastApplicationSessionKey, 16);
-    }
-}
 
-void LORAWAN_GetMcastNetworkSessionKey(uint8_t *mcastNetworkSessionKey)
-{
-  if(mcastNetworkSessionKey != NULL)
-    {
-      memcpy(mcastNetworkSessionKey, loRa.activationParameters.mcastNetworkSessionKey, sizeof(loRa.activationParameters.mcastNetworkSessionKey));
-    }
-}
-
-void LORAWAN_SetDeviceEui(uint8_t *deviceEuiNew)
-{
-}
-
-void LORAWAN_GetDeviceEui(uint8_t *deviceEui)
-{
-  memcpy(deviceEui, loRa.activationParameters.deviceEui.buffer, sizeof(loRa.activationParameters.deviceEui));
-}
-
-void LORAWAN_GetApplicationEui(uint8_t *applicationEui)
-{
-  memcpy(applicationEui, loRa.activationParameters.applicationEui.buffer, sizeof(loRa.activationParameters.applicationEui));
-}
-
-uint32_t LORAWAN_GetDeviceAddress(void)
-{
-  return loRa.activationParameters.deviceAddress.value;
-}
-
-void LORAWAN_GetNetworkSessionKey(uint8_t *networkSessionKey)
-{
-  memcpy(networkSessionKey, loRa.activationParameters.networkSessionKey, sizeof(loRa.activationParameters.networkSessionKey));
-}
-
-void LORAWAN_GetApplicationKey(uint8_t *applicationKey)
-{
-  memcpy(applicationKey, loRa.activationParameters.applicationKey, sizeof(loRa.activationParameters.applicationKey));
-}
-
-void LORAWAN_SetAdr(bool status)
-{
-  loRa.macStatus.adr = status;
-  loRa.lorawanMacStatus.adrAckRequest = DISABLED; // this flag should only be on when ADR is set and the adr ack counter is bigger than adr ack limit
-}
-
-bool LORAWAN_GetAdr(void)
-{
-  return loRa.macStatus.adr;
-}
 
 LorawanError_t LoRa_SetCurrentDataRate(uint8_t valueNew)
 {
@@ -497,7 +425,7 @@ LorawanError_t LORAWAN_SetTxPower(uint8_t txPowerNew)
 {
   LorawanError_t result = OK;
 
-  if(ValidateTxPower(txPowerNew) == OK)
+  if(LoRa_ValidateTxPower(txPowerNew) == OK)
     {
       LoRa_UpdateTxPower(txPowerNew);
     }
@@ -891,86 +819,6 @@ static uint8_t LoRa_GetMaxPayloadSize(void)
 
 static uint8_t* MacExecuteCommands(uint8_t *buffer, uint8_t fOptsLen)
 {
-  bool done = false;
-  uint8_t *ptr;
-  ptr = buffer;
-  while((ptr < (buffer + fOptsLen)) && (done == false))
-    {
-      //Clean structure before using it         
-      loRa.macCommands[loRa.crtMacCmdIndex].channelMaskAck = 0;
-      loRa.macCommands[loRa.crtMacCmdIndex].dataRateAck = 0;
-      loRa.macCommands[loRa.crtMacCmdIndex].powerAck = 0;
-      loRa.macCommands[loRa.crtMacCmdIndex].channelAck = 0;
-      loRa.macCommands[loRa.crtMacCmdIndex].dataRateReceiveWindowAck = 0;
-      loRa.macCommands[loRa.crtMacCmdIndex].rx1DROffestAck = 0;
-      loRa.macCommands[loRa.crtMacCmdIndex].dataRateRangeAck = 0;
-      loRa.macCommands[loRa.crtMacCmdIndex].channelFrequencyAck = 0;
-
-      //Reply has the same value as request
-      loRa.macCommands[loRa.crtMacCmdIndex].receivedCid = *ptr;
-
-      switch(*ptr++)
-        {
-          case LINK_CHECK_CID:
-            {
-              // No reply to server is needed 
-              loRa.macCommands[loRa.crtMacCmdIndex].receivedCid = INVALID_VALUE;
-            }
-            break;
-
-          case LINK_ADR_CID:
-            {
-              ptr = ExecuteLinkAdr(ptr);
-            }
-            break;
-
-          case DUTY_CYCLE_CID:
-            {
-              ptr = ExecuteDutyCycle(ptr);
-            }
-            break;
-
-          case RX2_SETUP_CID:
-            {
-              ptr = ExecuteRxParamSetupReq(ptr);
-            }
-            break;
-
-          case DEV_STATUS_CID:
-            {
-              ptr = ExecuteDevStatus(ptr);
-            }
-            break;
-
-          case NEW_CHANNEL_CID:
-            {
-              ptr = ExecuteNewChannel(ptr);
-
-            }
-            break;
-
-          case RX_TIMING_SETUP_CID:
-            {
-              ptr = ExecuteRxTimingSetup(ptr);
-            }
-            break;
-
-          default:
-            {
-              done = true; // Unknown MAC commands cannot be skipped and the first unknown MAC command terminates the processing of the MAC command sequence.
-              ptr = buffer + fOptsLen;
-              loRa.macCommands[loRa.crtMacCmdIndex].receivedCid = INVALID_VALUE;
-            }
-            break;
-        }
-
-      if((loRa.macCommands[loRa.crtMacCmdIndex].receivedCid != INVALID_VALUE) &&
-         (loRa.crtMacCmdIndex < MAX_NB_CMD_TO_PROCESS))
-        {
-          loRa.crtMacCmdIndex++;
-        }
-    }
-  return ptr;
 }
 
 static uint8_t* ExecuteRxTimingSetup(uint8_t *ptr)
@@ -1059,17 +907,6 @@ static void PrepareSessionKeys(uint8_t* sessionKey, uint8_t* appNonce, uint8_t* 
 
 }
 
-static void ComputeSessionKeys(JoinAccept_t *joinAcceptBuffer)
-{
-  PrepareSessionKeys(loRa.activationParameters.applicationSessionKey, joinAcceptBuffer->members.appNonce, joinAcceptBuffer->members.networkId);
-  loRa.activationParameters.applicationSessionKey[0] = 0x02; // used for Network Session Key
-  AESEncodeLoRa(loRa.activationParameters.applicationSessionKey, loRa.activationParameters.applicationKey);
-
-  PrepareSessionKeys(loRa.activationParameters.networkSessionKey, joinAcceptBuffer->members.appNonce, joinAcceptBuffer->members.networkId);
-  loRa.activationParameters.networkSessionKey[0] = 0x01; // used for Network Session Key
-  AESEncodeLoRa(loRa.activationParameters.networkSessionKey, loRa.activationParameters.applicationKey);
-}
-
 //Based on the last packet received, this function checks the flags and updates the state accordingly
 
 static void CheckFlags(Hdr_t* hdr)
@@ -1132,58 +969,6 @@ static uint8_t CheckMcastFlags(Hdr_t* hdr)
   return FLAG_OK;
 }
 
-static uint8_t CountfOptsLength(void)
-{
-  uint8_t i, macCommandLength = 0;
-
-  for(i = 0; i < loRa.crtMacCmdIndex; i++)
-    {
-      if(loRa.macCommands[i].receivedCid != INVALID_VALUE)
-        {
-          if((macCommandLength + macEndDevCmdReplyLen[loRa.macCommands[i].receivedCid - 2]) <= MAX_FOPTS_LEN)
-            {
-              macCommandLength += macEndDevCmdReplyLen[loRa.macCommands[i].receivedCid - 2];
-            }
-          else
-            {
-              break;
-            }
-        }
-    }
-
-  return macCommandLength;
-}
-
-static void AssembleEncryptionBlock(uint8_t dir, uint32_t frameCounter, uint8_t blockId, uint8_t firstByte, uint8_t multicastStatus)
-{
-  uint8_t bufferIndex = 0;
-
-  memset(aesBuffer, 0, sizeof(aesBuffer)); //clear the aesBuffer
-
-  aesBuffer[bufferIndex] = firstByte;
-
-  bufferIndex = bufferIndex + 5; // 4 bytes of 0x00 (done with memset at the beginning of the function)
-
-  aesBuffer[bufferIndex++] = dir;
-
-  if(DISABLED == multicastStatus)
-    {
-      memcpy(&aesBuffer[bufferIndex], &loRa.activationParameters.deviceAddress, sizeof(loRa.activationParameters.deviceAddress));
-      bufferIndex = bufferIndex + sizeof(loRa.activationParameters.deviceAddress);
-    }
-  else
-    {
-      memcpy(&aesBuffer[bufferIndex], &loRa.activationParameters.mcastDeviceAddress, sizeof(loRa.activationParameters.mcastDeviceAddress));
-      bufferIndex = bufferIndex + sizeof(loRa.activationParameters.mcastDeviceAddress);
-    }
-
-  memcpy(&aesBuffer[bufferIndex], &frameCounter, sizeof(frameCounter));
-  bufferIndex = bufferIndex + sizeof(frameCounter);
-
-  bufferIndex++; // 1 byte of 0x00 (done with memset at the beginning of the function)
-
-  aesBuffer[bufferIndex] = blockId;
-}
 
 static uint32_t ExtractMic(uint8_t *buffer, uint8_t bufferLength)
 {
@@ -1210,9 +995,7 @@ static void EncryptFRMPayload(uint8_t* buffer, uint8_t bufferLength, uint8_t dir
   k = bufferLength / AES_BLOCKSIZE;
   for(i = 1; i <= k; i++)
     {
-      AssembleEncryptionBlock(dir, frameCounter, i, 0x01, multicastStatus);
-      AESEncodeLoRa(aesBuffer, key);
-
+     
       for(j = 0; j < AES_BLOCKSIZE; j++)
         {
           bufferToBeEncrypted[macBufferIndex++] = aesBuffer[j] ^ buffer[AES_BLOCKSIZE * (i - 1) + j];
@@ -1221,9 +1004,7 @@ static void EncryptFRMPayload(uint8_t* buffer, uint8_t bufferLength, uint8_t dir
 
   if((bufferLength % AES_BLOCKSIZE) != 0)
     {
-      AssembleEncryptionBlock(dir, frameCounter, i, 0x01, multicastStatus);
-      AESEncodeLoRa(aesBuffer, key);
-
+     
       for(j = 0; j < (bufferLength % AES_BLOCKSIZE); j++)
         {
           bufferToBeEncrypted[macBufferIndex++] = aesBuffer[j] ^ buffer[(AES_BLOCKSIZE * k) + j];

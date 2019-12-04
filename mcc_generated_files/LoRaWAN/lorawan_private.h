@@ -94,7 +94,7 @@ extern "C"
 #define FPORT_MIN                               1
 #define FPORT_MAX                               223
 
-#define MAX_NB_CMD_TO_PROCESS                   16     
+//#define MAX_NB_CMD_TO_PROCESS                   16     
 
   //13 = sizeof(MIC) + MHDR + FHDR + sizeof (fPort);
 #define HDRS_MIC_PORT_MIN_SIZE 13 
@@ -378,7 +378,7 @@ extern "C"
 
   LorawanError_t ValidateDataRate(uint8_t dataRate);
 
-  LorawanError_t ValidateTxPower(uint8_t txPowerNew);
+  LorawanError_t LoRa_ValidateTxPower(uint8_t txPowerNew);
 
   //Initialization functions
 
