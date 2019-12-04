@@ -1430,7 +1430,7 @@ static void RADIO_WatchdogTimeout(uint8_t param)
     {
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
       //      LORAWAN_RxTimeout();
-      LoRa_RxTimeout();
+      LoRa_RxWdtTimeout();
     }
   else if((RadioConfiguration.flags & RADIO_FLAG_TRANSMITTING) != 0)
     {
@@ -1440,7 +1440,7 @@ static void RADIO_WatchdogTimeout(uint8_t param)
       // transmit this whole time, so this is the safest way to go (block the
       // channel for a really long time from now on).
       //      LORAWAN_TxDone(RadioConfiguration.watchdogTimerTimeout);
-      LoRa_TxDone(RadioConfiguration.watchdogTimerTimeout);
+      LoRa_TxWdtTimeout();
     }
 }
 

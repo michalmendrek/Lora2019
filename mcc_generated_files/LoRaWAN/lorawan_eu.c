@@ -97,7 +97,7 @@ static LorawanError_t LoRa_ValidateDataRange(uint8_t dataRangeNew);
 
 static LorawanError_t LoRa_ValidateChannelId(uint8_t channelId, bool allowedForDefaultChannels);
 
-static void LoRa_UpdateFrequency(uint8_t channelId, uint32_t frequencyNew);
+static void LoRa_ChannelUpdateFrequency(uint8_t channelId, uint32_t frequencyNew);
 
 void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
@@ -291,7 +291,7 @@ LorawanError_t LoRa_SetFrequency(uint8_t channelId, uint32_t frequencyNew)
       return INVALID_PARAMETER;
     }
 
-  LoRa_UpdateFrequency(channelId, frequencyNew);
+  LoRa_ChannelUpdateFrequency(channelId, frequencyNew);
 
   return result;
 }
@@ -477,7 +477,7 @@ static LorawanError_t LoRa_ValidateChannelId(uint8_t channelId, bool allowedForD
   return result;
 }
 
-static void LoRa_UpdateFrequency(uint8_t channelId, uint32_t frequencyNew)
+static void LoRa_ChannelUpdateFrequency(uint8_t channelId, uint32_t frequencyNew)
 {
   LoRa_Channels[channelId].frequency = frequencyNew;
   LoRa_Channels[channelId].parametersDefined |= FREQUENCY_DEFINED;

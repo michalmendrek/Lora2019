@@ -91,6 +91,7 @@ void main(void)
     {
       // Add your application code
       LoRa_Mainloop();
+      
       if(loRa.LoRa_StatusDanych == LoRa_transmitIdle)
         {
           LoRa_Reset(ISM_EU868);

@@ -229,9 +229,7 @@ extern "C"
       unsigned adr : 1;
     };
   } FCtrl_t;
-
-  // Mac header structure
-
+  
    //Protocol parameters
 
   typedef struct

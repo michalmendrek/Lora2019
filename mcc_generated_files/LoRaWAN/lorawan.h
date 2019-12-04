@@ -177,7 +177,7 @@ extern "C"
   void LoRa_System_Init(void);
 
   void LoRa_Reset(IsmBand_t ismBandNew);
-    
+
   /**
    * @Summary
       Sets the data rate for the next uplink.
@@ -262,18 +262,18 @@ extern "C"
    */
   uint8_t LoRa_GetSyncWord(void);
 
-    /**
+  /**
    * @Summary
-      Function sets the current downlink counter.
+    Function sets the current downlink counter.
    * @Description
-      This function sets the current downlink counter used during the communication.
-      This may be used to synchronize the downlink counter with the value stored by the server.
+    This function sets the current downlink counter used during the communication.
+    This may be used to synchronize the downlink counter with the value stored by the server.
    * @Preconditions
-      None
+    None
    * @Param
-      ctr - value of the new counter
+    ctr - value of the new counter
    * @Returns
-      None
+    None
    * @Example
    */
   void LoRa_SetCounter(uint32_t ctr);
@@ -294,7 +294,7 @@ extern "C"
    */
   uint32_t LoRa_GetCounter(void);
 
- 
+
   /**
    * @Summary
       Function sets battery level.
@@ -370,18 +370,18 @@ extern "C"
    */
   uint8_t LoRa_GetDataRange(uint8_t channelId);
 
-    /**
+  /**
    * @Summary
-      Sets the frequency of the given channel.
+    Sets the frequency of the given channel.
    * @Description
-      This function sets the frequency on the requested "channelId" to a new value.
+    This function sets the frequency on the requested "channelId" to a new value.
    * @Preconditions
-      None
+    None
    * @Param
-      channelId - the given channel
-      frequencyNew - the new frequency value (the value must be provided in Hz).
+    channelId - the given channel
+    frequencyNew - the new frequency value (the value must be provided in Hz).
    * @Returns
-      Returns LoRaWAN Error type (LorawanError_t)
+    Returns LoRaWAN Error type (LorawanError_t)
    * @Example
    */
   LorawanError_t LoRa_SetFrequency(uint8_t channelId, uint32_t frequencyNew);
@@ -400,6 +400,11 @@ extern "C"
    * @Example
    */
   uint8_t LoRa_GetIsmBand(void);
+
+  void LoRa_PrepareRetransmit(void);
+  
+  void LoRa_TxWdtTimeout(void);
+  void LoRa_RxWdtTimeout(void);
 
 
   /**

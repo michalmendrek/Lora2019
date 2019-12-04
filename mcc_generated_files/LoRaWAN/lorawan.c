@@ -356,6 +356,11 @@ void LoRa_SetBattery(uint8_t batteryLevelNew)
 
 void LoRa_TimerHandshakingCallback(uint8_t param) //  timeout handshaking - nie nawi?zano polaczenia
 {
+  LoRa_PrepareRetransmit();
+}
+
+void LoRa_PrepareRetransmit(void)
+{
   loRa.LoRa_transmitStatus = LoRa_transmit_Error;
 
   RADIO_clearFlag();
@@ -390,6 +395,16 @@ void LoRa_TimerWaitAckCallback(uint8_t param)
   RADIO_standby();
   RADIO_clearTransmitFlag();
   RADIO_clearReceiveFlag();
+}
+
+void LoRa_TxWdtTimeout(void)
+{
+  LoRa_PrepareRetransmit();
+}
+
+void LoRa_RxWdtTimeout(void)
+{
+  LoRa_PrepareRetransmit();
 }
 
 void LoRa_UpdateCurrentDataRate(uint8_t valueNew)
