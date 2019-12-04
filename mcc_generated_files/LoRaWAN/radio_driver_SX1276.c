@@ -529,8 +529,9 @@ void RADIO_SetLoRaSyncWord(uint8_t syncWord)
 
 void RADIO_clearFlag(void)
 {
-  RadioConfiguration.flags=0;
+  RadioConfiguration.flags = 0;
 }
+
 uint8_t RADIO_GetLoRaSyncWord(void)
 {
   return RadioConfiguration.syncWordLoRa;
@@ -962,11 +963,13 @@ void RADIO_ReceiveStop(void)
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
     }
 }
+
 void RADIO_SwTimers_stop(void)
 {
   SwTimerStop(RadioConfiguration.timeOnAirTimerId);
   SwTimerStop(RadioConfiguration.watchdogTimerId);
 }
+
 static void RADIO_RxDone(void)
 {
   uint8_t i, irqFlags;
@@ -1005,7 +1008,7 @@ static void RADIO_RxDone(void)
 
           RadioConfiguration.packetSNR = RADIO_RegisterRead(REG_LORA_PKTSNRVALUE);
           RadioConfiguration.packetSNR /= (int8_t) 4;
-          Rx_success=true;
+          Rx_success = true;
         }
       else
         {
@@ -1450,6 +1453,7 @@ void RADIO_clearReceiveFlag(void)
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
     }
 }
+
 void RADIO_standby(void)
 {
   RADIO_WriteMode(MODE_STANDBY, RadioConfiguration.modulation, 1);
