@@ -83,22 +83,6 @@ extern "C"
 
   /***************************** TYPEDEFS ***************************************/
 
-  typedef union
-  {
-    uint8_t joinAcceptCounter[29];
-
-    struct
-    {
-      Mhdr_t mhdr;
-      uint8_t appNonce[3];
-      uint8_t networkId[3];
-      DeviceAddress_t deviceAddress;
-      DlSettings_t DLSettings;
-      uint8_t rxDelay;
-      uint8_t cfList[16];
-    } members;
-  } JoinAccept_t;
-
   //Channel parameters
 
   typedef struct
@@ -112,21 +96,6 @@ extern "C"
     uint8_t parametersDefined;
     uint8_t LoRa_datarate;
   } ChannelParams_t;
-
-  typedef union
-  {
-    uint16_t value;
-
-    struct
-    {
-      unsigned ackRequiredFromNextDownlinkMessage : 1; //if set, the next downlink message should have the ACK bit set because an ACK is needed for the end device
-      unsigned ackRequiredFromNextUplinkMessage : 1; //if set, the next uplink message should have the ACK bit set because an ACK is needed for the server
-      unsigned joining : 1;
-      unsigned fPending : 1;
-      unsigned adrAckRequest : 1;
-      unsigned synchronization : 1; //if set, there is no need to send immediately a packet because the application sent one from the callback
-    };
-  } LorawanMacStatus_t;
 
   typedef struct
   {

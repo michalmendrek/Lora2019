@@ -93,15 +93,11 @@ static void LoRa_UpdateChannelIdStatus(uint8_t channelId, bool statusNew);
 
 static LorawanError_t LoRa_ValidateFrequency(uint32_t frequencyNew);
 
-static LorawanError_t ValidateDataRange(uint8_t dataRangeNew);
+static LorawanError_t LoRa_ValidateDataRange(uint8_t dataRangeNew);
 
 static LorawanError_t LoRa_ValidateChannelId(uint8_t channelId, bool allowedForDefaultChannels);
 
-static LorawanError_t ValidateChannelMaskCntl(uint8_t channelMaskCntl);
-
 static void LoRa_UpdateFrequency(uint8_t channelId, uint32_t frequencyNew);
-
-static LorawanError_t ValidateChannelMask(uint16_t channelMask);
 
 void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
@@ -263,7 +259,7 @@ LorawanError_t LoRa_SetDataRange(uint8_t channelId, uint8_t dataRangeNew)
 {
   LorawanError_t result = OK;
 
-  if((LoRa_ValidateChannelId(channelId, ALL_CHANNELS) != OK) || (ValidateDataRange(dataRangeNew) != OK))
+  if((LoRa_ValidateChannelId(channelId, ALL_CHANNELS) != OK) || (LoRa_ValidateDataRange(dataRangeNew) != OK))
     {
       result = INVALID_PARAMETER;
     }
@@ -307,7 +303,7 @@ uint8_t LoRa_GetIsmBand(void) //returns the ISM band
 
 // this function is called by the radio when the first or the second receive window expired without receiving any message (either for join accept or for message)
 
-LorawanError_t ValidateDataRate(uint8_t dataRate)
+LorawanError_t LoRa_ValidateDataRate(uint8_t dataRate)
 {
   LorawanError_t result = OK;
 
@@ -454,7 +450,7 @@ static LorawanError_t LoRa_ValidateFrequency(uint32_t frequencyNew)
   return result;
 }
 
-static LorawanError_t ValidateDataRange(uint8_t dataRangeNew)
+static LorawanError_t LoRa_ValidateDataRange(uint8_t dataRangeNew)
 {
   LorawanError_t result = OK;
   uint8_t dataRateMax, dataRateMin;
@@ -462,7 +458,7 @@ static LorawanError_t ValidateDataRange(uint8_t dataRangeNew)
   dataRateMin = dataRangeNew & LAST_NIBBLE;
   dataRateMax = (dataRangeNew & FIRST_NIBBLE) >> SHIFT4;
 
-  if((ValidateDataRate(dataRateMax) != OK) || (ValidateDataRate(dataRateMin) != OK) || (dataRateMax < dataRateMin))
+  if((LoRa_ValidateDataRate(dataRateMax) != OK) || (LoRa_ValidateDataRate(dataRateMin) != OK) || (dataRateMax < dataRateMin))
     {
       result = INVALID_PARAMETER;
     }
@@ -481,49 +477,10 @@ static LorawanError_t LoRa_ValidateChannelId(uint8_t channelId, bool allowedForD
   return result;
 }
 
-static LorawanError_t ValidateChannelMaskCntl(uint8_t channelMaskCntl)
-{
-  LorawanError_t result = OK;
-
-  if((channelMaskCntl != 0) && (channelMaskCntl != 6))
-    {
-      result = INVALID_PARAMETER;
-    }
-
-  return result;
-}
-
 static void LoRa_UpdateFrequency(uint8_t channelId, uint32_t frequencyNew)
 {
   LoRa_Channels[channelId].frequency = frequencyNew;
   LoRa_Channels[channelId].parametersDefined |= FREQUENCY_DEFINED;
-}
-
-static LorawanError_t ValidateChannelMask(uint16_t channelMask)
-{
-  uint8_t i = 0;
-
-  if(channelMask != 0x0000U)
-    {
-      for(i = 0; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
-        {
-          if(((channelMask & BIT0) == BIT0) && ((LoRa_Channels[i].parametersDefined & (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED)) != (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED))) // if the channel mask sent enables a yet undefined channel, the command is discarded and the device state is not changed
-            {
-              return INVALID_PARAMETER;
-            }
-          else
-            {
-              channelMask = channelMask >> SHIFT1;
-            }
-        }
-
-      return OK;
-    }
-  else
-    {
-      //ChMask set to 0x0000 in ADR may be used as a DoS attack so receiving this results in an error
-      return INVALID_PARAMETER;
-    }
 }
 
 static void LoRa_DutyCycleCallback(uint8_t param)

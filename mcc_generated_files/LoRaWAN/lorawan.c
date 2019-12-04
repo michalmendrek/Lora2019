@@ -53,10 +53,8 @@ static const uint8_t macEndDevCmdReplyLen[] = {1, 2, 1, 2, 3, 2, 1};
 
 LoRa_t loRa;
 
-uint8_t macBuffer[MAXIMUM_BUFFER_LENGTH];
 uint8_t LoRa_radioBuffer[MAXIMUM_BUFFER_LENGTH];
 static uint8_t aesBuffer[AES_BLOCKSIZE];
-RxAppData_t rxPayload;
 
 extern const uint8_t LoRa_maxPayloadSize[];
 extern ChannelParams_t LoRa_Channels[];
@@ -70,11 +68,9 @@ uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr);
 
 static uint8_t LoRa_GetMaxPayloadSize(void);
 
-static bool FindSmallestDataRate(void);
+static bool LoRa_FindSmallestDataRate(void);
 
-static void SetReceptionNotOkState(void);
-
-static void ConfigureRadioRx(uint8_t dataRate, uint32_t freq);
+static void LoRa_ConfigureRadioRx(uint8_t dataRate, uint32_t freq);
 
 uint8_t localDioStatus;
 
@@ -157,7 +153,7 @@ void LoRa_EnterReceive(void)
 {
   RADIO_clearFlag();
 
-  ConfigureRadioRx(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
+  LoRa_ConfigureRadioRx(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
 
   if(RADIO_ReceiveStart(4) != OK)
     {
@@ -292,7 +288,7 @@ LorawanError_t LoRa_SetCurrentDataRate(uint8_t valueNew)
 {
   // the current data rate cannot be smaller than the minimum data rate defined for all the channels or bigger than the maximum data rate defined for all the channels
 
-  if((valueNew < loRa.LoRa_minDataRate) || (valueNew > loRa.LoRa_maxDataRate) || (ValidateDataRate(valueNew) != OK))
+  if((valueNew < loRa.LoRa_minDataRate) || (valueNew > loRa.LoRa_maxDataRate) || (LoRa_ValidateDataRate(valueNew) != OK))
     {
       return INVALID_PARAMETER;
     }
@@ -308,7 +304,7 @@ uint8_t LoRa_GetCurrentDataRate(void)
   return loRa.LoRa_currentDataRate;
 }
 
-LorawanError_t LORAWAN_SetTxPower(uint8_t txPowerNew)
+LorawanError_t LoRa_SetTxPower(uint8_t txPowerNew)
 {
   LorawanError_t result = OK;
 
@@ -457,7 +453,7 @@ static bool LoRa_FindSmallestDataRate(void)
   return found;
 }
 
-static void ConfigureRadioRx(uint8_t dataRate, uint32_t freq)
+static void LoRa_ConfigureRadioRx(uint8_t dataRate, uint32_t freq)
 {
   LoRa_ConfigureRadio(dataRate, freq);
   RADIO_SetCRC(DISABLED);

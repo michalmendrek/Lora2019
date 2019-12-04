@@ -139,12 +139,6 @@ extern "C"
 
   /*************************** FUNCTIONS PROTOTYPE ******************************/
 
-  typedef struct
-  {
-    void (*RxAppData)(uint8_t* pData, uint8_t dataLength, OpStatus_t status);
-    void (*RxJoinResponse)(bool status);
-  } RxAppData_t;
-
   typedef void (*RxAppDataCb_t)(uint8_t* pData, uint8_t dataLength, OpStatus_t status);
   typedef void (*RxJoinResponseCb_t)(bool status);
 
@@ -204,24 +198,6 @@ extern "C"
 
   /**
    * @Summary
-      Returns the data rate for the next uplink.
-   * @Description
-      Communication between end-devices and gateways is spread out on different
-      frequency channels and data rates.
-      The selection of the data rate is a trade-off between communication range and
-      message duration, communications with different data rates do not interfere with each other.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      Returns the value of data rate for the next uplink (uint8_t).
-   * @Example
-   */
-  uint8_t LORAWAN_GetCurrentDataRate(void);
-
-  /**
-   * @Summary
       Sets TX output power.
    * @Description
       The TX output power (TXPower) is region-specific.
@@ -235,7 +211,7 @@ extern "C"
       Return LoRaWAN Error type (LorawanError_t).
    * @Example
    */
-  LorawanError_t LORAWAN_SetTxPower(uint8_t txPowerNew);
+  LorawanError_t LoRa_SetTxPower(uint8_t txPowerNew);
 
   /**
    * @Summary
@@ -335,39 +311,7 @@ extern "C"
       None
    * @Example
    */
-  void LORAWAN_SetBattery(uint8_t batteryLevelNew);
-
-    /**
-   * @Summary
-      Function returns a decimal number representing the demodulation margin.
-   * @Description
-      This function will return the demodulation margin as received in the last Link Check Answer frame.
-      Please refer to the LoRaWAN Specification V1.0 for the description of the values.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      Margin value (uint8_t).
-   * @Example
-   */
-  uint8_t LORAWAN_GetLinkCheckMargin(void);
-
-  /**
-   * @Summary
-      Function returns a decimal dumber representing the number of gateways.
-   * @Description
-      This function will return the number of gateways that successfully received the last
-      Link Check Request frame command, as received in the last Link Check Answer.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      Number of gateways (uint8_t).
-   * @Example
-   */
-  uint8_t LORAWAN_GetLinkCheckGwCnt(void);
+  void LoRa_SetBattery(uint8_t batteryLevelNew);
 
   /**
    * @Summary

@@ -232,45 +232,7 @@ extern "C"
 
   // Mac header structure
 
-  typedef union
-  {
-    uint8_t value;
-
-    struct
-    {
-      uint8_t major : 2;
-      uint8_t rfu : 3;
-      uint8_t mType : 3;
-    } bits;
-  } Mhdr_t;
-
-  typedef union
-  {
-    uint8_t fHdrCounter[23];
-
-    struct
-    {
-      Mhdr_t mhdr;
-      DeviceAddress_t devAddr;
-      FCtrl_t fCtrl;
-      uint16_t fCnt;
-      uint8_t MacCommands[15];
-    } members;
-  } Hdr_t;
-
-  typedef union
-  {
-    uint8_t value;
-
-    struct
-    {
-      uint8_t rx2DataRate : 4;
-      uint8_t rx1DROffset : 3;
-      uint8_t rfu : 1;
-    } bits;
-  } DlSettings_t;
-
-  //Protocol parameters
+   //Protocol parameters
 
   typedef struct
   {
@@ -285,38 +247,7 @@ extern "C"
     uint8_t adrAckDelay;
   } ProtocolParams_t;
 
-  typedef struct
-  {
-    uint8_t receivedCid;
-    unsigned channelMaskAck : 1; // used for link adr answer
-    unsigned dataRateAck : 1; // used for link adr answer
-    unsigned powerAck : 1; // used for link adr answer
-    unsigned channelAck : 1; // used for RX param setup request
-    unsigned dataRateReceiveWindowAck : 1; // used for RX param setup request
-    unsigned rx1DROffestAck : 1; // used for RX param setup request
-    unsigned dataRateRangeAck : 1; // used for new channel answer
-    unsigned channelFrequencyAck : 1; // used for new channel answer
-  } LorawanCommands_t;
-
-  typedef union
-  {
-    uint16_t value;
-
-    struct
-    {
-      unsigned deviceEui : 1; //if set, device EUI was defined
-      unsigned applicationEui : 1;
-      unsigned deviceAddress : 1;
-      unsigned applicationKey : 1;
-      unsigned networkSessionKey : 1;
-      unsigned applicationSessionKey : 1;
-      unsigned mcastApplicationSessionKey : 1;
-      unsigned mcastNetworkSessionKey : 1;
-      unsigned mcastDeviceAddress : 1;
-    };
-  } LorawanMacKeys_t;
-
-  typedef struct
+    typedef struct
   {
     uint32_t frequency;
     uint8_t dataRate;
@@ -335,10 +266,7 @@ extern "C"
     };
   } DataRange_t;
 
-  extern uint8_t macBuffer[];
   extern uint8_t LoRa_radioBuffer[];
-
-  extern RxAppData_t rxPayload;
 
   /*************************** FUNCTIONS PROTOTYPE ******************************/
 
@@ -359,7 +287,7 @@ extern "C"
   void LoRa_UpdateTxPower(uint8_t txPowerNew);
 
 
-  LorawanError_t ValidateDataRate(uint8_t dataRate);
+  LorawanError_t LoRa_ValidateDataRate(uint8_t dataRate);
 
   LorawanError_t LoRa_ValidateTxPower(uint8_t txPowerNew);
 
