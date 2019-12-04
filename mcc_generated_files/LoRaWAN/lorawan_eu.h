@@ -139,7 +139,6 @@ extern "C"
     ReceiveWindowParameters_t receiveWindow1Parameters;
     ReceiveWindowParameters_t receiveWindow2Parameters;
     ActivationParameters_t activationParameters;
-    ChannelParams_t channelParameters;
 
     IsmBand_t ismBand;
     LorawanMacKeys_t macKeys;
@@ -154,11 +153,10 @@ extern "C"
     uint8_t counterRepetitionsConfirmedUplink;
     uint8_t lastUsedChannelIndex;
     uint16_t prescaler;
-    uint8_t currentDataRate;
 
-    uint8_t minDataRate;
-    uint8_t maxDataRate;
-    uint8_t maxChannels;
+//    uint8_t minDataRate;
+//    uint8_t maxDataRate;
+//    uint8_t maxChannels;
     uint8_t counterAdrAckDelay;
     uint8_t offset;
     bool macInitialized;

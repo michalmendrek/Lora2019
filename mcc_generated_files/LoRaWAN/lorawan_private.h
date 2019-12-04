@@ -365,13 +365,11 @@ extern "C"
 
   // Update and validation functions
 
-  void UpdateCurrentDataRate(uint8_t valueNew);
+  void LoRa_UpdateCurrentDataRate(uint8_t valueNew);
 
   void UpdateTxPower(uint8_t txPowerNew);
 
   void UpdateRetransmissionAckTimeoutState(void);
-
-  void UpdateMinMaxChDataRate(void);
 
 
   void UpdateReceiveWindow2Parameters(uint32_t frequency, uint8_t dataRate);

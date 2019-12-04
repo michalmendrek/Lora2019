@@ -667,7 +667,7 @@ extern "C"
       Return LoRaWAN Error type (LorawanError_t).
    * @Example
    */
-  LorawanError_t LORAWAN_SetCurrentDataRate(uint8_t valueNew);
+  LorawanError_t LoRa_SetCurrentDataRate(uint8_t valueNew);
 
   /**
    * @Summary
@@ -1300,7 +1300,7 @@ extern "C"
       The frequency of the given channel (value returned is in Hz).
    * @Example
    */
-  uint32_t LORAWAN_GetFrequency(uint8_t channelId);
+  uint32_t LoRa_GetFrequency(uint8_t channelId);
 
   /**
    * @Summary
@@ -1326,7 +1326,7 @@ extern "C"
       ...
       <code>
    */
-  LorawanError_t LORAWAN_SetDataRange(uint8_t channelId, uint8_t dataRangeNew);
+  LorawanError_t LoRa_SetDataRange(uint8_t channelId, uint8_t dataRangeNew);
 
   /**
    * @Summary

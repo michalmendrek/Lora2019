@@ -43,10 +43,10 @@
 const uint8_t rxWindowSize[] = {8, 10, 14, 26, 49, 88, 60, 8};
 
 // Max Payload Size 
-const uint8_t maxPayloadSize[8] = {51, 51, 51, 115, 242, 242, 242, 56}; // for FSK max message size should be 64 bytes
+const uint8_t LoRa_maxPayloadSize[8] = {51, 51, 51, 115, 242, 242, 242, 56}; // for FSK max message size should be 64 bytes
 
 // Channels by ism band
-ChannelParams_t Channels[MAX_EU_SINGLE_BAND_CHANNELS];
+ChannelParams_t LoRa_Channels[MAX_EU_SINGLE_BAND_CHANNELS];
 
 static const int8_t rxWindowOffset[] = {-33, -50, -58, -62, -66, -68, -15, -2};
 
@@ -97,9 +97,9 @@ static void InitDefault868Channels(void);
 
 static void InitDefault433Channels(void);
 
-static void UpdateDataRange(uint8_t channelId, uint8_t dataRangeNew);
+static void LoRa_UpdateDataRange(uint8_t channelId, uint8_t dataRangeNew);
 
-static void UpdateChannelIdStatus(uint8_t channelId, bool statusNew);
+static void LoRa_UpdateChannelIdStatus(uint8_t channelId, bool statusNew);
 
 static LorawanError_t ValidateRxOffset(uint8_t rxOffset);
 
@@ -210,21 +210,21 @@ void LoRa_Reset(IsmBand_t ismBandNew)
 
   loRa.LoRa_currentDataRate = DR0;
 
-  UpdateMinMaxChDataRate();
+  LoRa_UpdateMinMaxChDataRate();
 }
 
 static void LoRa_InitDefault868Channels(void)
 {
   uint8_t i;
 
-  memset(Channels, 0, sizeof(Channels));
-  memcpy(Channels, DefaultChannels868, sizeof(DefaultChannels868));
+  memset(LoRa_Channels, 0, sizeof(LoRa_Channels));
+  memcpy(LoRa_Channels, DefaultChannels868, sizeof(DefaultChannels868));
   for(i = 3; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
     {
       // for undefined channels the duty cycle should be a very big value, and the data range a not-valid value
       //duty cycle 0 means no duty cycle limitation, the bigger the duty cycle value, the greater the limitation
-      Channels[i].dutyCycle = UINT16_MAX;
-      Channels[i].dataRange.value = UINT8_MAX;
+      LoRa_Channels[i].dutyCycle = UINT16_MAX;
+      LoRa_Channels[i].dataRange.value = UINT8_MAX;
     }
 }
 
@@ -232,14 +232,14 @@ static void LoRa_InitDefault433Channels(void)
 {
   uint8_t i;
 
-  memset(Channels, 0, sizeof(Channels));
-  memcpy(Channels, DefaultChannels433, sizeof(DefaultChannels433));
+  memset(LoRa_Channels, 0, sizeof(LoRa_Channels));
+  memcpy(LoRa_Channels, DefaultChannels433, sizeof(DefaultChannels433));
   for(i = 3; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
     {
       // for undefined channels the duty cycle should be a very big value, and the data range a not-valid value
       //duty cycle 0 means no duty cycle limitation, the bigger the duty cycle value, the greater the limitation
-      Channels[i].dutyCycle = UINT16_MAX;
-      Channels[i].dataRange.value = UINT8_MAX;
+      LoRa_Channels[i].dutyCycle = UINT16_MAX;
+      LoRa_Channels[i].dataRange.value = UINT8_MAX;
     }
 }
 
@@ -299,97 +299,20 @@ void LORAWAN_Init(RxAppDataCb_t RxPayload, RxJoinResponseCb_t RxJoinResponse) //
 
 void LORAWAN_Reset(IsmBand_t ismBandNew)
 {
-  if(loRa.macInitialized == ENABLED)
-    {
-      StopAllSoftwareTimers();
-    }
-
-  loRa.syncWord = 0x34;
-  RADIO_SetLoRaSyncWord(loRa.syncWord);
-
-  loRa.macStatus.value = 0;
-  loRa.XXX_lastTimerValue = 0;
-  loRa.lastPacketLength = 0;
-  loRa.fCntDown.value = 0;
-  loRa.fCntUp.value = 0;
-  loRa.devNonce = 0;
-  loRa.prescaler = 1;
-  loRa.counterAdrAckDelay = 0;
-  loRa.offset = 0;
-
-  // link check mechanism should be disabled
-  loRa.macStatus.linkCheck = DISABLED;
-
-  //flags all 0-es
-  loRa.macStatus.value = 0;
-  loRa.lorawanMacStatus.value = 0;
-
-  loRa.maxRepetitionsConfirmedUplink = 7; // 7 retransmissions should occur for each confirmed frame sent until ACK is received
-  loRa.maxRepetitionsUnconfirmedUplink = 0; // 0 retransmissions should occur for each unconfirmed frame sent until a response is received
-  loRa.counterRepetitionsConfirmedUplink = 1;
-  loRa.counterRepetitionsUnconfirmedUplink = 1;
-
-  loRa.ismBand = ismBandNew;
-
-  loRa.deviceClass = CLASS_A;
-
-  // initialize default channels
-  loRa.maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
-  if(ISM_EU868 == ismBandNew)
-    {
-      RADIO_Init(&LoRa_radioBuffer[16], EU868_CALIBRATION_FREQ);
-
-      InitDefault868Channels();
-
-      loRa.receiveWindow2Parameters.dataRate = EU868_DEFAULT_RX_WINDOW2_DR;
-      loRa.receiveWindow2Parameters.frequency = EU868_DEFAULT_RX_WINDOW2_FREQ;
-    }
-  else
-    {
-      RADIO_Init(&LoRa_radioBuffer[16], EU433_CALIBRATION_FREQ);
-
-      InitDefault433Channels();
-
-      loRa.receiveWindow2Parameters.dataRate = EU433_DEFAULT_RX_WINDOW2_DR;
-      loRa.receiveWindow2Parameters.frequency = EU433_DEFAULT_RX_WINDOW2_FREQ;
-    }
-
-  loRa.txPower = 1;
-
-  loRa.currentDataRate = DR0;
-
-  UpdateMinMaxChDataRate();
-
-  //keys will be filled with 0
-  loRa.macKeys.value = 0; //no keys are set
-  memset(&loRa.activationParameters, 0, sizeof(loRa.activationParameters));
-
-  //protocol parameters receive the default values
-
-  LORAWAN_LinkCheckConfigure(DISABLED); // disable the link check mechanism
+  
 }
 
 LorawanError_t LORAWAN_SetReceiveWindow2Parameters(uint32_t frequency, uint8_t dataRate)
 {
-  LorawanError_t result = OK;
-
-  if((ValidateFrequency(frequency) == OK) && (ValidateDataRate(dataRate) == OK))
-    {
-      UpdateReceiveWindow2Parameters(frequency, dataRate);
-    }
-  else
-    {
-      result = INVALID_PARAMETER;
-    }
-  return result;
+ 
 }
 
-uint32_t LORAWAN_GetFrequency(uint8_t channelId)
+uint32_t LoRa_GetFrequency(uint8_t channelId)
 {
-  return Channels[channelId].frequency;
+  return LoRa_Channels[channelId].frequency;
 }
 
-LorawanError_t LORAWAN_SetDataRange(uint8_t channelId, uint8_t dataRangeNew)
+LorawanError_t LoRa_SetDataRange(uint8_t channelId, uint8_t dataRangeNew)
 {
   LorawanError_t result = OK;
 
@@ -399,7 +322,7 @@ LorawanError_t LORAWAN_SetDataRange(uint8_t channelId, uint8_t dataRangeNew)
     }
   else
     {
-      UpdateDataRange(channelId, dataRangeNew);
+      LoRa_UpdateDataRange(channelId, dataRangeNew);
     }
 
   return result;
@@ -411,7 +334,7 @@ uint8_t LORAWAN_GetDataRange(uint8_t channelId)
 
   if(ValidateChannelId(channelId, ALL_CHANNELS) == OK)
     {
-      result = Channels[channelId].dataRange.value;
+      result = LoRa_Channels[channelId].dataRange.value;
     }
   return result;
 }
@@ -428,9 +351,9 @@ LorawanError_t LORAWAN_SetChannelIdStatus(uint8_t channelId, bool statusNew)
 
   else
     {
-      if((Channels[channelId].parametersDefined & (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED)) == (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED))
+      if((LoRa_Channels[channelId].parametersDefined & (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED)) == (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED))
         {
-          UpdateChannelIdStatus(channelId, statusNew);
+          LoRa_UpdateChannelIdStatus(channelId, statusNew);
         }
       else
         {
@@ -447,7 +370,7 @@ bool LORAWAN_GetChannelIdStatus(uint8_t channelId)
 
   if(ValidateChannelId(channelId, ALL_CHANNELS) == OK)
     {
-      result = Channels[channelId].status;
+      result = LoRa_Channels[channelId].status;
     }
   return result;
 }
@@ -488,7 +411,7 @@ uint16_t LORAWAN_GetDutyCycle(uint8_t channelId)
 
   if(ValidateChannelId(channelId, ALL_CHANNELS) == OK)
     {
-      result = Channels[channelId].dutyCycle;
+      result = LoRa_Channels[channelId].dutyCycle;
     }
 
   return result;
@@ -516,7 +439,7 @@ void LORAWAN_TxDone(uint16_t timeOnAir)
       // the join request should never exceed 0.1%
       if(loRa.lorawanMacStatus.joining == 1)
         {
-          Channels[i].channelTimer = ((uint32_t) timeOnAir) * (((uint32_t) DUTY_CYCLE_JOIN_REQUEST + 1) * ((uint32_t) loRa.prescaler) - 1);
+          LoRa_Channels[i].channelTimer = ((uint32_t) timeOnAir) * (((uint32_t) DUTY_CYCLE_JOIN_REQUEST + 1) * ((uint32_t) loRa.prescaler) - 1);
         }
       else
         {
@@ -525,27 +448,27 @@ void LORAWAN_TxDone(uint16_t timeOnAir)
             {
             }
 
-          Channels[i].channelTimer = ((uint32_t) timeOnAir) * (((uint32_t) Channels[i].dutyCycle + 1) * ((uint32_t) loRa.prescaler) - 1);
+          LoRa_Channels[i].channelTimer = ((uint32_t) timeOnAir) * (((uint32_t) LoRa_Channels[i].dutyCycle + 1) * ((uint32_t) loRa.prescaler) - 1);
         }
       
       for(i = 0; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
         {
-          if((Channels[i].status == ENABLED) && (Channels[i].channelTimer != 0))
+          if((LoRa_Channels[i].status == ENABLED) && (LoRa_Channels[i].channelTimer != 0))
             {
               if(i != loRa.lastUsedChannelIndex)
                 {
-                  if(Channels[i].channelTimer > delta)
+                  if(LoRa_Channels[i].channelTimer > delta)
                     {
-                      Channels[i].channelTimer = Channels[i].channelTimer - delta;
+                      LoRa_Channels[i].channelTimer = LoRa_Channels[i].channelTimer - delta;
                     }
                   else
                     {
-                      Channels[i].channelTimer = 0;
+                      LoRa_Channels[i].channelTimer = 0;
                     }
                 }
-              if((Channels[i].channelTimer <= minim) && (Channels[i].channelTimer != 0))
+              if((LoRa_Channels[i].channelTimer <= minim) && (LoRa_Channels[i].channelTimer != 0))
                 {
-                  minim = Channels[i].channelTimer;
+                  minim = LoRa_Channels[i].channelTimer;
                   found = true;
                 }
             }
@@ -648,17 +571,7 @@ void LORAWAN_RxTimeout(void)
                                 }
                             }
                         }
-                      else
-                        {
-                          // if no channel was found due to duty cycle limitations, start a timer and send the packet when the first channel will be free
-                          for(i = 0; i <= loRa.maxChannels; i++)
-                            {
-                              if((Channels[i].status == ENABLED) && (Channels[i].channelTimer != 0) && (Channels[i].channelTimer <= minim) && (loRa.currentDataRate >= Channels[i].dataRange.min) && (loRa.currentDataRate <= Channels[i].dataRange.max))
-                                {
-                                  minim = Channels[i].channelTimer;
-                                }
-                            }
-                         }
+                      
                     }
                   else
                     {
@@ -727,61 +640,7 @@ uint8_t* ExecuteDutyCycle(uint8_t *ptr)
 
 uint8_t* ExecuteLinkAdr(uint8_t *ptr)
 {
-  uint8_t txPower, dataRate;
-  uint16_t channelMask;
-
-  txPower = *(ptr) & LAST_NIBBLE;
-  dataRate = (*(ptr) & FIRST_NIBBLE) >> SHIFT4;
-  ptr++;
-  channelMask = (*((uint16_t*) ptr));
-  ptr = ptr + sizeof(channelMask);
-  Redundancy_t *redundancy;
-  redundancy = (Redundancy_t*) (ptr++);
-
-  if(ENABLED == loRa.macStatus.adr)
-    {
-      if((ValidateChannelMaskCntl(redundancy->chMaskCntl) == OK) && (ValidateChannelMask(channelMask) == OK)) // If the ChMask field value is one of values meaning RFU, the end-device should reject the command and unset the Channel mask ACK bit in its response.
-        {
-          loRa.macCommands[loRa.crtMacCmdIndex].channelMaskAck = 1;
-        }
-
-      if((ValidateDataRate(dataRate) == OK) && (dataRate >= loRa.minDataRate) && (dataRate <= loRa.maxDataRate))
-        {
-          loRa.macCommands[loRa.crtMacCmdIndex].dataRateAck = 1;
-        }
-
-      if(ValidateTxPower(txPower) == OK)
-        {
-          loRa.macCommands[loRa.crtMacCmdIndex].powerAck = 1;
-        }
-
-      if((loRa.macCommands[loRa.crtMacCmdIndex].powerAck == 1) && (loRa.macCommands[loRa.crtMacCmdIndex].dataRateAck == 1) && (loRa.macCommands[loRa.crtMacCmdIndex].channelMaskAck == 1))
-        {
-          EnableChannels(channelMask, redundancy->chMaskCntl);
-
-          UpdateTxPower(txPower);
-          loRa.macStatus.txPowerModified = ENABLED; // the current tx power was modified, so the user is informed about the change via this flag
-          UpdateCurrentDataRate(dataRate);
-
-          if(redundancy->nbRep == 0)
-            {
-              loRa.maxRepetitionsUnconfirmedUplink = 0;
-            }
-          else
-            {
-              loRa.maxRepetitionsUnconfirmedUplink = redundancy->nbRep - 1;
-            }
-          loRa.macStatus.nbRepModified = 1;
-        }
-    }
-  else
-    {
-      loRa.macCommands[loRa.crtMacCmdIndex].channelMaskAck = 0;
-      loRa.macCommands[loRa.crtMacCmdIndex].dataRateAck = 0;
-      loRa.macCommands[loRa.crtMacCmdIndex].powerAck = 0;
-    }
-
-  return ptr;
+  
 }
 
 uint8_t* ExecuteDevStatus(uint8_t *ptr)
@@ -823,9 +682,9 @@ uint8_t* ExecuteNewChannel(uint8_t *ptr)
           if(frequency != 0)
             {
               UpdateFrequency(channelIndex, frequency);
-              UpdateDataRange(channelIndex, drRange.value);
+              LoRa_UpdateDataRange(channelIndex, drRange.value);
               UpdateDutyCycle(channelIndex, DUTY_CYCLE_DEFAULT);
-              UpdateChannelIdStatus(channelIndex, ENABLED);
+              LoRa_UpdateChannelIdStatus(channelIndex, ENABLED);
             }
           else
             {
@@ -837,9 +696,9 @@ uint8_t* ExecuteNewChannel(uint8_t *ptr)
           if(frequency != 0)
             {
               UpdateFrequency(channelIndex + 16, frequency);
-              UpdateDataRange(channelIndex + 16, drRange.value);
+              LoRa_UpdateDataRange(channelIndex + 16, drRange.value);
               UpdateDutyCycle(channelIndex + 16, DUTY_CYCLE_DEFAULT);
-              UpdateChannelIdStatus(channelIndex + 16, ENABLED);
+              LoRa_UpdateChannelIdStatus(channelIndex + 16, ENABLED);
             }
           else
             {
@@ -892,48 +751,7 @@ uint8_t* ExecuteRxParamSetupReq(uint8_t *ptr)
 
 LorawanError_t SearchAvailableChannel(uint8_t maxChannels, bool transmissionType, uint8_t* channelIndex)
 {
-  uint8_t randomNumberCopy, randomNumber, i;
-  LorawanError_t result = OK;
-
-  randomNumber = Random(maxChannels) + 1; //this is a guard so that randomNumber is not 0 and the search will happen
-  randomNumberCopy = randomNumber;
-
-  while(randomNumber)
-    {
-      for(i = 0; (i < maxChannels) && (randomNumber != 0); i++)
-        {
-          if((Channels[i].status == ENABLED) && (Channels[i].channelTimer == 0) && (loRa.currentDataRate >= Channels[i].dataRange.min) && (loRa.currentDataRate <= Channels[i].dataRange.max))
-            {
-              if(transmissionType == 0) // if transmissionType is join request, then check also for join request channels
-                {
-                  if(Channels[i].joinRequestChannel == 1)
-                    {
-                      randomNumber--;
-                    }
-                }
-              else
-                {
-                  randomNumber--;
-                }
-            }
-        }
-      // if after one search in all the vector no valid channel was found, exit the loop and return an error
-      if(randomNumber == randomNumberCopy)
-        {
-          result = NO_CHANNELS_FOUND;
-          break;
-        }
-    }
-
-  if(i != 0)
-    {
-      *channelIndex = i - 1;
-    }
-  else
-    {
-      result = NO_CHANNELS_FOUND;
-    }
-  return result;
+    
 }
 
 void UpdateCfList(uint8_t bufferLength, JoinAccept_t *joinAccept)
@@ -956,11 +774,11 @@ void UpdateCfList(uint8_t bufferLength, JoinAccept_t *joinAccept)
             {
               if(ValidateFrequency(frequency) == OK)
                 {
-                  Channels[i + channelIndex].frequency = frequency;
-                  Channels[i + channelIndex].dataRange.max = DR5;
-                  Channels[i + channelIndex].dataRange.min = DR0;
-                  Channels[i + channelIndex].dutyCycle = DUTY_CYCLE_DEFAULT_NEW_CHANNEL;
-                  Channels[i + channelIndex].parametersDefined = 0xFF; //all parameters defined
+                  LoRa_Channels[i + channelIndex].frequency = frequency;
+                  LoRa_Channels[i + channelIndex].dataRange.max = DR5;
+                  LoRa_Channels[i + channelIndex].dataRange.min = DR0;
+                  LoRa_Channels[i + channelIndex].dutyCycle = DUTY_CYCLE_DEFAULT_NEW_CHANNEL;
+                  LoRa_Channels[i + channelIndex].parametersDefined = 0xFF; //all parameters defined
                   LORAWAN_SetChannelIdStatus(i + channelIndex, ENABLED);
                   loRa.macStatus.channelsModified = ENABLED; // a new channel was added, so the flag is set to inform the user
                 }
@@ -1016,17 +834,7 @@ void UpdateDLSettings(uint8_t dlRx2Dr, uint8_t dlRx1DrOffset)
 
 void StartReTxTimer(void)
 {
-  uint8_t i;
-  uint32_t minim = UINT32_MAX;
-
-  for(i = 0; i <= loRa.maxChannels; i++)
-    {
-      if((Channels[i].status == ENABLED) && (Channels[i].channelTimer != 0) && (Channels[i].channelTimer <= minim) && (loRa.currentDataRate >= Channels[i].dataRange.min) && (loRa.currentDataRate <= Channels[i].dataRange.max))
-        {
-          minim = Channels[i].channelTimer;
-        }
-    }
-  loRa.macStatus.macState = RETRANSMISSION_DELAY;
+ 
 }
 
 LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t channelRx) // 
@@ -1045,9 +853,9 @@ LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t chan
     }
 
   loRa.LoRa_lastUsedChannelIndex = channelRxIndex;
-  loRa.LoRa_receiveChannelParameters.frequency = Channels[channelRxIndex].frequency;
+  loRa.LoRa_receiveChannelParameters.frequency = LoRa_Channels[channelRxIndex].frequency;
   loRa.LoRa_receiveChannelParameters.dataRate = loRa.LoRa_currentDataRate;
-  loRa.LoRa_sendChannelParameters.frequency = Channels[channelRxIndex].frequency;
+  loRa.LoRa_sendChannelParameters.frequency = LoRa_Channels[channelRxIndex].frequency;
   loRa.LoRa_sendChannelParameters.dataRate = loRa.LoRa_currentDataRate;
 
   return result;
@@ -1055,20 +863,7 @@ LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t chan
 
 LorawanError_t SelectChannelForTransmission(bool transmissionType) // transmission type is 0 means join request, transmission type is 1 means data message mode
 {
-  LorawanError_t result = OK;
-  uint8_t channelIndex;
-
-  result = SearchAvailableChannel(MAX_EU_SINGLE_BAND_CHANNELS, transmissionType, &channelIndex);
-
-  if(result == OK)
-    {
-      loRa.lastUsedChannelIndex = channelIndex;
-      loRa.receiveWindow1Parameters.frequency = Channels[channelIndex].frequency;
-      loRa.receiveWindow1Parameters.dataRate = loRa.currentDataRate;
-
-      ConfigureRadioTx(loRa.receiveWindow1Parameters.dataRate, loRa.receiveWindow1Parameters.frequency);
-    }
-  return result;
+  
 }
 
 static void CreateAllSoftwareTimers(void)
@@ -1096,14 +891,14 @@ static void InitDefault868Channels(void)
 {
   uint8_t i;
 
-  memset(Channels, 0, sizeof(Channels));
-  memcpy(Channels, DefaultChannels868, sizeof(DefaultChannels868));
+  memset(LoRa_Channels, 0, sizeof(LoRa_Channels));
+  memcpy(LoRa_Channels, DefaultChannels868, sizeof(DefaultChannels868));
   for(i = 3; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
     {
       // for undefined channels the duty cycle should be a very big value, and the data range a not-valid value
       //duty cycle 0 means no duty cycle limitation, the bigger the duty cycle value, the greater the limitation
-      Channels[i].dutyCycle = UINT16_MAX;
-      Channels[i].dataRange.value = UINT8_MAX;
+      LoRa_Channels[i].dutyCycle = UINT16_MAX;
+      LoRa_Channels[i].dataRange.value = UINT8_MAX;
     }
 }
 
@@ -1111,81 +906,71 @@ static void InitDefault433Channels(void)
 {
   uint8_t i;
 
-  memset(Channels, 0, sizeof(Channels));
-  memcpy(Channels, DefaultChannels433, sizeof(DefaultChannels433));
+  memset(LoRa_Channels, 0, sizeof(LoRa_Channels));
+  memcpy(LoRa_Channels, DefaultChannels433, sizeof(DefaultChannels433));
   for(i = 3; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
     {
       // for undefined channels the duty cycle should be a very big value, and the data range a not-valid value
       //duty cycle 0 means no duty cycle limitation, the bigger the duty cycle value, the greater the limitation
-      Channels[i].dutyCycle = UINT16_MAX;
-      Channels[i].dataRange.value = UINT8_MAX;
+      LoRa_Channels[i].dutyCycle = UINT16_MAX;
+      LoRa_Channels[i].dataRange.value = UINT8_MAX;
     }
 }
 
-static void UpdateDataRange(uint8_t channelId, uint8_t dataRangeNew)
+static void LoRa_UpdateDataRange(uint8_t channelId, uint8_t dataRangeNew)
 {
   uint8_t i;
   // after updating the data range of a channel we need to check if the minimum dataRange has changed or not.
   // The user cannot set the current data rate outside the range of the data range
-  loRa.minDataRate = DR7;
-  loRa.maxDataRate = DR0;
+  loRa.LoRa_minDataRate = DR7;
+  loRa.LoRa_maxDataRate = DR0;
 
-  Channels[channelId].dataRange.value = dataRangeNew;
-  Channels[channelId].parametersDefined |= DATA_RANGE_DEFINED;
-  for(i = 0; i < loRa.maxChannels; i++)
+  LoRa_Channels[channelId].dataRange.value = dataRangeNew;
+  LoRa_Channels[channelId].parametersDefined |= DATA_RANGE_DEFINED;
+  for(i = 0; i < loRa.LoRa_maxChannels; i++)
     {
-      if((Channels[i].dataRange.min < loRa.minDataRate) && (Channels[i].status == ENABLED))
+      if((LoRa_Channels[i].dataRange.min < loRa.LoRa_minDataRate) && (LoRa_Channels[i].status == ENABLED))
         {
-          loRa.minDataRate = Channels[i].dataRange.min;
+          loRa.LoRa_minDataRate = LoRa_Channels[i].dataRange.min;
         }
-      if((Channels[i].dataRange.max > loRa.maxDataRate) && (Channels[i].status == ENABLED))
+      if((LoRa_Channels[i].dataRange.max > loRa.LoRa_maxDataRate) && (LoRa_Channels[i].status == ENABLED))
         {
-          loRa.maxDataRate = Channels[i].dataRange.max;
+          loRa.LoRa_maxDataRate = LoRa_Channels[i].dataRange.max;
         }
     }
 
-  if(loRa.currentDataRate > loRa.maxDataRate)
+  if(loRa.LoRa_currentDataRate > loRa.LoRa_maxDataRate)
     {
-      loRa.currentDataRate = loRa.maxDataRate;
+      loRa.LoRa_currentDataRate = loRa.LoRa_maxDataRate;
     }
 
-  if(loRa.currentDataRate < loRa.minDataRate)
+  if(loRa.LoRa_currentDataRate < loRa.LoRa_minDataRate)
     {
-      loRa.currentDataRate = loRa.minDataRate;
+      loRa.LoRa_currentDataRate = loRa.LoRa_minDataRate;
     }
 }
 
-static void UpdateChannelIdStatus(uint8_t channelId, bool statusNew)
+static void LoRa_UpdateChannelIdStatus(uint8_t channelId, bool statusNew)
 {
   uint8_t i;
 
-  Channels[channelId].status = statusNew;
-  if(Channels[channelId].status == DISABLED)
+  LoRa_Channels[channelId].status = statusNew;
+  if(LoRa_Channels[channelId].status == DISABLED)
     {
       //Clear the dutycycle timer of the channel
-      Channels[channelId].channelTimer = 0;
+      LoRa_Channels[channelId].channelTimer = 0;
     }
 
-  for(i = 0; i < loRa.maxChannels; i++)
+  for(i = 0; i < loRa.LoRa_maxChannels; i++)
     {
-      if((Channels[i].dataRange.min < loRa.minDataRate) && (Channels[i].status == ENABLED))
+      if((LoRa_Channels[i].dataRange.min < loRa.LoRa_minDataRate) && (LoRa_Channels[i].status == ENABLED))
         {
-          loRa.minDataRate = Channels[i].dataRange.min;
+          loRa.LoRa_minDataRate = LoRa_Channels[i].dataRange.min;
         }
-      if((Channels[i].dataRange.max > loRa.maxDataRate) && (Channels[i].status == ENABLED))
+      if((LoRa_Channels[i].dataRange.max > loRa.LoRa_maxDataRate) && (LoRa_Channels[i].status == ENABLED))
         {
-          loRa.maxDataRate = Channels[i].dataRange.max;
+          loRa.LoRa_maxDataRate = LoRa_Channels[i].dataRange.max;
         }
-    }
-
-  if(loRa.currentDataRate > loRa.maxDataRate)
-    {
-      loRa.currentDataRate = loRa.maxDataRate;
-    }
-
-  if(loRa.currentDataRate < loRa.minDataRate)
-    {
-      loRa.currentDataRate = loRa.minDataRate;
     }
 }
 
@@ -1269,14 +1054,14 @@ static void EnableChannels(uint16_t channelMask, uint8_t channelMaskCntl)
 
 static void UpdateFrequency(uint8_t channelId, uint32_t frequencyNew)
 {
-  Channels[channelId].frequency = frequencyNew;
-  Channels[channelId].parametersDefined |= FREQUENCY_DEFINED;
+  LoRa_Channels[channelId].frequency = frequencyNew;
+  LoRa_Channels[channelId].parametersDefined |= FREQUENCY_DEFINED;
 }
 
 static void UpdateDutyCycle(uint8_t channelId, uint16_t dutyCycleNew)
 {
-  Channels[channelId].dutyCycle = dutyCycleNew;
-  Channels[channelId].parametersDefined |= DUTY_CYCLE_DEFINED;
+  LoRa_Channels[channelId].dutyCycle = dutyCycleNew;
+  LoRa_Channels[channelId].parametersDefined |= DUTY_CYCLE_DEFINED;
 }
 
 static LorawanError_t ValidateChannelMask(uint16_t channelMask)
@@ -1287,7 +1072,7 @@ static LorawanError_t ValidateChannelMask(uint16_t channelMask)
     {
       for(i = 0; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
         {
-          if(((channelMask & BIT0) == BIT0) && ((Channels[i].parametersDefined & (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED)) != (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED))) // if the channel mask sent enables a yet undefined channel, the command is discarded and the device state is not changed
+          if(((channelMask & BIT0) == BIT0) && ((LoRa_Channels[i].parametersDefined & (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED)) != (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED))) // if the channel mask sent enables a yet undefined channel, the command is discarded and the device state is not changed
             {
               return INVALID_PARAMETER;
             }
@@ -1314,7 +1099,7 @@ static void EnableChannels1(uint16_t channelMask, uint8_t channelMaskCntl, uint8
     {
       for(i = channelIndexMin; i < channelIndexMax; i++)
         {
-          UpdateChannelIdStatus(i, ENABLED);
+          LoRa_UpdateChannelIdStatus(i, ENABLED);
         }
     }
   else if(channelMaskCntl == 0)
@@ -1323,11 +1108,11 @@ static void EnableChannels1(uint16_t channelMask, uint8_t channelMaskCntl, uint8
         {
           if(channelMask & BIT0 == BIT0)
             {
-              UpdateChannelIdStatus(i, ENABLED);
+              LoRa_UpdateChannelIdStatus(i, ENABLED);
             }
           else
             {
-              UpdateChannelIdStatus(i, DISABLED);
+              LoRa_UpdateChannelIdStatus(i, DISABLED);
             }
           channelMask = channelMask >> SHIFT1;
         }
@@ -1343,19 +1128,19 @@ static void LoRa_DutyCycleCallback(uint8_t param)
   for(i = 0; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
     {
       //Validate this only for enabled channels
-      if((Channels[i].status == ENABLED) && (Channels[i].channelTimer != 0))
+      if((LoRa_Channels[i].status == ENABLED) && (LoRa_Channels[i].channelTimer != 0))
         {
-          if(Channels[i].channelTimer > loRa.XXX_lastTimerValue)
+          if(LoRa_Channels[i].channelTimer > loRa.XXX_lastTimerValue)
             {
-              Channels[i].channelTimer = Channels[i].channelTimer - loRa.XXX_lastTimerValue;
+              LoRa_Channels[i].channelTimer = LoRa_Channels[i].channelTimer - loRa.XXX_lastTimerValue;
             }
           else
             {
-              Channels[i].channelTimer = 0;
+              LoRa_Channels[i].channelTimer = 0;
             }
-          if((Channels[i].channelTimer <= minim) && (Channels[i].channelTimer != 0))
+          if((LoRa_Channels[i].channelTimer <= minim) && (LoRa_Channels[i].channelTimer != 0))
             {
-              minim = Channels[i].channelTimer;
+              minim = LoRa_Channels[i].channelTimer;
               found = true;
             }
         }
