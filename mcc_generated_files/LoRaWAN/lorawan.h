@@ -183,146 +183,6 @@ extern "C"
   void LoRa_System_Init(void);
 
   void LoRa_Reset(IsmBand_t ismBandNew);
-
-  /**
-   * @Summary
-      LoRaWAN Initialization function
-   * @Description
-      This function initializes LoRaWAN stack and the radio module.
-   * @Preconditions
-      None
-   * @Param
-      RxPayload - pointer to function that gets called after the bidirectional communication ended.
-      RxJoinResponse - pointer to function that gets called after the activation procedure
-   * @Return
-      None
-   * @Example
-   */
-  void LORAWAN_Init(RxAppDataCb_t RxPayload, RxJoinResponseCb_t RxJoinResponse);
-
-  /**
-   * @Summary
-      LoRaWAN activation procedure.
-   * @Description
-      This function starts LoRaWAN activation procedure.
-   * @Preconditions
-      None
-   * @Param
-      activationTypeNew - activation type: OTAA or ABP
-   * @Returns
-      Function returns the status of the operation (LorawanError_t).
-   * @Example
-   */
-  LorawanError_t LORAWAN_Join(ActivationType_t activationTypeNew);
-
-  /**
-   * @Summary
-      Bidirectional communication start.
-   * @Description
-      This function starts a bidirectional communication process.
-   * @Preconditions
-      None
-   * @Param
-      confirmed - represents the transmission type; can be either UNCNF - unconfirmed or CNF - confirmed (TransmissionType_t)
-      port - represents the port on which the transmission is being made; it's a number between 0 and 255 (uint8_t)
-      buffer - a data buffer used to store the data to be sent
-      bufferLength - the length in bytes of the data buffer (uint8_t)
-   * @Returns
-      Function returns the status of the operation (LorawanError_t).
-   * @Example
-      uint8_t dataToSend = 45;
-      LORAWAN_Send (UNCNF, 20, &dataToSend, sizeof(dataToSend));
-   */
-  LorawanError_t LORAWAN_Send(TransmissionType_t confirmed, uint8_t port, void *buffer, uint8_t bufferLength);
-
-  /**
-   * @Summary
-   *  Set the status of multicast.
-   * @Description
-   *  This function enables or disables the multicast operation.
-   * @Preconditions
-   *  Before enabling the multicast, one must join a network and the multicast parameters mult be set (mcastNetworkSessionKey, mcastApplicationSessionKey, mcastDeviceAddressNew)
-   * @Param
-      None
-   * @Returns
-      Function returns the status of the operation (LorawanError_t)
-   * @Example
-   */
-  LorawanError_t LORAWAN_SetMcast(bool status);
-
-       /**
-   * @Summary
-   *  Multicast network session key set.
-   * @Description
-   *  This function sets the value of the multicast network session key.
-   * @Preconditions
-   *  None
-   * @Param
-      mcastNetworkSessionKeyNew - address where the new value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetMcastNetworkSessionKey(uint8_t *mcastNetworkSessionKeyNew);
-
-   
-    /**
-    @Summary
-   * Sets LoRa class.
-    @Description
-   * This function sets LoRaWAN stack class to A or C.
-    @Preconditions
-   * None
-    @Param
-   * class - new class
-    @Returns
-   * None
-    @Example
-   */
-  void LORAWAN_SetClass(LoRaClass_t deviceClass);
-
-  /**
-    @Summary
-   * Returns LoRa class.
-    @Description
-   * This function returns LoRaWAN stack class.
-    @Preconditions
-    @Param
-   * None
-    @Returns
-   * Returns LoRa Class Type.
-    @Example
-   */
-  LoRaClass_t LORAWAN_GetClass(void);
-
-  /**
-    @Summary
-   * Sets downlink counter for multicast communication.
-    @Description
-   * This function sets the value for the counter used in multicast downlink communication.
-    @Preconditions
-    @Param
-   * newCnt - new counter value;
-    @Returns
-   * None
-    @Example
-   */
-  void LORAWAN_SetMcastDownCounter(uint32_t newCnt);
-
-  /**
-    @Summary
-   * Gets downlink counter for multicast communication.
-    @Description
-   * This function gets the value for the counter used in multicast downlink communication.
-    @Preconditions
-    @Param
-   * None;
-    @Returns
-   * Returns counter value.
-    @Example
-   */
-  uint32_t LORAWAN_GetMcastDownCounter();
-
     
   /**
    * @Summary
@@ -426,39 +286,7 @@ extern "C"
    */
   uint8_t LoRa_GetSyncWord(void);
 
-  /**
-   * @Summary
-      Function sets the current uplink counter.
-   * @Description
-      This function sets the current uplink counter used during the communication.
-      This may be used to synchronize the uplink counter with the value stored by the server.
-   * @Preconditions
-      None
-   * @Param
-      ctr - value of the new counter to be set
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetUplinkCounter(uint32_t ctr);
-
-  /**
-   * @Summary
-      Function returns the current uplink counter.
-   * @Description
-      This function returns the current uplink counter used during the communication.
-      This may be used to synchronize the uplink counter with the value stored by the server.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      Current uplink counter (uint32_t).
-   * @Example
-   */
-  uint32_t LORAWAN_GetUplinkCounter(void);
-
-  /**
+    /**
    * @Summary
       Function sets the current downlink counter.
    * @Description
@@ -472,7 +300,7 @@ extern "C"
       None
    * @Example
    */
-  void LORAWAN_SetDownlinkCounter(uint32_t ctr);
+  void LoRa_SetCounter(uint32_t ctr);
 
   /**
    * @Summary
@@ -488,7 +316,7 @@ extern "C"
       Current downlink counter (uint32_t).
    * @Example
    */
-  uint32_t LORAWAN_GetDownlinkCounter(void);
+  uint32_t LoRa_GetCounter(void);
 
   /**
    * @Summary
@@ -772,41 +600,7 @@ extern "C"
    */
   uint16_t LORAWAN_GetAckTimeout(void);
 
-    /**
-   * @Summary
-      Function sets the parameters for the second receive window (RX2).
-   * @Description
-      This function sets the data rate and frequency used for the second Receive window.
-      The configuration of the Receive window parameters should be in concordance with the server configuration.
-   * @Preconditions
-      None
-   * @Param
-      frequency - the new frequency (must be provided in Hz)
-      dataRate - the new data rate
-   * @Returns
-      Return LoRaWAN Error type (LorawanError_t).
-   * @Example
-   */
-  LorawanError_t LORAWAN_SetReceiveWindow2Parameters(uint32_t frequency, uint8_t dataRate);
-
-  /**
-   * @Summary
-      Function gets the parameters for the second receive window (RX2).
-   * @Description
-      This function gets the data rate and frequency used for the second Receive window.
-      The configuration of the Receive window parameters should be in concordance with the server configuration.
-   * @Preconditions
-      None
-   * @Param
-      frequency - pointer containing the frequency in Hz (32bit value)
-      dataRate - pinter containing the data rate (8bit value)
-   * @Returns
-  
-      None
-   * @Example
-   */
-  void LORAWAN_GetReceiveWindow2Parameters(uint32_t* frequency, uint8_t* dataRate);
-
+    
   /**
    * @Summary
       Function sets battery level.
@@ -826,59 +620,6 @@ extern "C"
   void LORAWAN_SetBattery(uint8_t batteryLevelNew);
 
     /**
-   * @Summary
-      Function sets the automatic reply mode state.
-   * @Description
-      This function sets the state of the automatic reply. By enabling the automatic reply,
-      the module will transmit a packet without a payload immediately after a confirmed
-      downlink is received, or when the Frame Pending bit has been set by the server. If set
-      to OFF, no automatic reply will be transmitted.
-   * @Preconditions
-      None
-   * @Param
-      status - on/off (true/false)
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetAutomaticReply(bool status);
-
-  /**
-   * @Summary
-      Function returns the automatic reply mode state.
-   * @Description
-      This function returns the state of the automatic reply. By enabling the automatic reply,
-      the module will transmit a packet without a payload immediately after a confirmed
-      downlink is received, or when the Frame Pending bit has been set by the server. If set
-      to OFF, no automatic reply will be transmitted.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      Returns the mode (true/false) for the automatic reply
-   * @Example
-   */
-  bool LORAWAN_GetAutomaticReply(void);
-
-  /**
-   * @Summary
-      Function returns the status of the module.
-   * @Description
-      This function will return the current status of the module. The value returned is a
-      bit mask represented in hexadecimal form.
-      Please refer to LoRaWAN Specification V1.0 document for the significance of the bit mask.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      Returns the status (uint32_t).
-   * @Example
-   */
-  uint32_t LORAWAN_GetStatus(void);
-
-  /**
    * @Summary
       Function returns a decimal number representing the demodulation margin.
    * @Description
@@ -998,99 +739,8 @@ extern "C"
    */
   bool LORAWAN_GetChannelIdStatus(uint8_t channelId);
 
-  /**
-   * @Summary
-      Function pauses LoRaWAN stack.
-   * @Description
-      This function pauses the LoRaWAN stack functionality to allow transceiver (radio) configuration.
-      Through the use of "mac pause", radio commands can be generated between a LoRaWAN protocol
-      uplink application, and the LoRaWAN protocol Receive windows.
-      This function will reply with the time interval in milliseconds that the transceiver can
-      be used without affecting the LoRaWAN functionality.
-   * @Preconditions
-      None
-   * @Param
-       None
-   * @Returns
-       Returns the number in milliseconds representing how much it can be paused without affecting the functionality.
-       Returns 0 if it cannot be paused, maximum value when in idle mode.
-   * @Example
-   */
-  uint32_t LORAWAN_Pause(void);
-
-  /**
-   * @Summary
-      Function resumes LoRaWAN stack functionality.
-   * @Description
-      This function resumes LoRaWAN stack functionality, in order to continue normal
-      functionality after being paused.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_Resume(void);
-
-  /**
-   * @Summary
-      Function sets the time interval for the link check process.
-   * @Description
-      This function sets the time interval for the link check process to be triggered periodically.
-      A <value> of 0 will disable the link check process.
-      When the time interval expires, the next application packet that will be sent to the server
-      will include a link check MAC command.
-      Please refer to the LoRaWAN Specification V1.0 for more information on the link check MAC command.
-   * @Preconditions
-      None
-   * @Param
-      period - the new period value
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_LinkCheckConfigure(uint16_t period);
-
-  /**
-   * @Summary
-      Function disables the Silent Immediately state.
-   * @Description
-      The network can issue a certain command that would require the end device to go silent immediately.
-      This mechanism disables any further communication of the module, effectively isolating it from the network.
-      Using this function, after this network command has been received, restores the modules connectivity
-      by allowing it to send data.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_ForceEnable(void);
-
-
-  /**
-   * @Summary
-      This function will automatically reset the software LoRaWAN stack and initialize
-      it with the parameters for the selected ISM band.
-   * @Description
-      This command will set default values for most of the LoRaWAN parameters.
-      Everything set prior to this command will lose its set value,
-      being reinitialized to the default value, including setting the cryptographic keys to 0.
-   * @Preconditions
-      None
-   * @Param
-      ismBandNew - the new band (IsmBand_t)
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_Reset(IsmBand_t ismBandNew);
-
-  /**
+ 
+    /**
    * @Summary
       Sets the frequency of the given channel.
    * @Description
@@ -1161,21 +811,6 @@ extern "C"
 
   /**
    * @Summary
-      Function returns the LORAWAN stack state.
-   * @Description
-      This function returns the state of the LORAWAN stack.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      Returns state of the LORAWAN stack (loRa.macStatus.macState).                       
-   * @Example
-   */
-  uint8_t LORAWAN_GetState(void);
-
-  /**
-   * @Summary
       LoRaWAN Mainloop function.
    * @Description
       This function is used for running the system timers and check the DIO pins.
@@ -1188,7 +823,7 @@ extern "C"
       none                       
    * @Example
    */
-  void LORAWAN_Mainloop(void);
+  void LoRa_Mainloop(void);
 
 #ifdef	__cplusplus
 }

@@ -130,22 +130,6 @@ extern "C"
 
   typedef struct
   {
-    LorawanMacStatus_t lorawanMacStatus;
-
-    LorawanStatus_t macStatus;
-    FCnt_t fCntDown;
-    FCnt_t fMcastCntDown;
-    LoRaClass_t deviceClass; //del
-    ReceiveWindowParameters_t receiveWindow1Parameters;
-    ReceiveWindowParameters_t receiveWindow2Parameters;
-
-    uint16_t devNonce;
-    uint16_t lastPacketLength;
-
-    bool macInitialized;
-    
-    FCnt_t fCntUp;
-    /************************************************/
     //LoRa
     LoRaTransmitState_t LoRa_transmitStatus;
     LoRaStatus_t LoRa_StatusDanych;

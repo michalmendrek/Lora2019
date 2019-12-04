@@ -87,21 +87,9 @@ void LoRa_Reset(IsmBand_t ismBandNew);
 static void LoRa_InitDefault868Channels(void);
 static void LoRa_InitDefault433Channels(void);
 
-static void CreateAllSoftwareTimers(void);
-
-static void SetCallbackSoftwareTimers(void);
-
-static void StopAllSoftwareTimers(void);
-
-static void InitDefault868Channels(void);
-
-static void InitDefault433Channels(void);
-
 static void LoRa_UpdateDataRange(uint8_t channelId, uint8_t dataRangeNew);
 
 static void LoRa_UpdateChannelIdStatus(uint8_t channelId, bool statusNew);
-
-static LorawanError_t ValidateRxOffset(uint8_t rxOffset);
 
 static LorawanError_t LoRa_ValidateFrequency(uint32_t frequencyNew);
 
@@ -172,7 +160,7 @@ static void LoRa_SetCallbackSoftwareTimers(void)
 
 static void LoRa_StopAllSoftwareTimers(void)
 {
-   SwTimerStop(loRa.LoRa_TimerHandshaking);
+  SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerRetransmit);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
 }
@@ -270,41 +258,6 @@ void LoRa_RxTimeout(void)
       loRa.LoRa_transmitStatus = LoRa_SendFailed;
     }
   RADIO_clearReceiveFlag();
-}
-
-void LORAWAN_Init(RxAppDataCb_t RxPayload, RxJoinResponseCb_t RxJoinResponse) // this function resets everything to the default values
-{
-  // Allocate software timers and their callbacks
-  if(loRa.macInitialized == DISABLED)
-    {
-      CreateAllSoftwareTimers();
-      SetCallbackSoftwareTimers();
-      loRa.macInitialized = ENABLED;
-    }
-  else
-    {
-      StopAllSoftwareTimers();
-    }
-
-  rxPayload.RxAppData = RxPayload;
-  rxPayload.RxJoinResponse = RxJoinResponse;
-
-  RADIO_Init(&LoRa_radioBuffer[16], EU868_CALIBRATION_FREQ);
-
-  srand(RADIO_ReadRandom()); // for the loRa random function we need a seed that is obtained from the radio
-
-  LORAWAN_Reset(ISM_EU868);
-
-}
-
-void LORAWAN_Reset(IsmBand_t ismBandNew)
-{
-  
-}
-
-LorawanError_t LORAWAN_SetReceiveWindow2Parameters(uint32_t frequency, uint8_t dataRate)
-{
- 
 }
 
 uint32_t LoRa_GetFrequency(uint8_t channelId)
@@ -424,14 +377,14 @@ uint8_t LoRa_GetIsmBand(void) //returns the ISM band
 
 void LORAWAN_TxDone(uint16_t timeOnAir)
 {
-   
+
 }
 
 // this function is called by the radio when the first or the second receive window expired without receiving any message (either for join accept or for message)
 
 void LORAWAN_RxTimeout(void)
 {
-  
+
 }
 
 LorawanError_t ValidateDataRate(uint8_t dataRate)
@@ -460,12 +413,12 @@ LorawanError_t LoRa_ValidateTxPower(uint8_t txPowerNew)
 
 uint8_t* ExecuteDutyCycle(uint8_t *ptr)
 {
-  
+
 }
 
 uint8_t* ExecuteLinkAdr(uint8_t *ptr)
 {
-  
+
 }
 
 uint8_t* ExecuteDevStatus(uint8_t *ptr)
@@ -475,59 +428,20 @@ uint8_t* ExecuteDevStatus(uint8_t *ptr)
 
 uint8_t* ExecuteNewChannel(uint8_t *ptr)
 {
- 
+
 }
 
 uint8_t* ExecuteRxParamSetupReq(uint8_t *ptr)
 {
-  
+
 }
 
 LorawanError_t SearchAvailableChannel(uint8_t maxChannels, bool transmissionType, uint8_t* channelIndex)
 {
-    
+
 }
 
-void UpdateCfList(uint8_t bufferLength, JoinAccept_t *joinAccept)
-{
-  uint8_t i;
-  uint32_t frequency;
-  uint8_t channelIndex;
-
-  if((bufferLength == SIZE_JOIN_ACCEPT_WITH_CFLIST))
-    {
-      // 3 is the minimum channel index for single band
-      channelIndex = 3;
-
-      for(i = 0; i < NUMBER_CFLIST_FREQUENCIES; i++)
-        {
-          frequency = 0;
-          memcpy(&frequency, joinAccept->members.cfList + 3 * i, 3);
-          frequency *= 100;
-          if(frequency != 0)
-            {
-              if(LoRa_ValidateFrequency(frequency) == OK)
-                {
-                  LoRa_Channels[i + channelIndex].frequency = frequency;
-                  LoRa_Channels[i + channelIndex].dataRange.max = DR5;
-                  LoRa_Channels[i + channelIndex].dataRange.min = DR0;
-                  LoRa_Channels[i + channelIndex].dutyCycle = DUTY_CYCLE_DEFAULT_NEW_CHANNEL;
-                  LoRa_Channels[i + channelIndex].parametersDefined = 0xFF; //all parameters defined
-                  LORAWAN_SetChannelIdStatus(i + channelIndex, ENABLED);
-                  loRa.macStatus.channelsModified = ENABLED; // a new channel was added, so the flag is set to inform the user
-                }
-            }
-          else
-            {
-              LORAWAN_SetChannelIdStatus(i + channelIndex, DISABLED);
-            }
-        }
-
-      loRa.macStatus.channelsModified = ENABLED;
-    }
-}
-
-void ConfigureRadio(uint8_t dataRate, uint32_t freq)
+void LoRa_ConfigureRadio(uint8_t dataRate, uint32_t freq)
 {
   RADIO_SetModulation(modulation[dataRate]);
   RADIO_SetChannelFrequency(freq);
@@ -545,21 +459,6 @@ void ConfigureRadio(uint8_t dataRate, uint32_t freq)
       //FSK modulation
       RADIO_SetFSKSyncWord(sizeof(FskSyncWordBuff) / sizeof(FskSyncWordBuff[0]), (uint8_t*) FskSyncWordBuff);
     }
-}
-
-uint32_t GetRx1Freq(void)
-{
-  return loRa.receiveWindow1Parameters.frequency;
-}
-
-void UpdateDLSettings(uint8_t dlRx2Dr, uint8_t dlRx1DrOffset)
-{
-
-}
-
-void StartReTxTimer(void)
-{
- 
 }
 
 LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t channelRx) // 
@@ -584,62 +483,6 @@ LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t chan
   loRa.LoRa_sendChannelParameters.dataRate = loRa.LoRa_currentDataRate;
 
   return result;
-}
-
-LorawanError_t SelectChannelForTransmission(bool transmissionType) // transmission type is 0 means join request, transmission type is 1 means data message mode
-{
-  
-}
-
-static void CreateAllSoftwareTimers(void)
-{ 
-  loRa.LoRa_TimerHandshaking = SwTimerCreate();
-  loRa.LoRa_TimerRetransmit = SwTimerCreate();
-  loRa.LoRa_TimerWaitAck = SwTimerCreate();
-}
-
-static void SetCallbackSoftwareTimers(void)
-{
-  SwTimerSetCallback(loRa.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback, 0);
-  SwTimerSetCallback(loRa.LoRa_TimerRetransmit, LoRa_TimerRetransmitCallback, 0);
-  SwTimerSetCallback(loRa.LoRa_TimerWaitAck, LoRa_TimerWaitAckCallback, 0);
-}
-
-static void StopAllSoftwareTimers(void)
-{
-  SwTimerStop(loRa.LoRa_TimerHandshaking);
-  SwTimerStop(loRa.LoRa_TimerRetransmit);
-  SwTimerStop(loRa.LoRa_TimerWaitAck);
-}
-
-static void InitDefault868Channels(void)
-{
-  uint8_t i;
-
-  memset(LoRa_Channels, 0, sizeof(LoRa_Channels));
-  memcpy(LoRa_Channels, DefaultChannels868, sizeof(DefaultChannels868));
-  for(i = 3; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
-    {
-      // for undefined channels the duty cycle should be a very big value, and the data range a not-valid value
-      //duty cycle 0 means no duty cycle limitation, the bigger the duty cycle value, the greater the limitation
-      LoRa_Channels[i].dutyCycle = UINT16_MAX;
-      LoRa_Channels[i].dataRange.value = UINT8_MAX;
-    }
-}
-
-static void InitDefault433Channels(void)
-{
-  uint8_t i;
-
-  memset(LoRa_Channels, 0, sizeof(LoRa_Channels));
-  memcpy(LoRa_Channels, DefaultChannels433, sizeof(DefaultChannels433));
-  for(i = 3; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
-    {
-      // for undefined channels the duty cycle should be a very big value, and the data range a not-valid value
-      //duty cycle 0 means no duty cycle limitation, the bigger the duty cycle value, the greater the limitation
-      LoRa_Channels[i].dutyCycle = UINT16_MAX;
-      LoRa_Channels[i].dataRange.value = UINT8_MAX;
-    }
 }
 
 static void LoRa_UpdateDataRange(uint8_t channelId, uint8_t dataRangeNew)
@@ -697,18 +540,6 @@ static void LoRa_UpdateChannelIdStatus(uint8_t channelId, bool statusNew)
           loRa.LoRa_maxDataRate = LoRa_Channels[i].dataRange.max;
         }
     }
-}
-
-static LorawanError_t ValidateRxOffset(uint8_t rxOffset)
-{
-  LorawanError_t result = OK;
-
-  if(rxOffset > 5)
-    {
-      result = INVALID_PARAMETER;
-    }
-
-  return result;
 }
 
 static LorawanError_t LoRa_ValidateFrequency(uint32_t frequencyNew)
@@ -872,7 +703,7 @@ static void LoRa_DutyCycleCallback(uint8_t param)
     }
   if(found == true)
     {
-      loRa.XXX_lastTimerValue = minim;    
+      loRa.XXX_lastTimerValue = minim;
     }
 }
 
@@ -880,7 +711,7 @@ void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq)
 {
   int8_t txPower;
 
-  ConfigureRadio(dataRate, freq);
+  LoRa_ConfigureRadio(dataRate, freq);
 
   if(ISM_EU868 == loRa.LoRa_ismBand)
     {

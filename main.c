@@ -84,16 +84,13 @@ void main(void)
   // Disable the Peripheral Interrupts
   //INTERRUPT_PeripheralInterruptDisable();
 
-  //  LORAWAN_Init(RxData, RxJoinResponse);
   LoRa_System_Init();
-    //  LORAWAN_Join(ABP);
   uint8_t bufor[20];
   sprintf(bufor, "test Lora");
   while(1)
     {
       // Add your application code
-      LORAWAN_Mainloop();
-      //      LORAWAN_Send(UNCNF, 2, "LoRa", 4);
+      LoRa_Mainloop();
       if(loRa.LoRa_StatusDanych == LoRa_transmitIdle)
         {
           LoRa_Reset(ISM_EU868);

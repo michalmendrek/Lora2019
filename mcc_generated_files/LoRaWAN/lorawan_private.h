@@ -94,7 +94,7 @@ extern "C"
 #define FPORT_MIN                               1
 #define FPORT_MAX                               223
 
-//#define MAX_NB_CMD_TO_PROCESS                   16     
+  //#define MAX_NB_CMD_TO_PROCESS                   16     
 
   //13 = sizeof(MIC) + MHDR + FHDR + sizeof (fPort);
 #define HDRS_MIC_PORT_MIN_SIZE 13 
@@ -122,18 +122,7 @@ extern "C"
 
   typedef enum
   {
-    IDLE = 0,
-    TRANSMISSION_OCCURRING,
-    BEFORE_RX1, //between TX and RX1, FSK can occur
-    RX1_OPEN,
-    BETWEEN_RX1_RX2, //FSK can occur
-    RX2_OPEN,
-    RETRANSMISSION_DELAY, //used for ADR_ACK delay, FSK can occur
-    ABP_DELAY, //used for delaying in calling the join callback for ABP
-    CLASS_C_RX2_1_OPEN,
-    CLASS_C_RX2_2_OPEN,
-
-    LoRa_Idle,
+    LoRa_Idle = 0,
     LoRa_Handshaking_TX,
     LoRa_Handshaking_RX,
     LoRa_SendData_TX,
@@ -142,8 +131,8 @@ extern "C"
     LoRa_SendFailed,
     LoRa_Wait_retransmit,
     LoRa_transmit_Error,
-//    LoRa_transmit_OK,
-//    LoRa_Transmit_Fail
+    //    LoRa_transmit_OK,
+    //    LoRa_Transmit_Fail
   } LoRaTransmitState_t;
 
   typedef enum
@@ -369,12 +358,6 @@ extern "C"
 
   void LoRa_UpdateTxPower(uint8_t txPowerNew);
 
-  void UpdateRetransmissionAckTimeoutState(void);
-
-
-  void UpdateReceiveWindow2Parameters(uint32_t frequency, uint8_t dataRate);
-
-  void UpdateDLSettings(uint8_t dlRx2Dr, uint8_t dlRx1DrOffset);
 
   LorawanError_t ValidateDataRate(uint8_t dataRate);
 
@@ -384,18 +367,7 @@ extern "C"
 
   LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t channelRx);
 
-  void ResetParametersForConfirmedTransmission(void);
-
-  void ResetParametersForUnconfirmedTransmission(void);
-
-  void SetJoinFailState(void);
-
   uint16_t Random(uint16_t max);
-
-
-  LorawanError_t SelectChannelForTransmission(bool transmissionType); // transmission type is 0 means join request, transmission type is 1 means data message mode
-
-  void StartReTxTimer(void);
 
   LorawanError_t SearchAvailableChannel(uint8_t maxChannels, bool transmissionType, uint8_t* channelIndex);
 
@@ -411,9 +383,8 @@ extern "C"
 
   uint8_t* ExecuteRxParamSetupReq(uint8_t *ptr);
 
-  void ConfigureRadio(uint8_t dataRate, uint32_t freq);
+  void LoRa_ConfigureRadio(uint8_t dataRate, uint32_t freq);
 
-  uint32_t GetRx1Freq(void);
 
   void LORAWAN_EnterContinuousReceive(void);
 
