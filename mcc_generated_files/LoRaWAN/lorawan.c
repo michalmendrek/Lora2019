@@ -317,69 +317,7 @@ static void LoRa_AssemblePacket(uint8_t *buffer, uint16_t bufferLength, uint8_t 
 
 LorawanError_t LORAWAN_Join(ActivationType_t activationTypeNew)
 {
-  uint8_t bufferIndex;
-  LorawanError_t result;
 
-  if(loRa.macStatus.macPause == ENABLED)
-    {
-      return MAC_PAUSED; // Any further transmissions or receptions cannot occur is macPaused is enabled.
-    }
-
-  if(loRa.macStatus.silentImmediately == ENABLED)
-    {
-      return SILENT_IMMEDIATELY_ACTIVE;
-    }
-
-  if(loRa.macStatus.macState != IDLE)
-    {
-      return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
-    }
-
-  loRa.activationParameters.activationType = activationTypeNew;
-
-  if(OTAA == activationTypeNew)
-    {
-      //OTAA
-      if((loRa.macKeys.deviceEui == 0) || (loRa.macKeys.applicationEui == 0) || (loRa.macKeys.applicationKey == 0))
-        {
-          return KEYS_NOT_INITIALIZED;
-        }
-      else
-        {
-          result = SelectChannelForTransmission(0);
-
-          if(result == OK)
-            {
-              if(RADIO_Transmit(macBuffer, bufferIndex) == OK)
-                {
-                  UpdateJoinInProgress(TRANSMISSION_OCCURRING);
-                  return OK;
-                }
-              else
-                {
-                  return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
-                }
-            }
-          else
-            {
-              return result;
-            }
-        }
-    }
-  else
-    {
-      //ABP
-      if((loRa.macKeys.applicationSessionKey == 0) || (loRa.macKeys.networkSessionKey == 0) || (loRa.macKeys.deviceAddress == 0))
-        {
-          return KEYS_NOT_INITIALIZED;
-        }
-      else
-        {
-          UpdateJoinInProgress(ABP_DELAY);
-
-          return OK;
-        }
-    }
 }
 
 LorawanError_t LORAWAN_Send(TransmissionType_t confirmed, uint8_t port, void *buffer, uint8_t bufferLength)
@@ -456,43 +394,14 @@ LorawanError_t LORAWAN_Send(TransmissionType_t confirmed, uint8_t port, void *bu
 
 LorawanError_t LORAWAN_SetMcast(bool status)
 {
-  if(CLASS_A == loRa.deviceClass)
-    {
-      return INVALID_CLASS; // it works only for Class B and Class C
-    }
-
-  // Only ABP shall be checked
-  if(CLASS_C == loRa.deviceClass)
-    {
-      if(ENABLED == status)
-        {
-          if((0 == loRa.macKeys.mcastApplicationSessionKey) ||
-             (0 == loRa.macKeys.mcastNetworkSessionKey) ||
-             (0 == loRa.macKeys.mcastDeviceAddress))
-            {
-              return MCAST_PARAM_ERROR;
-            }
-
-          loRa.macStatus.mcastEnable = ENABLED;
-        }
-      else
-        {
-          loRa.macStatus.mcastEnable = DISABLED;
-        }
-    }
-
-  return OK;
-}
+  }
 
 bool LORAWAN_GetMcast(void)
 {
-  return loRa.macStatus.mcastEnable;
-}
+  }
 
 void LORAWAN_SetMcastDeviceAddress(uint32_t mcastDeviceAddressNew)
 {
-  loRa.activationParameters.mcastDeviceAddress.value = mcastDeviceAddressNew;
-  loRa.macKeys.mcastDeviceAddress = 1;
 }
 
 uint32_t LORAWAN_GetMcastDeviceAddress(void)
@@ -502,14 +411,10 @@ uint32_t LORAWAN_GetMcastDeviceAddress(void)
 
 void LORAWAN_SetMcastNetworkSessionKey(uint8_t *mcastNetworkSessionKeyNew)
 {
-  memcpy(loRa.activationParameters.mcastNetworkSessionKey, mcastNetworkSessionKeyNew, 16);
-  loRa.macKeys.mcastNetworkSessionKey = 1;
-}
+  }
 
 void LORAWAN_SetMcastApplicationSessionKey(uint8_t *mcastApplicationSessionKeyNew)
 {
-  memcpy(loRa.activationParameters.mcastApplicationSessionKey, mcastApplicationSessionKeyNew, 16);
-  loRa.macKeys.mcastApplicationSessionKey = 1;
 }
 
 void LORAWAN_GetMcastApplicationSessionKey(uint8_t *mcastApplicationSessionKey)
@@ -530,12 +435,6 @@ void LORAWAN_GetMcastNetworkSessionKey(uint8_t *mcastNetworkSessionKey)
 
 void LORAWAN_SetDeviceEui(uint8_t *deviceEuiNew)
 {
-  if(deviceEuiNew != NULL)
-    {
-      memcpy(loRa.activationParameters.deviceEui.buffer, deviceEuiNew, sizeof(loRa.activationParameters.deviceEui));
-      loRa.macKeys.deviceEui = 1;
-      loRa.macStatus.networkJoined = DISABLED; // this is a guard against overwriting any of the addresses after one join was already done. If any of the addresses change, rejoin is needed
-    }
 }
 
 void LORAWAN_GetDeviceEui(uint8_t *deviceEui)
@@ -543,26 +442,9 @@ void LORAWAN_GetDeviceEui(uint8_t *deviceEui)
   memcpy(deviceEui, loRa.activationParameters.deviceEui.buffer, sizeof(loRa.activationParameters.deviceEui));
 }
 
-void LORAWAN_SetApplicationEui(uint8_t *applicationEuiNew)
-{
-  if(applicationEuiNew != NULL)
-    {
-      memcpy(loRa.activationParameters.applicationEui.buffer, applicationEuiNew, 8);
-      loRa.macKeys.applicationEui = 1;
-      loRa.macStatus.networkJoined = DISABLED; // this is a guard against overwriting any of the addresses after one join was already done. If any of the addresses change, rejoin is needed
-    }
-}
-
 void LORAWAN_GetApplicationEui(uint8_t *applicationEui)
 {
   memcpy(applicationEui, loRa.activationParameters.applicationEui.buffer, sizeof(loRa.activationParameters.applicationEui));
-}
-
-void LORAWAN_SetDeviceAddress(uint32_t deviceAddressNew)
-{
-  loRa.activationParameters.deviceAddress.value = deviceAddressNew;
-  loRa.macKeys.deviceAddress = 1;
-  loRa.macStatus.networkJoined = DISABLED; // this is a guard against overwriting any of the addresses after one join was already done. If any of the addresses change, rejoin is needed
 }
 
 uint32_t LORAWAN_GetDeviceAddress(void)
@@ -570,44 +452,9 @@ uint32_t LORAWAN_GetDeviceAddress(void)
   return loRa.activationParameters.deviceAddress.value;
 }
 
-void LORAWAN_SetNetworkSessionKey(uint8_t *networkSessionKeyNew)
-{
-  if(networkSessionKeyNew != NULL)
-    {
-      memcpy(loRa.activationParameters.networkSessionKey, networkSessionKeyNew, 16);
-      loRa.macKeys.networkSessionKey = 1;
-      loRa.macStatus.networkJoined = DISABLED; // this is a guard against overwriting any of the addresses after one join was already done. If any of the addresses change, rejoin is needed
-    }
-}
-
 void LORAWAN_GetNetworkSessionKey(uint8_t *networkSessionKey)
 {
   memcpy(networkSessionKey, loRa.activationParameters.networkSessionKey, sizeof(loRa.activationParameters.networkSessionKey));
-}
-
-void LORAWAN_SetApplicationSessionKey(uint8_t *applicationSessionKeyNew)
-{
-  if(applicationSessionKeyNew != NULL)
-    {
-      memcpy(loRa.activationParameters.applicationSessionKey, applicationSessionKeyNew, 16);
-      loRa.macKeys.applicationSessionKey = 1;
-      loRa.macStatus.networkJoined = DISABLED; // this is a guard against overwriting any of the addresses after one join was already done. If any of the addresses change, rejoin is needed
-    }
-}
-
-void LORAWAN_GetApplicationSessionKey(uint8_t *applicationSessionKey)
-{
-  memcpy(applicationSessionKey, loRa.activationParameters.applicationSessionKey, sizeof(loRa.activationParameters.applicationSessionKey));
-}
-
-void LORAWAN_SetApplicationKey(uint8_t *applicationKeyNew)
-{
-  if(applicationKeyNew != NULL)
-    {
-      memcpy(loRa.activationParameters.applicationKey, applicationKeyNew, 16);
-      loRa.macKeys.applicationKey = 1;
-      loRa.macStatus.networkJoined = DISABLED; // this is a guard against overwriting any of the addresses after one join was already done. If any of the addresses change, rejoin is needed
-    }
 }
 
 void LORAWAN_GetApplicationKey(uint8_t *applicationKey)
@@ -652,7 +499,7 @@ LorawanError_t LORAWAN_SetTxPower(uint8_t txPowerNew)
 
   if(ValidateTxPower(txPowerNew) == OK)
     {
-      UpdateTxPower(txPowerNew);
+      LoRa_UpdateTxPower(txPowerNew);
     }
   else
     {
@@ -661,19 +508,19 @@ LorawanError_t LORAWAN_SetTxPower(uint8_t txPowerNew)
   return result;
 }
 
-uint8_t LORAWAN_GetTxPower(void)
+uint8_t LoRa_GetTxPower(void)
 {
-  return loRa.txPower;
+  return loRa.LoRa_txPower;
 }
 
-uint8_t LORAWAN_GetSyncWord(void)
+uint8_t LoRa_GetSyncWord(void)
 {
-  return loRa.syncWord;
+  return loRa.LoRa_syncWord;
 }
 
-void LORAWAN_SetSyncWord(uint8_t syncWord)
+void LoRa_SetSyncWord(uint8_t syncWord)
 {
-  loRa.syncWord = syncWord;
+  loRa.LoRa_syncWord = syncWord;
 }
 
 void LORAWAN_SetUplinkCounter(uint32_t ctr)
@@ -700,63 +547,63 @@ uint32_t LORAWAN_GetDownlinkCounter(void)
 
 void LORAWAN_SetReceiveDelay1(uint16_t receiveDelay1New)
 {
-  }
+}
 
 uint16_t LORAWAN_GetReceiveDelay1(void)
 {
-  }
+}
 
 uint16_t LORAWAN_GetReceiveDelay2(void)
 {
-  }
+}
 
 void LORAWAN_SetJoinAcceptDelay1(uint16_t joinAcceptDelay1New)
 {
-  }
+}
 
 uint16_t LORAWAN_GetJoinAcceptDelay1(void)
 {
-  }
+}
 
 void LORAWAN_SetJoinAcceptDelay2(uint16_t joinAcceptDelay2New)
 {
-  }
+}
 
 uint16_t LORAWAN_GetJoinAcceptDelay2(void)
 {
-  }
+}
 
 void LORAWAN_SetMaxFcntGap(uint16_t maxFcntGapNew)
 {
-  }
+}
 
 uint16_t LORAWAN_GetMaxFcntGap(void)
 {
-  }
+}
 
 void LORAWAN_SetAdrAckLimit(uint8_t adrAckLimitNew)
 {
-  }
+}
 
 uint8_t LORAWAN_GetAdrAckLimit(void)
 {
-  }
+}
 
 void LORAWAN_SetAdrAckDelay(uint8_t adrAckDelayNew)
 {
-  }
+}
 
 uint8_t LORAWAN_GetAdrAckDelay(void)
 {
-  }
+}
 
 void LORAWAN_SetAckTimeout(uint16_t ackTimeoutNew)
 {
- }
+}
 
 uint16_t LORAWAN_GetAckTimeout(void)
 {
-  }
+}
 
 void LORAWAN_SetClass(LoRaClass_t deviceClass)
 {
@@ -792,14 +639,7 @@ uint32_t LORAWAN_GetMcastDownCounter()
 
 void LORAWAN_SetNumberOfRetransmissions(uint8_t numberRetransmissions)
 {
-  loRa.maxRepetitionsConfirmedUplink = numberRetransmissions;
-}
 
-// for confirmed frames, default value is 8. The number of retransmissions includes also the first transmission
-
-uint8_t LORAWAN_GetNumberOfRetransmissions(void)
-{
-  return loRa.maxRepetitionsConfirmedUplink;
 }
 
 void LORAWAN_GetReceiveWindow2Parameters(uint32_t* frequency, uint8_t* dataRate)
@@ -814,14 +654,6 @@ void LORAWAN_GetReceiveWindow2Parameters(uint32_t* frequency, uint8_t* dataRate)
 void LoRa_SetBattery(uint8_t batteryLevelNew)
 {
   loRa.LoRa_batteryLevel = batteryLevelNew;
-}
-
-// the LORAWAN_GetPrescaler function returns the prescaler value that is sent by the server to the end device via the Mac Command
-// not user configurable
-
-uint16_t LORAWAN_GetPrescaler(void)
-{
-  return loRa.prescaler;
 }
 
 // if status is enabled, responses to ACK and MAC commands will be sent immediately
@@ -877,7 +709,7 @@ uint32_t LORAWAN_Pause(void)
             }
           else if(loRa.macStatus.networkJoined == ENABLED)
             {
-              
+
             }
         }
         break;
@@ -932,7 +764,7 @@ void LORAWAN_Resume(void)
 
 void LORAWAN_LinkCheckConfigure(uint16_t period)
 {
-  }
+}
 
 // if LORAWAN_ForceEnable is sent, the Silent Immediately bit sent by the end device is discarded and transmission is possible again
 
@@ -1003,9 +835,9 @@ void LoRa_UpdateCurrentDataRate(uint8_t valueNew)
   loRa.LoRa_currentDataRate = valueNew;
 }
 
-void UpdateTxPower(uint8_t txPowerNew)
+void LoRa_UpdateTxPower(uint8_t txPowerNew)
 {
-  loRa.txPower = txPowerNew;
+  loRa.LoRa_txPower = txPowerNew;
 }
 
 void UpdateRetransmissionAckTimeoutState(void)
@@ -1015,22 +847,16 @@ void UpdateRetransmissionAckTimeoutState(void)
 
 void UpdateReceiveWindow2Parameters(uint32_t frequency, uint8_t dataRate)
 {
-  loRa.receiveWindow2Parameters.dataRate = dataRate;
-  loRa.receiveWindow2Parameters.frequency = frequency;
 }
 
 void ResetParametersForConfirmedTransmission(void)
 {
-  loRa.macStatus.macState = IDLE;
-  loRa.counterRepetitionsConfirmedUplink = 1;
-  loRa.lorawanMacStatus.ackRequiredFromNextDownlinkMessage = DISABLED;
+
 }
 
 void ResetParametersForUnconfirmedTransmission(void)
 {
-  loRa.macStatus.macState = IDLE;
-  loRa.counterRepetitionsUnconfirmedUplink = 1;
-  loRa.crtMacCmdIndex = 0;
+
 }
 
 void SetJoinFailState(void)
@@ -1058,8 +884,8 @@ LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength)
 static uint8_t LoRa_GetMaxPayloadSize(void)
 {
   uint8_t result;
-      result = LoRa_maxPayloadSize[loRa.LoRa_currentDataRate];
- 
+  result = LoRa_maxPayloadSize[loRa.LoRa_currentDataRate];
+
   return result;
 }
 
@@ -1206,7 +1032,7 @@ static void ConfigureRadioRx(uint8_t dataRate, uint32_t freq)
 
 static void UpdateReceiveDelays(uint8_t delay)
 {
- }
+}
 
 static void UpdateJoinInProgress(uint8_t state)
 {

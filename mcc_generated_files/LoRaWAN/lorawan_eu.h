@@ -141,27 +141,14 @@ extern "C"
     ActivationParameters_t activationParameters;
 
     IsmBand_t ismBand;
-    LorawanMacKeys_t macKeys;
     uint8_t crtMacCmdIndex;
     LorawanCommands_t macCommands[MAX_NB_CMD_TO_PROCESS];
 
     uint16_t devNonce;
     uint16_t lastPacketLength;
-    uint8_t maxRepetitionsUnconfirmedUplink;
-    uint8_t maxRepetitionsConfirmedUplink;
-    uint8_t counterRepetitionsUnconfirmedUplink;
-    uint8_t counterRepetitionsConfirmedUplink;
-    uint8_t lastUsedChannelIndex;
-    uint16_t prescaler;
 
-//    uint8_t minDataRate;
-//    uint8_t maxDataRate;
-//    uint8_t maxChannels;
-    uint8_t counterAdrAckDelay;
-    uint8_t offset;
     bool macInitialized;
-    uint8_t syncWord;
-    uint8_t txPower;
+    
     FCnt_t fCntUp;
     /************************************************/
     //LoRa

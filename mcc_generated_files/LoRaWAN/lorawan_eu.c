@@ -424,175 +424,14 @@ uint8_t LORAWAN_GetIsmBand(void) //returns the ISM band
 
 void LORAWAN_TxDone(uint16_t timeOnAir)
 {
-  if(loRa.macStatus.macPause == DISABLED)
-    {
-      bool found = false;
-      uint8_t i;
-      uint32_t delta = 0, minim = UINT32_MAX, ticks;
-
-      //This flag is used when the reception in RX1 is overlapping the opening of RX2
-
-      loRa.macStatus.macState = BEFORE_RX1;
-
-      i = loRa.lastUsedChannelIndex;
-
-      // the join request should never exceed 0.1%
-      if(loRa.lorawanMacStatus.joining == 1)
-        {
-          LoRa_Channels[i].channelTimer = ((uint32_t) timeOnAir) * (((uint32_t) DUTY_CYCLE_JOIN_REQUEST + 1) * ((uint32_t) loRa.prescaler) - 1);
-        }
-      else
-        {
-
-          if(CLASS_A == loRa.deviceClass)
-            {
-            }
-
-          LoRa_Channels[i].channelTimer = ((uint32_t) timeOnAir) * (((uint32_t) LoRa_Channels[i].dutyCycle + 1) * ((uint32_t) loRa.prescaler) - 1);
-        }
-      
-      for(i = 0; i < MAX_EU_SINGLE_BAND_CHANNELS; i++)
-        {
-          if((LoRa_Channels[i].status == ENABLED) && (LoRa_Channels[i].channelTimer != 0))
-            {
-              if(i != loRa.lastUsedChannelIndex)
-                {
-                  if(LoRa_Channels[i].channelTimer > delta)
-                    {
-                      LoRa_Channels[i].channelTimer = LoRa_Channels[i].channelTimer - delta;
-                    }
-                  else
-                    {
-                      LoRa_Channels[i].channelTimer = 0;
-                    }
-                }
-              if((LoRa_Channels[i].channelTimer <= minim) && (LoRa_Channels[i].channelTimer != 0))
-                {
-                  minim = LoRa_Channels[i].channelTimer;
-                  found = true;
-                }
-            }
-        }
-      if(found == true)
-        {
-          loRa.XXX_lastTimerValue = minim;
-         }
-      if(CLASS_C == loRa.deviceClass)
-        {
-          loRa.macStatus.macState = CLASS_C_RX2_1_OPEN;
-          LORAWAN_EnterContinuousReceive();
-        }
-    }
-  else
-    {
-      if((RADIO_GetStatus() & RADIO_FLAG_TIMEOUT) != 0)
-        {
-          // Radio transmission ended by watchdog timer
-          rxPayload.RxAppData(NULL, 0, RADIO_NOT_OK);
-        }
-      else
-        {
-          //Standalone radio transmissions finished OK, using the same callback as in LoRaWAN tx
-          if(rxPayload.RxAppData != NULL)
-            {
-              rxPayload.RxAppData(NULL, 0, RADIO_OK);
-            }
-        }
-    }
+   
 }
 
 // this function is called by the radio when the first or the second receive window expired without receiving any message (either for join accept or for message)
 
 void LORAWAN_RxTimeout(void)
 {
-  uint8_t i;
-  uint32_t minim = UINT32_MAX;
-
-  if(loRa.macStatus.macPause == 0)
-    {
-      // if the timeout is after the first receive window, we have to wait for the second receive window....
-      if(loRa.macStatus.macState == RX1_OPEN)
-        {
-          if(CLASS_A == loRa.deviceClass)
-            {
-              loRa.macStatus.macState = BETWEEN_RX1_RX2;
-            }
-          else if(CLASS_C == loRa.deviceClass)
-            {
-
-            }
-        }
-      else
-        {
-          // if last message sent was a join request, the join was not accepted after the second window expired
-          if(loRa.lorawanMacStatus.joining == 1)
-            {
-              SetJoinFailState();
-            }
-            // if last message sent was a data message, and there was no reply...
-          else if(loRa.macStatus.networkJoined == 1)
-            {
-              if(loRa.lorawanMacStatus.ackRequiredFromNextDownlinkMessage == ENABLED) // if last uplink packet was confirmed, we have to send this packet by the number indicated by NbRepConfFrames
-                {
-                  if(loRa.counterRepetitionsConfirmedUplink <= loRa.maxRepetitionsConfirmedUplink)
-                    {
-                      loRa.macStatus.macState = RETRANSMISSION_DELAY;                      
-                    }
-                  else
-                    {
-                      ResetParametersForConfirmedTransmission();
-                      if(rxPayload.RxAppData != NULL)
-                        {
-                          rxPayload.RxAppData(NULL, 0, MAC_NOT_OK);
-                        }
-                    }
-                }
-
-              else
-                {
-                  if(loRa.counterRepetitionsUnconfirmedUplink <= loRa.maxRepetitionsUnconfirmedUplink)
-                    {
-                      loRa.macStatus.macState = RETRANSMISSION_DELAY;
-                      if(SelectChannelForTransmission(1) == OK)
-                        {
-                          //resend the last packet if the radio transmit function succeedes
-                          if(RADIO_Transmit(&macBuffer[16], loRa.lastPacketLength) == OK)
-                            {
-                              loRa.counterRepetitionsUnconfirmedUplink++; //for each retransmission, the counter increments
-                              loRa.macStatus.macState = TRANSMISSION_OCCURRING; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
-                            }
-                          else
-                            // if radio cannot transmit, then no more retransmissions will occur for this packet
-                            {
-                              ResetParametersForUnconfirmedTransmission();
-                              if(rxPayload.RxAppData != NULL)
-                                {
-                                  rxPayload.RxAppData(NULL, 0, MAC_NOT_OK); // inform the application layer that no message was received back from the server
-                                }
-                            }
-                        }
-                      
-                    }
-                  else
-                    {
-                      ResetParametersForUnconfirmedTransmission();
-                      if(rxPayload.RxAppData != NULL)
-                        {
-                          rxPayload.RxAppData(NULL, 0, MAC_OK); // inform the application layer that no message was received back from the server
-                        }
-                    }
-                }
-            }
-        }
-    }
-  else
-    {
-      //Standalone radio reception NOK, using the same callback as in LoRaWAN rx
-      if(rxPayload.RxAppData != NULL)
-        {
-          rxPayload.RxAppData(NULL, 0, RADIO_NOT_OK);
-        }
-    }
+  
 }
 
 LorawanError_t ValidateDataRate(uint8_t dataRate)
@@ -621,21 +460,7 @@ LorawanError_t ValidateTxPower(uint8_t txPowerNew)
 
 uint8_t* ExecuteDutyCycle(uint8_t *ptr)
 {
-  uint8_t maxDCycle;
-
-  maxDCycle = *(ptr++);
-  if(maxDCycle < 15)
-    {
-      loRa.prescaler = 1 << maxDCycle; // Execute the 2^maxDCycle here
-      loRa.macStatus.prescalerModified = ENABLED;
-    }
-
-  if(maxDCycle == 255)
-    {
-      loRa.macStatus.silentImmediately = ENABLED;
-    }
-
-  return ptr;
+  
 }
 
 uint8_t* ExecuteLinkAdr(uint8_t *ptr)
@@ -650,103 +475,12 @@ uint8_t* ExecuteDevStatus(uint8_t *ptr)
 
 uint8_t* ExecuteNewChannel(uint8_t *ptr)
 {
-  uint8_t channelIndex;
-  DataRange_t drRange;
-  uint32_t frequency = 0;
-
-  channelIndex = *(ptr++);
-
-  frequency = (*((uint32_t*) ptr)) & 0x00FFFFFF;
-  frequency = frequency * 100;
-  ptr = ptr + 3; // 3 bytes for frequecy
-
-  drRange.value = *(ptr++);
-
-  if(ValidateChannelId(channelIndex, WITHOUT_DEFAULT_CHANNELS) == OK)
-    {
-      if((ValidateFrequency(frequency) == OK) || (frequency == 0))
-        {
-          loRa.macCommands[loRa.crtMacCmdIndex].channelFrequencyAck = 1;
-        }
-
-      if(ValidateDataRange(drRange.value) == OK)
-        {
-          loRa.macCommands[loRa.crtMacCmdIndex].dataRateRangeAck = 1;
-        }
-    }
-
-  if((loRa.macCommands[loRa.crtMacCmdIndex].channelFrequencyAck == 1) && (loRa.macCommands[loRa.crtMacCmdIndex].dataRateRangeAck == 1))
-    {
-      if(loRa.lastUsedChannelIndex < 16)
-        {
-          if(frequency != 0)
-            {
-              UpdateFrequency(channelIndex, frequency);
-              LoRa_UpdateDataRange(channelIndex, drRange.value);
-              UpdateDutyCycle(channelIndex, DUTY_CYCLE_DEFAULT);
-              LoRa_UpdateChannelIdStatus(channelIndex, ENABLED);
-            }
-          else
-            {
-              LORAWAN_SetChannelIdStatus(channelIndex, DISABLED); // according to the spec, a frequency value of 0 disables the channel
-            }
-        }
-      else
-        {
-          if(frequency != 0)
-            {
-              UpdateFrequency(channelIndex + 16, frequency);
-              LoRa_UpdateDataRange(channelIndex + 16, drRange.value);
-              UpdateDutyCycle(channelIndex + 16, DUTY_CYCLE_DEFAULT);
-              LoRa_UpdateChannelIdStatus(channelIndex + 16, ENABLED);
-            }
-          else
-            {
-              LORAWAN_SetChannelIdStatus(channelIndex + 16, DISABLED); // according to the spec, a frequency value of 0 disables the channel
-            }
-        }
-
-      loRa.macStatus.channelsModified = 1; // a new channel was added, so the flag is set to inform the user
-    }
-  return ptr;
+ 
 }
 
 uint8_t* ExecuteRxParamSetupReq(uint8_t *ptr)
 {
-  DlSettings_t dlSettings;
-  uint32_t frequency = 0;
-
-  //In the status field (response) we have to include the following: channle ACK, RX2 data rate ACK, RX1DoffsetACK
-
-  dlSettings.value = *(ptr++);
-
-  frequency = (*((uint32_t*) ptr)) & 0x00FFFFFF;
-  frequency = frequency * 100;
-  ptr = ptr + 3; //3 bytes for frequency
-
-  if(ValidateFrequency(frequency) == OK)
-    {
-      loRa.macCommands[loRa.crtMacCmdIndex].channelAck = 1;
-    }
-
-  if(ValidateDataRate(dlSettings.bits.rx2DataRate) == OK)
-    {
-      loRa.macCommands[loRa.crtMacCmdIndex].dataRateReceiveWindowAck = 1;
-    }
-
-  if(ValidateRxOffset(dlSettings.bits.rx1DROffset) == OK)
-    {
-      loRa.macCommands[loRa.crtMacCmdIndex].rx1DROffestAck = 1;
-    }
-
-  if((loRa.macCommands[loRa.crtMacCmdIndex].dataRateReceiveWindowAck == 1) && (loRa.macCommands[loRa.crtMacCmdIndex].channelAck == 1) && (loRa.macCommands[loRa.crtMacCmdIndex].rx1DROffestAck == 1))
-    {
-      loRa.offset = dlSettings.bits.rx1DROffset;
-      UpdateReceiveWindow2Parameters(frequency, dlSettings.bits.rx2DataRate);
-      loRa.macStatus.secondReceiveWindowModified = 1;
-    }
-
-  return ptr;
+  
 }
 
 LorawanError_t SearchAvailableChannel(uint8_t maxChannels, bool transmissionType, uint8_t* channelIndex)
@@ -820,16 +554,7 @@ uint32_t GetRx1Freq(void)
 
 void UpdateDLSettings(uint8_t dlRx2Dr, uint8_t dlRx1DrOffset)
 {
-  if(dlRx2Dr <= DR7)
-    {
-      loRa.receiveWindow2Parameters.dataRate = dlRx2Dr;
-    }
 
-  if(dlRx1DrOffset <= 5)
-    {
-      // update the offset between the uplink data rate and the downlink data rate used to communicate with the end device on the first reception slot
-      loRa.offset = dlRx1DrOffset;
-    }
 }
 
 void StartReTxTimer(void)

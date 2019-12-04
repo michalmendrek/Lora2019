@@ -367,7 +367,7 @@ extern "C"
 
   void LoRa_UpdateCurrentDataRate(uint8_t valueNew);
 
-  void UpdateTxPower(uint8_t txPowerNew);
+  void LoRa_UpdateTxPower(uint8_t txPowerNew);
 
   void UpdateRetransmissionAckTimeoutState(void);
 

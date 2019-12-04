@@ -388,23 +388,7 @@ extern "C"
    */
   void LORAWAN_GetDeviceEui(uint8_t *deviceEui);
 
-  /**
-   * @Summary
-      Sets the application identifier.
-   * @Description
-      This function sets the end-device Application identifier (AppEUI)
-      The AppEUI is a global application ID in IEEE EUI64 address space that uniquely identifies the application provider (i.e., owner) of the end-device.
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      applicationEuiNew - buffer where AppEUI is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetApplicationEui(uint8_t *applicationEuiNew);
-
-  /**
+    /**
    * @Summary
       Gets the value of the application identifier.
    * @Description
@@ -421,22 +405,7 @@ extern "C"
    */
   void LORAWAN_GetApplicationEui(uint8_t *applicationEui);
 
-  /**
-   * @Summary
-      Sets end-device address.
-   * @Description
-      This function sets the end-device address (DevAddr).
-      The DevAddr is a 32bit identifier of the end-device within the current network.
-   * @Preconditions
-      None
-   * @Param
-      deviceAddressNew - the value of the new address to be set
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetDeviceAddress(uint32_t deviceAddressNew);
-
+  
   /**
    * @Summary
       Returns the address of end-device.
@@ -510,24 +479,7 @@ extern "C"
    */
   uint32_t LORAWAN_GetMcastDownCounter();
 
-  /**
-   * @Summary
-      Sets the network session key.
-   * @Description
-      This function sets the Network Session key (NwkSKey). 
-      The NwkSKey is a network session key specific for the end-device and
-      it is used to calculate and verify the MIC (Message Integrity Code).
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      networkSessionKeyNew - buffer where the value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetNetworkSessionKey(uint8_t *networkSessionKeyNew);
-
-  /**
+    /**
    * @Summary
       Gets the network session key.
    * @Description
@@ -544,58 +496,7 @@ extern "C"
    */
   void LORAWAN_GetNetworkSessionKey(uint8_t *networkSessionKey);
 
-  /**
-   * @Summary
-      Sets the application session key.
-   * @Description
-      This function sets the Application Session Key (AppSKey).
-      The AppSKey is an application session key specific for the end-device;
-      it is used to encrypt/decrypt the payload field of application-specific data messages,
-      and also to calculate/verify an application-level MIC (Message Integrity Code)that may be included in the payload.
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      applicationSessionKeyNew - buffer where the value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetApplicationSessionKey(uint8_t *applicationSessionKeyNew);
-
-  /**
-   * @Summary
-      Gets the application session key.
-   * @Description
-      This function gets the Application Session Key (AppSKey). 
-      The AppSKey is an application session key specific for the end-device
-      it is used to encrypt/decrypt the payload field of application-specific data messages,
-      and also to calculate/verify an application-level MIC that may be included in the payload.
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      applicationSessionKey - buffer where the value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_GetApplicationSessionKey(uint8_t *applicationSessionKey);
-
-  /**
-   * @Summary
-      Sets the application key.
-   * @Description
-      This function sets the Application Key (AppKey).
-      The AppKey is an AES-128 application key specific for the end-device that is assigned by the application owner to the end-device.
-   * @Preconditions
-      Pointer must be allocated by caller.
-   * @Param
-      applicationKeyNew - buffer where the value is stored
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetApplicationKey(uint8_t *applicationKeyNew);
-
+  
   /**
    * @Summary
       Gets the application key.
@@ -719,7 +620,7 @@ extern "C"
       Returns TX output power value (uint8_t).
    * @Example
    */
-  uint8_t LORAWAN_GetTxPower(void);
+  uint8_t LoRa_GetTxPower(void);
 
   /**
    * @Summary
@@ -735,7 +636,7 @@ extern "C"
       None
    * @Example
    */
-  void LORAWAN_SetSyncWord(uint8_t syncWord);
+  void LoRa_SetSyncWord(uint8_t syncWord);
 
   /**
    * @Summary
@@ -751,7 +652,7 @@ extern "C"
       The value of the sync word (uint8_t).
    * @Example
    */
-  uint8_t LORAWAN_GetSyncWord(void);
+  uint8_t LoRa_GetSyncWord(void);
 
   /**
    * @Summary
@@ -1099,40 +1000,7 @@ extern "C"
    */
   uint16_t LORAWAN_GetAckTimeout(void);
 
-  /**
-   * @Summary
-      Sets the number of retransmissions.
-   * @Description
-      This function sets the number of retransmissions to be used for an uplink confirmed
-      packet, if no downlink acknowledgment is received from the server.
-      At reset, the number of retransmissions is defaulted to 7.
-   * @Preconditions
-      None
-   * @Param
-      numberRetransmissions - the new value
-   * @Returns
-      None
-   * @Example
-   */
-  void LORAWAN_SetNumberOfRetransmissions(uint8_t numberRetransmissions);
-
-  /**
-   * @Summary
-      Function returns the number of retransmissions.
-   * @Description
-      This function returns the number of retransmissions to be used for an uplink confirmed
-      packet, if no downlink acknowledgment is received from the server.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      The number of retransmissions (uint8_t).
-   * @Example
-   */
-  uint8_t LORAWAN_GetNumberOfRetransmissions(void);
-
-  /**
+    /**
    * @Summary
       Function sets the parameters for the second receive window (RX2).
    * @Description
@@ -1185,24 +1053,7 @@ extern "C"
    */
   void LORAWAN_SetBattery(uint8_t batteryLevelNew);
 
-  /**
-   * @Summary
-     Function returns the duty cycle prescaler value.
-   * @Description
-      This function returns the duty cycle prescaler. The value of the prescaler can be
-      configured ONLY by the SERVER through the use of the Duty Cycle Request frame.
-      Upon reception of this command from the server, the duty cycle prescaler is changed for all enabled channels.
-   * @Preconditions
-      None
-   * @Param
-      None
-   * @Returns
-      The value of the prescaler (uint16_t).
-   * @Example
-   */
-  uint16_t LORAWAN_GetPrescaler(void);
-
-  /**
+    /**
    * @Summary
       Function sets the automatic reply mode state.
    * @Description

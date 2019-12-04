@@ -86,10 +86,7 @@ void main(void)
 
   //  LORAWAN_Init(RxData, RxJoinResponse);
   LoRa_System_Init();
-  //  LORAWAN_SetNetworkSessionKey(nwkSKey);
-  //  LORAWAN_SetApplicationSessionKey(appSKey);
-  //  LORAWAN_SetDeviceAddress(devAddr);
-  //  LORAWAN_Join(ABP);
+    //  LORAWAN_Join(ABP);
   uint8_t bufor[20];
   sprintf(bufor, "test Lora");
   while(1)
