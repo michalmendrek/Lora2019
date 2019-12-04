@@ -140,14 +140,12 @@ extern "C"
     ReceiveWindowParameters_t receiveWindow2Parameters;
     ActivationParameters_t activationParameters;
     ChannelParams_t channelParameters;
-    ProtocolParams_t protocolParameters;
+
     IsmBand_t ismBand;
     LorawanMacKeys_t macKeys;
     uint8_t crtMacCmdIndex;
     LorawanCommands_t macCommands[MAX_NB_CMD_TO_PROCESS];
-    uint32_t lastTimerValue;
-    uint32_t periodForLinkCheck;
-    uint16_t adrAckCnt;
+
     uint16_t devNonce;
     uint16_t lastPacketLength;
     uint8_t maxRepetitionsUnconfirmedUplink;
@@ -157,7 +155,7 @@ extern "C"
     uint8_t lastUsedChannelIndex;
     uint16_t prescaler;
     uint8_t currentDataRate;
-    
+
     uint8_t minDataRate;
     uint8_t maxDataRate;
     uint8_t maxChannels;
@@ -199,7 +197,8 @@ extern "C"
     uint8_t LoRa_maxChannels;
     uint8_t LoRa_Command;
 
-
+    uint32_t XXX_lastTimerValue;
+    ProtocolParams_t LoRa_protocolParameters;
   } LoRa_t;
 
   extern LoRa_t loRa;

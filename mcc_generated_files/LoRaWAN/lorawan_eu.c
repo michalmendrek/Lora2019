@@ -308,16 +308,14 @@ void LORAWAN_Reset(IsmBand_t ismBandNew)
   RADIO_SetLoRaSyncWord(loRa.syncWord);
 
   loRa.macStatus.value = 0;
-  loRa.lastTimerValue = 0;
+  loRa.XXX_lastTimerValue = 0;
   loRa.lastPacketLength = 0;
   loRa.fCntDown.value = 0;
   loRa.fCntUp.value = 0;
   loRa.devNonce = 0;
   loRa.prescaler = 1;
-  loRa.adrAckCnt = 0;
   loRa.counterAdrAckDelay = 0;
   loRa.offset = 0;
-  loRa.lastTimerValue = 0;
 
   // link check mechanism should be disabled
   loRa.macStatus.linkCheck = DISABLED;
@@ -367,15 +365,6 @@ void LORAWAN_Reset(IsmBand_t ismBandNew)
   memset(&loRa.activationParameters, 0, sizeof(loRa.activationParameters));
 
   //protocol parameters receive the default values
-  loRa.protocolParameters.receiveDelay1 = RECEIVE_DELAY1;
-  loRa.protocolParameters.receiveDelay2 = RECEIVE_DELAY2;
-  loRa.protocolParameters.joinAcceptDelay1 = JOIN_ACCEPT_DELAY1;
-  loRa.protocolParameters.joinAcceptDelay2 = JOIN_ACCEPT_DELAY2;
-  loRa.protocolParameters.ackTimeout = ACK_TIMEOUT;
-  loRa.protocolParameters.adrAckDelay = ADR_ACK_DELAY;
-  loRa.protocolParameters.adrAckLimit = ADR_ACK_LIMIT;
-  loRa.protocolParameters.maxFcntGap = MAX_FCNT_GAP;
-  loRa.protocolParameters.maxMultiFcntGap = MAX_MCAST_FCNT_GAP;
 
   LORAWAN_LinkCheckConfigure(DISABLED); // disable the link check mechanism
 }
@@ -563,7 +552,7 @@ void LORAWAN_TxDone(uint16_t timeOnAir)
         }
       if(found == true)
         {
-          loRa.lastTimerValue = minim;
+          loRa.XXX_lastTimerValue = minim;
          }
       if(CLASS_C == loRa.deviceClass)
         {
@@ -1356,9 +1345,9 @@ static void LoRa_DutyCycleCallback(uint8_t param)
       //Validate this only for enabled channels
       if((Channels[i].status == ENABLED) && (Channels[i].channelTimer != 0))
         {
-          if(Channels[i].channelTimer > loRa.lastTimerValue)
+          if(Channels[i].channelTimer > loRa.XXX_lastTimerValue)
             {
-              Channels[i].channelTimer = Channels[i].channelTimer - loRa.lastTimerValue;
+              Channels[i].channelTimer = Channels[i].channelTimer - loRa.XXX_lastTimerValue;
             }
           else
             {
@@ -1373,7 +1362,7 @@ static void LoRa_DutyCycleCallback(uint8_t param)
     }
   if(found == true)
     {
-      loRa.lastTimerValue = minim;    
+      loRa.XXX_lastTimerValue = minim;    
     }
 }
 
