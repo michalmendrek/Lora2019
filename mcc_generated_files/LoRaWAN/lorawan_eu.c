@@ -95,19 +95,13 @@ static LorawanError_t LoRa_ValidateFrequency(uint32_t frequencyNew);
 
 static LorawanError_t ValidateDataRange(uint8_t dataRangeNew);
 
-static LorawanError_t ValidateChannelId(uint8_t channelId, bool allowedForDefaultChannels);
+static LorawanError_t LoRa_ValidateChannelId(uint8_t channelId, bool allowedForDefaultChannels);
 
 static LorawanError_t ValidateChannelMaskCntl(uint8_t channelMaskCntl);
 
-static void EnableChannels(uint16_t channelMask, uint8_t channelMaskCntl);
-
-static void UpdateFrequency(uint8_t channelId, uint32_t frequencyNew);
-
-static void UpdateDutyCycle(uint8_t channelId, uint16_t dutyCycleNew);
+static void LoRa_UpdateFrequency(uint8_t channelId, uint32_t frequencyNew);
 
 static LorawanError_t ValidateChannelMask(uint16_t channelMask);
-
-static void EnableChannels1(uint16_t channelMask, uint8_t channelMaskCntl, uint8_t channelIndexMin, uint8_t channelIndexMax);
 
 void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
 
@@ -269,7 +263,7 @@ LorawanError_t LoRa_SetDataRange(uint8_t channelId, uint8_t dataRangeNew)
 {
   LorawanError_t result = OK;
 
-  if((ValidateChannelId(channelId, ALL_CHANNELS) != OK) || (ValidateDataRange(dataRangeNew) != OK))
+  if((LoRa_ValidateChannelId(channelId, ALL_CHANNELS) != OK) || (ValidateDataRange(dataRangeNew) != OK))
     {
       result = INVALID_PARAMETER;
     }
@@ -281,91 +275,27 @@ LorawanError_t LoRa_SetDataRange(uint8_t channelId, uint8_t dataRangeNew)
   return result;
 }
 
-uint8_t LORAWAN_GetDataRange(uint8_t channelId)
+uint8_t LoRa_GetDataRange(uint8_t channelId)
 {
   uint8_t result = 0xFF;
 
-  if(ValidateChannelId(channelId, ALL_CHANNELS) == OK)
+  if(LoRa_ValidateChannelId(channelId, ALL_CHANNELS) == OK)
     {
       result = LoRa_Channels[channelId].dataRange.value;
     }
   return result;
 }
 
-LorawanError_t LORAWAN_SetChannelIdStatus(uint8_t channelId, bool statusNew)
+LorawanError_t LoRa_SetFrequency(uint8_t channelId, uint32_t frequencyNew)
 {
   LorawanError_t result = OK;
 
-
-  if(ValidateChannelId(channelId, ALL_CHANNELS) != OK)
-    {
-      result = INVALID_PARAMETER;
-    }
-
-  else
-    {
-      if((LoRa_Channels[channelId].parametersDefined & (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED)) == (FREQUENCY_DEFINED | DATA_RANGE_DEFINED | DUTY_CYCLE_DEFINED))
-        {
-          LoRa_UpdateChannelIdStatus(channelId, statusNew);
-        }
-      else
-        {
-          result = INVALID_PARAMETER;
-        }
-    }
-
-  return result;
-}
-
-bool LORAWAN_GetChannelIdStatus(uint8_t channelId)
-{
-  bool result = DISABLED;
-
-  if(ValidateChannelId(channelId, ALL_CHANNELS) == OK)
-    {
-      result = LoRa_Channels[channelId].status;
-    }
-  return result;
-}
-
-LorawanError_t LORAWAN_SetFrequency(uint8_t channelId, uint32_t frequencyNew)
-{
-  LorawanError_t result = OK;
-
-  if((ValidateChannelId(channelId, 0) != OK) || (LoRa_ValidateFrequency(frequencyNew) != OK))
+  if((LoRa_ValidateChannelId(channelId, 0) != OK) || (LoRa_ValidateFrequency(frequencyNew) != OK))
     {
       return INVALID_PARAMETER;
     }
 
-  UpdateFrequency(channelId, frequencyNew);
-
-  return result;
-}
-
-LorawanError_t LORAWAN_SetDutyCycle(uint8_t channelId, uint16_t dutyCycleValue)
-{
-  LorawanError_t result = OK;
-
-  if(ValidateChannelId(channelId, ALL_CHANNELS) == OK)
-    {
-      UpdateDutyCycle(channelId, dutyCycleValue);
-    }
-  else
-    {
-      result = INVALID_PARAMETER;
-    }
-
-  return result;
-}
-
-uint16_t LORAWAN_GetDutyCycle(uint8_t channelId)
-{
-  uint16_t result = UINT16_MAX;
-
-  if(ValidateChannelId(channelId, ALL_CHANNELS) == OK)
-    {
-      result = LoRa_Channels[channelId].dutyCycle;
-    }
+  LoRa_UpdateFrequency(channelId, frequencyNew);
 
   return result;
 }
@@ -375,17 +305,7 @@ uint8_t LoRa_GetIsmBand(void) //returns the ISM band
   return loRa.LoRa_ismBand;
 }
 
-void LORAWAN_TxDone(uint16_t timeOnAir)
-{
-
-}
-
 // this function is called by the radio when the first or the second receive window expired without receiving any message (either for join accept or for message)
-
-void LORAWAN_RxTimeout(void)
-{
-
-}
 
 LorawanError_t ValidateDataRate(uint8_t dataRate)
 {
@@ -409,36 +329,6 @@ LorawanError_t LoRa_ValidateTxPower(uint8_t txPowerNew)
     }
 
   return result;
-}
-
-uint8_t* ExecuteDutyCycle(uint8_t *ptr)
-{
-
-}
-
-uint8_t* ExecuteLinkAdr(uint8_t *ptr)
-{
-
-}
-
-uint8_t* ExecuteDevStatus(uint8_t *ptr)
-{
-  return ptr;
-}
-
-uint8_t* ExecuteNewChannel(uint8_t *ptr)
-{
-
-}
-
-uint8_t* ExecuteRxParamSetupReq(uint8_t *ptr)
-{
-
-}
-
-LorawanError_t SearchAvailableChannel(uint8_t maxChannels, bool transmissionType, uint8_t* channelIndex)
-{
-
 }
 
 void LoRa_ConfigureRadio(uint8_t dataRate, uint32_t freq)
@@ -579,7 +469,7 @@ static LorawanError_t ValidateDataRange(uint8_t dataRangeNew)
   return result;
 }
 
-static LorawanError_t ValidateChannelId(uint8_t channelId, bool allowedForDefaultChannels) //if allowedForDefaultChannels is 1, all the channels can be modified, if it is 0 channels 0, 1, 2 and 16, 17, and 18 (dual band) cannot be modified
+static LorawanError_t LoRa_ValidateChannelId(uint8_t channelId, bool allowedForDefaultChannels) //if allowedForDefaultChannels is 1, all the channels can be modified, if it is 0 channels 0, 1, 2 and 16, 17, and 18 (dual band) cannot be modified
 {
   LorawanError_t result = OK;
 
@@ -603,21 +493,10 @@ static LorawanError_t ValidateChannelMaskCntl(uint8_t channelMaskCntl)
   return result;
 }
 
-static void EnableChannels(uint16_t channelMask, uint8_t channelMaskCntl)
-{
-  EnableChannels1(channelMask, channelMaskCntl, 0, MAX_EU_SINGLE_BAND_CHANNELS);
-}
-
-static void UpdateFrequency(uint8_t channelId, uint32_t frequencyNew)
+static void LoRa_UpdateFrequency(uint8_t channelId, uint32_t frequencyNew)
 {
   LoRa_Channels[channelId].frequency = frequencyNew;
   LoRa_Channels[channelId].parametersDefined |= FREQUENCY_DEFINED;
-}
-
-static void UpdateDutyCycle(uint8_t channelId, uint16_t dutyCycleNew)
-{
-  LoRa_Channels[channelId].dutyCycle = dutyCycleNew;
-  LoRa_Channels[channelId].parametersDefined |= DUTY_CYCLE_DEFINED;
 }
 
 static LorawanError_t ValidateChannelMask(uint16_t channelMask)
@@ -644,34 +523,6 @@ static LorawanError_t ValidateChannelMask(uint16_t channelMask)
     {
       //ChMask set to 0x0000 in ADR may be used as a DoS attack so receiving this results in an error
       return INVALID_PARAMETER;
-    }
-}
-
-static void EnableChannels1(uint16_t channelMask, uint8_t channelMaskCntl, uint8_t channelIndexMin, uint8_t channelIndexMax)
-{
-  uint8_t i;
-
-  if(channelMaskCntl == 6)
-    {
-      for(i = channelIndexMin; i < channelIndexMax; i++)
-        {
-          LoRa_UpdateChannelIdStatus(i, ENABLED);
-        }
-    }
-  else if(channelMaskCntl == 0)
-    {
-      for(i = channelIndexMin; i < channelIndexMax; i++)
-        {
-          if(channelMask & BIT0 == BIT0)
-            {
-              LoRa_UpdateChannelIdStatus(i, ENABLED);
-            }
-          else
-            {
-              LoRa_UpdateChannelIdStatus(i, DISABLED);
-            }
-          channelMask = channelMask >> SHIFT1;
-        }
     }
 }
 

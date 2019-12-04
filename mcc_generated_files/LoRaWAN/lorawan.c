@@ -350,66 +350,6 @@ uint32_t LoRa_GetCounter(void)
 
 // Set and get functions for protocol parameters
 
-void LORAWAN_SetReceiveDelay1(uint16_t receiveDelay1New)
-{
-}
-
-uint16_t LORAWAN_GetReceiveDelay1(void)
-{
-}
-
-uint16_t LORAWAN_GetReceiveDelay2(void)
-{
-}
-
-void LORAWAN_SetJoinAcceptDelay1(uint16_t joinAcceptDelay1New)
-{
-}
-
-uint16_t LORAWAN_GetJoinAcceptDelay1(void)
-{
-}
-
-void LORAWAN_SetJoinAcceptDelay2(uint16_t joinAcceptDelay2New)
-{
-}
-
-uint16_t LORAWAN_GetJoinAcceptDelay2(void)
-{
-}
-
-void LORAWAN_SetMaxFcntGap(uint16_t maxFcntGapNew)
-{
-}
-
-uint16_t LORAWAN_GetMaxFcntGap(void)
-{
-}
-
-void LORAWAN_SetAdrAckLimit(uint8_t adrAckLimitNew)
-{
-}
-
-uint8_t LORAWAN_GetAdrAckLimit(void)
-{
-}
-
-void LORAWAN_SetAdrAckDelay(uint8_t adrAckDelayNew)
-{
-}
-
-uint8_t LORAWAN_GetAdrAckDelay(void)
-{
-}
-
-void LORAWAN_SetAckTimeout(uint16_t ackTimeoutNew)
-{
-}
-
-uint16_t LORAWAN_GetAckTimeout(void)
-{
-}
-
 // battery Level: 0 - external power source,  1-254 level, 255: the end device was not able to measure the battery level
 // default value for battery is 255 - the end device was not able to measure the battery level
 
@@ -456,11 +396,6 @@ void LoRa_TimerWaitAckCallback(uint8_t param)
   RADIO_clearReceiveFlag();
 }
 
-void LORAWAN_EnterContinuousReceive(void)
-{
-
-}
-
 void LoRa_UpdateCurrentDataRate(uint8_t valueNew)
 {
   loRa.LoRa_currentDataRate = valueNew;
@@ -476,10 +411,6 @@ void LoRa_UpdateTxPower(uint8_t txPowerNew)
 uint16_t Random(uint16_t max)
 {
   return(rand() % max);
-}
-
-LorawanError_t LORAWAN_RxDone(uint8_t *buffer, uint8_t bufferLength)
-{
 }
 
 static uint8_t LoRa_GetMaxPayloadSize(void)

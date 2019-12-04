@@ -369,26 +369,12 @@ extern "C"
 
   uint16_t Random(uint16_t max);
 
-  LorawanError_t SearchAvailableChannel(uint8_t maxChannels, bool transmissionType, uint8_t* channelIndex);
-
-  //MAC commands functions
-
-  uint8_t* ExecuteDutyCycle(uint8_t *ptr);
-
-  uint8_t* ExecuteLinkAdr(uint8_t *ptr);
-
-  uint8_t* ExecuteDevStatus(uint8_t *ptr);
-
-  uint8_t* ExecuteNewChannel(uint8_t *ptr);
-
-  uint8_t* ExecuteRxParamSetupReq(uint8_t *ptr);
+    //MAC commands functions
 
   void LoRa_ConfigureRadio(uint8_t dataRate, uint32_t freq);
 
 
-  void LORAWAN_EnterContinuousReceive(void);
-
-#ifdef	__cplusplus
+ #ifdef	__cplusplus
 }
 #endif
 

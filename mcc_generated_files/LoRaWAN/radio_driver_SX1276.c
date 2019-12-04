@@ -1069,11 +1069,13 @@ static void RADIO_FSKPayloadReady(void)
 
       if((RadioConfiguration.flags & RADIO_FLAG_RXDATA) != 0)
         {
-          LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
+//          LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
+          LoRa_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, true);
         }
       else
         {
-          LORAWAN_RxTimeout();
+          //          LORAWAN_RxTimeout();
+          LoRa_RxTimeout();
         }
     }
 }
@@ -1102,7 +1104,7 @@ static void RADIO_TxDone(void)
   if((RadioConfiguration.flags & RADIO_FLAG_TIMEOUT) == 0)
     {
       timeOnAir = TIME_ON_AIR_LOAD_VALUE - TICKS_TO_MS(SwTimerReadValue(RadioConfiguration.timeOnAirTimerId));
-      //      LORAWAN_TxDone((uint16_t) timeOnAir);
+
       LoRa_TxDone((uint16_t) timeOnAir);
     }
 }
@@ -1124,7 +1126,8 @@ static void RADIO_FSKPacketSent(void)
         {
           timeOnAir = TIME_ON_AIR_LOAD_VALUE - TICKS_TO_MS(SwTimerReadValue(RadioConfiguration.timeOnAirTimerId));
           SwTimerStop(RadioConfiguration.timeOnAirTimerId);
-          LORAWAN_TxDone((uint16_t) timeOnAir);
+          //          LORAWAN_TxDone((uint16_t) timeOnAir);
+          LoRa_TxDone((uint16_t) timeOnAir);
         }
     }
 }
@@ -1413,7 +1416,8 @@ static void RADIO_RxFSKTimeout(uint8_t param)
       // Make sure the watchdog won't trigger MAC functions erroneously.
       SwTimerStop(RadioConfiguration.watchdogTimerId);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
-      LORAWAN_RxTimeout();
+      //      LORAWAN_RxTimeout();
+      LoRa_RxTimeout();
     }
 }
 
@@ -1425,7 +1429,8 @@ static void RADIO_WatchdogTimeout(uint8_t param)
   if((RadioConfiguration.flags & RADIO_FLAG_RECEIVING) != 0)
     {
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
-      LORAWAN_RxTimeout();
+      //      LORAWAN_RxTimeout();
+      LoRa_RxTimeout();
     }
   else if((RadioConfiguration.flags & RADIO_FLAG_TRANSMITTING) != 0)
     {
@@ -1434,7 +1439,8 @@ static void RADIO_WatchdogTimeout(uint8_t param)
       // this time-out occured we cannot know for sure that the radio did not
       // transmit this whole time, so this is the safest way to go (block the
       // channel for a really long time from now on).
-      LORAWAN_TxDone(RadioConfiguration.watchdogTimerTimeout);
+      //      LORAWAN_TxDone(RadioConfiguration.watchdogTimerTimeout);
+      LoRa_TxDone(RadioConfiguration.watchdogTimerTimeout);
     }
 }
 
