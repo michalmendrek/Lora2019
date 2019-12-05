@@ -482,7 +482,7 @@ static bool LoRa_FindSmallestDataRate(void)
   return found;
 }
 
-static void LoRa_ConfigureRadioRx(uint8_t dataRate, uint32_t freq)
+static void LoRa_ConfigureRadioRx(uint8_t dataRate, uint32_t freq)  //OK
 {
   LoRa_ConfigureRadio(dataRate, freq);
   RADIO_SetCRC(DISABLED);
