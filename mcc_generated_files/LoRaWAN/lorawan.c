@@ -151,13 +151,27 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
 
 void LoRa_EnterReceive(void)
 {
+  bool result = false;
   RADIO_clearFlag();
-
-  LoRa_ConfigureRadioRx(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
-
-  if(RADIO_ReceiveStart(4) != OK)
+  if(loRa.LoRa_transmitStatus == LoRa_Handshaking_TX)
     {
+      loRa.LoRa_transmitStatus = LoRa_Handshaking_RX;
+      result = true;
+    }
+  if(loRa.LoRa_transmitStatus == LoRa_SendData_TX)
+    {
+      loRa.LoRa_transmitStatus = LoRa_SendData_RX;
+      result = true;
+    }
 
+  if(result)
+    {
+      LoRa_ConfigureRadioRx(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
+
+      if(RADIO_ReceiveStart(4) != OK)
+        {
+
+        }
     }
 }
 LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength);

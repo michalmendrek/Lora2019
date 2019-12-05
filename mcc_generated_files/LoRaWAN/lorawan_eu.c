@@ -223,16 +223,8 @@ static void LoRa_InitDefault433Channels(void)
 
 void LoRa_TxDone(uint16_t timeOnAir)
 {
-  if(loRa.LoRa_transmitStatus == LoRa_Handshaking_TX)
-    {
-      loRa.LoRa_transmitStatus = LoRa_Handshaking_RX;
+  
       LoRa_EnterReceive();
-    }
-  if(loRa.LoRa_transmitStatus == LoRa_SendData_TX)
-    {
-      loRa.LoRa_transmitStatus = LoRa_SendData_RX;
-      LoRa_EnterReceive();
-    }
 }
 
 void LoRa_RxTimeout(void)
