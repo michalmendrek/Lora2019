@@ -99,7 +99,7 @@ static LorawanError_t LoRa_ValidateChannelId(uint8_t channelId, bool allowedForD
 
 static void LoRa_ChannelUpdateFrequency(uint8_t channelId, uint32_t frequencyNew);
 
-void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
+void LoRa_ConfigureRadioTx_X(uint8_t dataRate, uint32_t freq);
 
 /****************************** FUNCTIONS *************************************/
 
@@ -319,7 +319,7 @@ LorawanError_t LoRa_ValidateTxPower(uint8_t txPowerNew)
   return result;
 }
 
-void LoRa_ConfigureRadio(uint8_t dataRate, uint32_t freq)   //OK
+void LoRa_ConfigureRadio_X(uint8_t dataRate, uint32_t freq)   //OK
 {
   RADIO_SetModulation(modulation[dataRate]);
   RADIO_SetChannelFrequency(freq);
@@ -339,7 +339,7 @@ void LoRa_ConfigureRadio(uint8_t dataRate, uint32_t freq)   //OK
     }
 }
 
-LorawanError_t LoRa_SelectChannelForTransmission(uint8_t channelTx, uint8_t channelRx) // 
+LorawanError_t LoRa_SelectChannelForTransmission_X(uint8_t channelTx, uint8_t channelRx) // 
 {
   LorawanError_t result = OK;
   uint8_t channelTxIndex = LoRa_Chann_nr;
@@ -507,11 +507,11 @@ static void LoRa_DutyCycleCallback(uint8_t param)
     }
 }
 
-void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq) //OK
+void LoRa_ConfigureRadioTx_X(uint8_t dataRate, uint32_t freq) //OK
 {
   int8_t txPower;
 
-  LoRa_ConfigureRadio(dataRate, freq);
+  LoRa_ConfigureRadio_X(dataRate, freq);
 
   //  if(ISM_EU868 == loRa.LoRa_ismBand)
 

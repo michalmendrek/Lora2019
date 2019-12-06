@@ -141,7 +141,7 @@ extern "C"
 #define LoRa_Retransmit_timeout 500 //ms
 #define LoRa_Retransmit_trials  5
   /*************************** FUNCTIONS PROTOTYPE ******************************/
-  void LoRa_ConfigureRadioTx(uint8_t dataRate, uint32_t freq);
+  void LoRa_ConfigureRadioTx_X(uint8_t dataRate, uint32_t freq);
 
 #ifdef	__cplusplus
 }
