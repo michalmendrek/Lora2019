@@ -421,7 +421,7 @@ static void RADIO_WritePower(int8_t power)
     }
 }
 
-void RADIO_Init(uint8_t *radioBuffer, uint32_t frequency)
+void RADIO_Init_X(uint8_t *radioBuffer, uint32_t frequency)
 {
   RadioConfiguration.frequency = frequency;
   RadioConfiguration.frequencyDeviation = 25000;

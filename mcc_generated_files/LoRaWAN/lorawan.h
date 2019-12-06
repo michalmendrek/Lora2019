@@ -176,7 +176,7 @@ extern "C"
    */
   void LoRa_System_Init(void);
 
-  void LoRa_Reset(IsmBand_t ismBandNew);
+  void LoRa_Reset_X(IsmBand_t ismBandNew);
 
   /**
    * @Summary

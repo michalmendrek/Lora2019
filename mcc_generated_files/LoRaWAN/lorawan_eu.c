@@ -82,8 +82,8 @@ static const uint8_t FskSyncWordBuff[3] = {0xC1, 0x94, 0xC1};
 
 static void LoRa_CreateSoftwareTimers(void);
 static void LoRa_SetCallbackSoftwareTimers(void);
-static void LoRa_StopAllSoftwareTimers(void);
-void LoRa_Reset(IsmBand_t ismBandNew);
+static void LoRa_StopAllSoftwareTimers_X(void);
+void LoRa_Reset_X(IsmBand_t ismBandNew);
 static void LoRa_InitDefault868Channels(void);
 static void LoRa_InitDefault433Channels(void);
 
@@ -119,18 +119,18 @@ void LoRa_System_Init(void) // this function resets everything to the default va
     }
   else
     {
-      LoRa_StopAllSoftwareTimers();
+      LoRa_StopAllSoftwareTimers_X();
     }
   loRa.LoRa_Addres = LoRaDeviceAddress;
   loRa.LoRa_ch0_params.frequency = LoRa_CH0_frequency;
   loRa.LoRa_ch0_params.dataRate = LoRa_CH0_datarate;
   //  loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
 
-  RADIO_Init(LoRa_radioBuffer, EU868_CALIBRATION_FREQ);
+  RADIO_Init_X(LoRa_radioBuffer, EU868_CALIBRATION_FREQ);
 
   srand(RADIO_ReadRandom()); // for the loRa random function we need a seed that is obtained from the radio
 
-  LoRa_Reset(ISM_EU868);
+  LoRa_Reset_X(ISM_EU868);
 
 }
 
@@ -148,18 +148,18 @@ static void LoRa_SetCallbackSoftwareTimers(void)
   SwTimerSetCallback(loRa.LoRa_TimerWaitAck, LoRa_TimerWaitAckCallback, 0);
 }
 
-static void LoRa_StopAllSoftwareTimers(void)
+static void LoRa_StopAllSoftwareTimers_X(void)
 {
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerRetransmit);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
 }
 
-void LoRa_Reset(IsmBand_t ismBandNew)
+void LoRa_Reset_X(IsmBand_t ismBandNew)
 {
   if(loRa.LoRa_initialised == ENABLED)
     {
-      LoRa_StopAllSoftwareTimers();
+      LoRa_StopAllSoftwareTimers_X();
     }
 
   loRa.LoRa_syncWord = 0x34;
@@ -171,18 +171,10 @@ void LoRa_Reset(IsmBand_t ismBandNew)
 
   // initialize default channels
   loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
-  if(ISM_EU868 == ismBandNew)
-    {
-      RADIO_Init(LoRa_radioBuffer, EU868_CALIBRATION_FREQ);
+  //  if(ISM_EU868 == ismBandNew)
+  RADIO_Init_X(LoRa_radioBuffer, EU868_CALIBRATION_FREQ);
 
-      LoRa_InitDefault868Channels();
-    }
-  else
-    {
-      RADIO_Init(LoRa_radioBuffer, EU433_CALIBRATION_FREQ);
-
-      LoRa_InitDefault433Channels();
-    }
+  LoRa_InitDefault868Channels();
 
   loRa.LoRa_txPower = 1;
 
@@ -319,7 +311,7 @@ LorawanError_t LoRa_ValidateTxPower(uint8_t txPowerNew)
   return result;
 }
 
-void LoRa_ConfigureRadio_X(uint8_t dataRate, uint32_t freq)   //OK
+void LoRa_ConfigureRadio_X(uint8_t dataRate, uint32_t freq) //OK
 {
   RADIO_SetModulation(modulation[dataRate]);
   RADIO_SetChannelFrequency(freq);
