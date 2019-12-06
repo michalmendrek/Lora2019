@@ -1018,7 +1018,7 @@ static void RADIO_RxDone(void)
       RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
       //      LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
-      LoRa_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, Rx_success);
+      LoRa_RxDone_X(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, Rx_success);
     }
 }
 
@@ -1070,7 +1070,7 @@ static void RADIO_FSKPayloadReady(void)
       if((RadioConfiguration.flags & RADIO_FLAG_RXDATA) != 0)
         {
 //          LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
-          LoRa_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, true);
+          LoRa_RxDone_X(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, true);
         }
       else
         {

@@ -149,7 +149,7 @@ LorawanError_t LoRa_Send_XY(void *buffer, uint8_t bufferLength)
     }
 }
 
-void LoRa_EnterReceive_XY_H(void)
+void LoRa_EnterReceive_XY_HD(void)
 {
   bool result = false;
   RADIO_clearFlag();
@@ -174,10 +174,10 @@ void LoRa_EnterReceive_XY_H(void)
         }
     }
 }
-LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength);
+LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength);
 LorawanError_t LoRa_RxDone_Fail(void);
 
-LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength, bool RX_success)
+LorawanError_t LoRa_RxDone_X(uint8_t *buffer, uint8_t bufferLength, bool RX_success)
 {
   RADIO_clearFlag();
 
@@ -186,7 +186,7 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength, bool RX_succes
 
   if(RX_success)
     {
-      LoRa_RxDone_OK(buffer, bufferLength);
+      LoRa_RxDone_OK_XY_H(buffer, bufferLength);
     }
   else
     {
@@ -195,7 +195,7 @@ LorawanError_t LoRa_RxDone(uint8_t *buffer, uint8_t bufferLength, bool RX_succes
 
 }
 
-LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength)
+LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength)
 {
   if(loRa.LoRa_transmitStatus == LoRa_Handshaking_RX)
     {
