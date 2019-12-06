@@ -159,7 +159,7 @@ extern "C"
       uint8_t dataToSend = 45;
       LORAWAN_Send (UNCNF, 20, &dataToSend, sizeof(dataToSend));
    */
-  LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength);
+  LorawanError_t LoRa_Send_XY(void *buffer, uint8_t bufferLength);
 
   /**
    * @Summary
@@ -176,7 +176,7 @@ extern "C"
    */
   void LoRa_System_Init(void);
 
-  void LoRa_Reset_X(IsmBand_t ismBandNew);
+  void LoRa_Reset_XY(IsmBand_t ismBandNew);
 
   /**
    * @Summary

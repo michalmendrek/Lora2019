@@ -139,7 +139,7 @@ extern "C"
 #define RADIO_FLAG_TIMEOUT              BIT4
 
 
-  void RADIO_Init_X(uint8_t *radioBuffer, uint32_t frequency);
+  void RADIO_Init_XY(uint8_t *radioBuffer, uint32_t frequency);
   void RADIO_clearFlag(void);
   void RADIO_SwTimers_stop(void);
   void RADIO_SetLoRaSyncWord(uint8_t syncWord);
@@ -193,7 +193,7 @@ extern "C"
   uint8_t RADIO_GetFSKSyncWord(uint8_t* syncWord);
 
 
-  RadioError_t RADIO_Transmit_X(uint8_t *buffer, uint8_t bufferLen);
+  RadioError_t RADIO_Transmit_XY(uint8_t *buffer, uint8_t bufferLen);
   RadioError_t RADIO_TransmitCW(void);
   RadioError_t RADIO_StopCW(void);
   RadioError_t RADIO_ReceiveStart(uint16_t rxWindowSize);

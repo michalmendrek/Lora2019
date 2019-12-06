@@ -94,9 +94,9 @@ void main(void)
       
       if(loRa.LoRa_StatusDanych == LoRa_transmitIdle)
         {
-          LoRa_Reset_X(ISM_EU868);
+          LoRa_Reset_XY(ISM_EU868);
           loRa.LoRa_transmitStatus = LoRa_Idle;
-          if(LoRa_Send(bufor, sizeof(bufor)) == OK)
+          if(LoRa_Send_XY(bufor, sizeof(bufor)) == OK)
             {
             }
         }

@@ -61,7 +61,7 @@ extern ChannelParams_t LoRa_Channels[];
 extern const uint8_t rxWindowSize[];
 
 /************************ FUNCTION PROTOTYPES *************************/
-static void LoRa_AssemblePacket_X(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel);
+static void LoRa_AssemblePacket_XY(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel);
 static uint8_t LoRa_GetMaxPayloadSize(void);
 uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr);
 /**********************************************************************/
@@ -79,9 +79,9 @@ LorawanError_t LoRa_Send_Data(void)
 {
   LorawanError_t result;
 
-  LoRa_ConfigureRadioTx_X(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
+  LoRa_ConfigureRadioTx_XY(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
-  if(RADIO_Transmit_X(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+  if(RADIO_Transmit_XY(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.LoRa_StatusDanych = LoRa_transmiting;
 
@@ -100,9 +100,9 @@ LorawanError_t LoRa_Send_Header(void)
 {
   LorawanError_t result;
 
-  LoRa_ConfigureRadioTx_X(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
+  LoRa_ConfigureRadioTx_XY(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
 
-  if(RADIO_Transmit_X(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+  if(RADIO_Transmit_XY(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.LoRa_StatusDanych = LoRa_transmiting;
       loRa.LoRa_Counnter.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
@@ -118,7 +118,7 @@ LorawanError_t LoRa_Send_Header(void)
   return OK;
 }
 
-LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
+LorawanError_t LoRa_Send_XY(void *buffer, uint8_t bufferLength)
 {
   LorawanError_t result;
 
@@ -135,9 +135,9 @@ LorawanError_t LoRa_Send(void *buffer, uint8_t bufferLength)
     }
   uint8_t channel = Random(LoRa_Chann_nr) + 1;
 
-  result = LoRa_SelectChannelForTransmission_X(channel, channel);
+  result = LoRa_SelectChannelForTransmission_XY(channel, channel);
 
-  LoRa_AssemblePacket_X(buffer, bufferLength, channel);
+  LoRa_AssemblePacket_XY(buffer, bufferLength, channel);
 
   if(LoRa_Send_Header() == OK)
     {
@@ -206,9 +206,9 @@ LorawanError_t LoRa_RxDone_OK(uint8_t *buffer, uint8_t bufferLength)
               loRa.LoRa_Command = buffer[1];
               if(loRa.LoRa_Command == 0)
                 {
-                  LoRa_ConfigureRadioTx_X(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
+                  LoRa_ConfigureRadioTx_XY(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
-                  if(RADIO_Transmit_X(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
+                  if(RADIO_Transmit_XY(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
                     {
                       loRa.LoRa_transmitStatus = LoRa_SendData_TX;
                       SwTimerSetTimeout(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_Transmit_timeout));
@@ -243,7 +243,7 @@ LorawanError_t LoRa_RxDone_Fail(void)
 
 }
 
-void LoRa_UpdateMinMaxChDataRate(void)
+void LoRa_UpdateMinMaxChDataRate_Y(void)
 {
   uint8_t i;
   // after updating the data range of a channel we need to check if the minimum dataRange has changed or not.
@@ -274,7 +274,7 @@ uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr)
   return(CRC);
 }
 
-static void LoRa_AssemblePacket_X(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel)
+static void LoRa_AssemblePacket_XY(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel)
 {
   uint8_t bufferHeadIndex = 0;
   uint8_t bufferIndex = 0;
@@ -484,7 +484,7 @@ static bool LoRa_FindSmallestDataRate(void)
 
 static void LoRa_ConfigureRadioRx_X(uint8_t dataRate, uint32_t freq)  //OK
 {
-  LoRa_ConfigureRadio_X(dataRate, freq);
+  LoRa_ConfigureRadio_XY(dataRate, freq);
   RADIO_SetCRC(DISABLED);
   RADIO_SetIQInverted(ENABLED);
 }

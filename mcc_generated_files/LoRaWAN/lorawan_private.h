@@ -276,7 +276,7 @@ extern "C"
 
   void LoRa_EnterReceive(void);
 
-  void LoRa_UpdateMinMaxChDataRate(void);
+  void LoRa_UpdateMinMaxChDataRate_Y(void);
 
   // Update and validation functions
 
@@ -291,13 +291,13 @@ extern "C"
 
   //Initialization functions
 
-  LorawanError_t LoRa_SelectChannelForTransmission_X(uint8_t channelTx, uint8_t channelRx);
+  LorawanError_t LoRa_SelectChannelForTransmission_XY(uint8_t channelTx, uint8_t channelRx);
 
   uint16_t Random(uint16_t max);
 
     //MAC commands functions
 
-  void LoRa_ConfigureRadio_X(uint8_t dataRate, uint32_t freq);
+  void LoRa_ConfigureRadio_XY(uint8_t dataRate, uint32_t freq);
 
 
  #ifdef	__cplusplus
