@@ -196,7 +196,7 @@ extern "C"
   RadioError_t RADIO_Transmit_XY(uint8_t *buffer, uint8_t bufferLen);
   RadioError_t RADIO_TransmitCW(void);
   RadioError_t RADIO_StopCW(void);
-  RadioError_t RADIO_ReceiveStart(uint16_t rxWindowSize);
+  RadioError_t RADIO_ReceiveStart_XY(uint16_t rxWindowSize);
   void RADIO_ReceiveStop(void);
 
   int8_t RADIO_GetMaxPower(void);

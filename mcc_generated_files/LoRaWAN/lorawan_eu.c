@@ -213,10 +213,10 @@ static void LoRa_InitDefault433Channels(void)
     }
 }
 
-void LoRa_TxDone(uint16_t timeOnAir)
+void LoRa_TxDone_XY(uint16_t timeOnAir)
 {
 
-  LoRa_EnterReceive();
+  LoRa_EnterReceive_XY_H();
 }
 
 void LoRa_RxTimeout(void)

@@ -880,7 +880,7 @@ RadioError_t RADIO_Transmit_XY(uint8_t *buffer, uint8_t bufferLen)
 
 // rxWindowSize parameter is in symbols for LoRa and ms for FSK
 
-RadioError_t RADIO_ReceiveStart(uint16_t rxWindowSize)
+RadioError_t RADIO_ReceiveStart_XY(uint16_t rxWindowSize)
 {
   if((RadioConfiguration.flags & RADIO_FLAG_RXDATA) != 0)
     {
@@ -1105,7 +1105,7 @@ static void RADIO_TxDone(void)
     {
       timeOnAir = TIME_ON_AIR_LOAD_VALUE - TICKS_TO_MS(SwTimerReadValue(RadioConfiguration.timeOnAirTimerId));
 
-      LoRa_TxDone((uint16_t) timeOnAir);
+      LoRa_TxDone_XY((uint16_t) timeOnAir);
     }
 }
 
@@ -1127,7 +1127,7 @@ static void RADIO_FSKPacketSent(void)
           timeOnAir = TIME_ON_AIR_LOAD_VALUE - TICKS_TO_MS(SwTimerReadValue(RadioConfiguration.timeOnAirTimerId));
           SwTimerStop(RadioConfiguration.timeOnAirTimerId);
           //          LORAWAN_TxDone((uint16_t) timeOnAir);
-          LoRa_TxDone((uint16_t) timeOnAir);
+          LoRa_TxDone_XY((uint16_t) timeOnAir);
         }
     }
 }

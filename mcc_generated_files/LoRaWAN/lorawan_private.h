@@ -274,7 +274,7 @@ extern "C"
   void LoRa_TimerRetransmitCallback(uint8_t param);
   void LoRa_TimerWaitAckCallback(uint8_t param);
 
-  void LoRa_EnterReceive(void);
+  void LoRa_EnterReceive_XY_H(void);
 
   void LoRa_UpdateMinMaxChDataRate_Y(void);
 

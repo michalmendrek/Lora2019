@@ -70,7 +70,7 @@ static uint8_t LoRa_GetMaxPayloadSize(void);
 
 static bool LoRa_FindSmallestDataRate(void);
 
-static void LoRa_ConfigureRadioRx_X(uint8_t dataRate, uint32_t freq);
+static void LoRa_ConfigureRadioRx_XY(uint8_t dataRate, uint32_t freq);
 
 uint8_t localDioStatus;
 
@@ -149,7 +149,7 @@ LorawanError_t LoRa_Send_XY(void *buffer, uint8_t bufferLength)
     }
 }
 
-void LoRa_EnterReceive(void)
+void LoRa_EnterReceive_XY_H(void)
 {
   bool result = false;
   RADIO_clearFlag();
@@ -166,9 +166,9 @@ void LoRa_EnterReceive(void)
 
   if(result)
     {
-      LoRa_ConfigureRadioRx_X(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
+      LoRa_ConfigureRadioRx_XY(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
 
-      if(RADIO_ReceiveStart(4) != OK)
+      if(RADIO_ReceiveStart_XY(4) != OK)
         {
 
         }
@@ -482,7 +482,7 @@ static bool LoRa_FindSmallestDataRate(void)
   return found;
 }
 
-static void LoRa_ConfigureRadioRx_X(uint8_t dataRate, uint32_t freq)  //OK
+static void LoRa_ConfigureRadioRx_XY(uint8_t dataRate, uint32_t freq)  //OK
 {
   LoRa_ConfigureRadio_XY(dataRate, freq);
   RADIO_SetCRC(DISABLED);
