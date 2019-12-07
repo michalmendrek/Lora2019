@@ -60,17 +60,17 @@ void HALResetPinOutputValue(uint8_t value)
     RADIO_nReset_SetHigh();
 }
 
-void HALSPICSAssert(void)
+void HALSPICSAssert_Yf(void)
 {
   RADIO_nCS_SetLow();
 }
 
-void HALSPICSDeassert(void)
+void HALSPICSDeassert_Yf(void)
 {
   RADIO_nCS_SetHigh();
 }
 
-uint8_t HALSPISend(uint8_t data)
+uint8_t HALSPISend_Yf(uint8_t data)
 {
   return SPI_Exchange8bit(data);
 }

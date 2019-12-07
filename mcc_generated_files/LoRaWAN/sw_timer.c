@@ -186,7 +186,7 @@ void SwTimerSetCallback(uint8_t timerId, void (*callback)(uint8_t), uint8_t call
   swTimers[timerId].callbackParameter = callbackParameter;
 }
 
-void SwTimerSetTimeout(uint8_t timerId, uint32_t timeout)
+void SwTimerSetTimeout_Yf(uint8_t timerId, uint32_t timeout)
 {
   INTERRUPT_GlobalInterruptDisable();
   swTimers[timerId].ticksRemaining = timeout - TIMER_CORRECTION_TICKS;
@@ -218,7 +218,7 @@ uint8_t SwTimerIsRunning(uint8_t timerId)
   return isRunning;
 }
 
-void SwTimerStart(uint8_t timerId)
+void SwTimerStart_Yf(uint8_t timerId)
 {
   uint32_t ticksRemaining;
   // Need to synchronize all timers

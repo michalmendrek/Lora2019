@@ -69,10 +69,10 @@ extern "C"
 
   uint8_t SwTimerCreate(void);
   void SwTimerSetCallback(uint8_t timerId, void (*callback)(uint8_t), uint8_t callbackParameter);
-  void SwTimerSetTimeout(uint8_t timerId, uint32_t msTimeout);
+  void SwTimerSetTimeout_Yf(uint8_t timerId, uint32_t msTimeout);
   uint32_t SwTimerReadValue(uint8_t timerId);
   uint8_t SwTimerIsRunning(uint8_t timerId);
-  void SwTimerStart(uint8_t timerId);
+  void SwTimerStart_Yf(uint8_t timerId);
   void SwTimerStop(uint8_t timerId);
   void SwTimersExecute(void);
   uint8_t SwTimersCanSleep(void);

@@ -57,9 +57,9 @@ extern "C"
   void HALResetPinMakeInput(void);
   void HALResetPinOutputValue(uint8_t value);
 
-  void HALSPICSAssert(void);
-  void HALSPICSDeassert(void);
-  uint8_t HALSPISend(uint8_t data);
+  void HALSPICSAssert_Yf(void);
+  void HALSPICSDeassert_Yf(void);
+  uint8_t HALSPISend_Yf(uint8_t data);
   uint8_t HALDIO0PinValue(void);
   uint8_t HALDIO1PinValue(void);
   uint8_t HALDIO2PinValue(void);

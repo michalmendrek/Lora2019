@@ -139,10 +139,10 @@ extern "C"
 #define RADIO_FLAG_TIMEOUT              BIT4
 
 
-  void RADIO_Init_XYF(uint8_t *radioBuffer, uint32_t frequency);
+  void RADIO_Init_XYf(uint8_t *radioBuffer, uint32_t frequency);
   void RADIO_clearFlag(void);
   void RADIO_SwTimers_stop(void);
-  void RADIO_SetLoRaSyncWord(uint8_t syncWord);
+  void RADIO_SetLoRaSyncWord_Yf(uint8_t syncWord);
   uint8_t RADIO_GetLoRaSyncWord(void);
 
   RadioError_t RADIO_SetChannelFrequency(uint32_t frequency);
@@ -154,13 +154,13 @@ extern "C"
   void RADIO_SetPreambleLen(uint16_t preambleLen);
   uint16_t RADIO_GetPreambleLen(void);
 
-  void RADIO_SetOutputPower(int8_t power);
+  void RADIO_SetOutputPower_Yf(int8_t power);
   uint8_t RADIO_GetOutputPower(void);
 
-  void RADIO_SetCRC(uint8_t crc);
+  void RADIO_SetCRC_Yf(uint8_t crc);
   uint8_t RADIO_GetCRC(void);
 
-  void RADIO_SetIQInverted(uint8_t iqInverted);
+  void RADIO_SetIQInverted_Yf(uint8_t iqInverted);
   uint8_t RADIO_GetIQInverted(void);
 
   void RADIO_SetBandwidth(RadioLoRaBandWidth_t bandwidth);
@@ -193,7 +193,7 @@ extern "C"
   uint8_t RADIO_GetFSKSyncWord(uint8_t* syncWord);
 
 
-  RadioError_t RADIO_Transmit_XYF(uint8_t *buffer, uint8_t bufferLen);
+  RadioError_t RADIO_Transmit_XYf(uint8_t *buffer, uint8_t bufferLen);
   RadioError_t RADIO_TransmitCW(void);
   RadioError_t RADIO_StopCW(void);
   RadioError_t RADIO_ReceiveStart_XY(uint16_t rxWindowSize);
@@ -219,8 +219,8 @@ extern "C"
   uint16_t RADIO_ReadRandom(void);
   int8_t RADIO_GetPacketSnr(void);
 
-  void RADIO_RegisterWrite(uint8_t reg, uint8_t value);
-  uint8_t RADIO_RegisterRead(uint8_t reg);
+  void RADIO_RegisterWrite_Yf(uint8_t reg, uint8_t value);
+  uint8_t RADIO_RegisterRead_Yf(uint8_t reg);
   
   void RADIO_clearReceiveFlag(void);
   void RADIO_clearTransmitFlag(void);

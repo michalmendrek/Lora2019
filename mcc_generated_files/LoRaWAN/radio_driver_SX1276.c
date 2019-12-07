@@ -107,13 +107,13 @@ static RadioConfiguration_t RadioConfiguration;
 
 static void RADIO_RxFSKTimeout(uint8_t param);
 static void RADIO_WatchdogTimeout(uint8_t param);
-static void RADIO_WriteMode(RadioMode_t newMode, RadioModulation_t newModulation, uint8_t blocking);
-static void RADIO_Reset(void);
-static void RADIO_WriteFrequency(uint32_t frequency);
+static void RADIO_WriteMode_Yf(RadioMode_t newMode, RadioModulation_t newModulation, uint8_t blocking);
+static void RADIO_Reset_Yf(void);
+static void RADIO_WriteFrequency_Yf(uint32_t frequency);
 static void RADIO_WriteFSKFrequencyDeviation(uint32_t frequencyDeviation);
 static void RADIO_WriteFSKBitRate(uint32_t bitRate);
 static void RADIO_WritePower(int8_t power);
-static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout);
+static void RADIO_WriteConfiguration_XYf(uint16_t symbolTimeout);
 static void RADIO_RxDone(void);
 static void RADIO_FSKPayloadReady(void);
 static void RADIO_RxTimeout(void);
@@ -122,29 +122,29 @@ static void RADIO_FSKPacketSent(void);
 static void RADIO_UnhandledInterrupt(RadioModulation_t modulation);
 static void RADIO_FHSSChangeChannel(void);
 
-void RADIO_RegisterWrite(uint8_t reg, uint8_t value)
+void RADIO_RegisterWrite_Yf(uint8_t reg, uint8_t value)
 {
-  HALSPICSAssert();
-  HALSPISend(REG_WRITE | reg);
-  HALSPISend(value);
-  HALSPICSDeassert();
+  HALSPICSAssert_Yf();
+  HALSPISend_Yf(REG_WRITE | reg);
+  HALSPISend_Yf(value);
+  HALSPICSDeassert_Yf();
 }
 
-uint8_t RADIO_RegisterRead(uint8_t reg)
+uint8_t RADIO_RegisterRead_Yf(uint8_t reg)
 {
   uint8_t readValue;
   reg &= 0x7F; // Make sure write bit is not set
-  HALSPICSAssert();
-  HALSPISend(reg);
-  readValue = HALSPISend(0xFF);
-  HALSPICSDeassert();
+  HALSPICSAssert_Yf();
+  HALSPISend_Yf(reg);
+  readValue = HALSPISend_Yf(0xFF);
+  HALSPICSDeassert_Yf();
   return readValue;
 }
 
 
 // This function repurposes DIO5 for ModeReady functionality
 
-static void RADIO_WriteMode(RadioMode_t newMode, RadioModulation_t newModulation, uint8_t blocking)
+static void RADIO_WriteMode_Yf(RadioMode_t newMode, RadioModulation_t newModulation, uint8_t blocking)
 {
   uint8_t opMode;
   uint8_t dioMapping;
@@ -162,7 +162,7 @@ static void RADIO_WriteMode(RadioMode_t newMode, RadioModulation_t newModulation
   newMode &= 0x07;
   newModulation &= 0x01;
 
-  opMode = RADIO_RegisterRead(REG_OPMODE);
+  opMode = RADIO_RegisterRead_Yf(REG_OPMODE);
 
   if((opMode & 0x80) != 0)
     {
@@ -183,7 +183,7 @@ static void RADIO_WriteMode(RadioMode_t newMode, RadioModulation_t newModulation
       if(MODE_SLEEP != currentMode)
         {
           // Clear mode bits, effectively going to sleep
-          RADIO_RegisterWrite(REG_OPMODE, opMode & (~0x07));
+          RADIO_RegisterWrite_Yf(REG_OPMODE, opMode & (~0x07));
           currentMode = MODE_SLEEP;
         }
       // Change modulation
@@ -197,7 +197,7 @@ static void RADIO_WriteMode(RadioMode_t newMode, RadioModulation_t newModulation
           // LoRa mode. Set MSB and clear sleep bits to make it stay in sleep
           opMode = 0x80 | (opMode & (~0x87));
         }
-      RADIO_RegisterWrite(REG_OPMODE, opMode);
+      RADIO_RegisterWrite_Yf(REG_OPMODE, opMode);
     }
 
   // From here on currentModulation is no longer current, we will use
@@ -210,7 +210,7 @@ static void RADIO_WriteMode(RadioMode_t newMode, RadioModulation_t newModulation
       // DIO5 pin to relay this information.
       if((MODE_SLEEP != newMode) && (1 == blocking))
         {
-          dioMapping = RADIO_RegisterRead(REG_DIOMAPPING2);
+          dioMapping = RADIO_RegisterRead_Yf(REG_DIOMAPPING2);
           if(MODULATION_FSK == newModulation)
             {
               // FSK mode
@@ -221,13 +221,13 @@ static void RADIO_WriteMode(RadioMode_t newMode, RadioModulation_t newModulation
               // LoRa mode
               dioMapping &= ~0x30; // DIO5 = 00 means ModeReady in LoRa mode
             }
-          RADIO_RegisterWrite(REG_DIOMAPPING2, dioMapping);
+          RADIO_RegisterWrite_Yf(REG_DIOMAPPING2, dioMapping);
         }
 
       // Do the actual mode switch.
       opMode &= ~0x07; // Clear old mode bits
       opMode |= newMode; // Set new mode bits
-      RADIO_RegisterWrite(REG_OPMODE, opMode);
+      RADIO_RegisterWrite_Yf(REG_OPMODE, opMode);
 
       // If required and possible, wait for switch to complete
       if(1 == blocking)
@@ -245,7 +245,7 @@ static void RADIO_WriteMode(RadioMode_t newMode, RadioModulation_t newModulation
     }
 }
 
-static void RADIO_Reset(void)
+static void RADIO_Reset_Yf(void)
 {
   HALResetPinMakeOutput();
   HALResetPinOutputValue(0);
@@ -259,7 +259,7 @@ static void RADIO_Reset(void)
 
 // The math in this function needs adjusting for FXOSC != 32MHz
 
-static void RADIO_WriteFrequency(uint32_t frequency)
+static void RADIO_WriteFrequency_Yf(uint32_t frequency)
 {
   uint32_t num, num_mod;
 
@@ -284,9 +284,9 @@ static void RADIO_WriteFrequency(uint32_t frequency)
 
   // Now variable num holds the representation of the frequency that needs to
   // be loaded into the radio chip
-  RADIO_RegisterWrite(REG_FRFMSB, (num >> SHIFT16) & 0xFF);
-  RADIO_RegisterWrite(REG_FRFMID, (num >> SHIFT8) & 0xFF);
-  RADIO_RegisterWrite(REG_FRFLSB, num & 0xFF);
+  RADIO_RegisterWrite_Yf(REG_FRFMSB, (num >> SHIFT16) & 0xFF);
+  RADIO_RegisterWrite_Yf(REG_FRFMID, (num >> SHIFT8) & 0xFF);
+  RADIO_RegisterWrite_Yf(REG_FRFLSB, num & 0xFF);
 }
 
 // The math in this function needs adjusting for FXOSC != 32MHz
@@ -307,8 +307,8 @@ static void RADIO_WriteFSKFrequencyDeviation(uint32_t frequencyDeviation)
 
   // Now variable num holds the representation of the frequency deviation that
   // needs to be loaded into the radio chip
-  RADIO_RegisterWrite(REG_FSK_FDEVMSB, (num >> SHIFT8) & 0xFF);
-  RADIO_RegisterWrite(REG_FSK_FDEVLSB, num & 0xFF);
+  RADIO_RegisterWrite_Yf(REG_FSK_FDEVMSB, (num >> SHIFT8) & 0xFF);
+  RADIO_RegisterWrite_Yf(REG_FSK_FDEVLSB, num & 0xFF);
 }
 
 // The math in this function needs adjusting for FXOSC != 32MHz
@@ -324,9 +324,9 @@ static void RADIO_WriteFSKBitRate(uint32_t bitRate)
 
   // Now variable num holds the representation of the bitrate that
   // needs to be loaded into the radio chip
-  RADIO_RegisterWrite(REG_FSK_BITRATEMSB, (num >> SHIFT8) & 0xFF);
-  RADIO_RegisterWrite(REG_FSK_BITRATELSB, num & 0xFF);
-  RADIO_RegisterWrite(REG_FSK_BITRATEFRAC, 0x00);
+  RADIO_RegisterWrite_Yf(REG_FSK_BITRATEMSB, (num >> SHIFT8) & 0xFF);
+  RADIO_RegisterWrite_Yf(REG_FSK_BITRATELSB, num & 0xFF);
+  RADIO_RegisterWrite_Yf(REG_FSK_BITRATEFRAC, 0x00);
 }
 
 int8_t RADIO_GetMaxPower(void)
@@ -358,10 +358,10 @@ static void RADIO_WritePower(int8_t power)
           power = 15;
         }
 
-      paDac = RADIO_RegisterRead(REG_PADAC);
+      paDac = RADIO_RegisterRead_Yf(REG_PADAC);
       paDac &= ~(0x07);
       paDac |= 0x04;
-      RADIO_RegisterWrite(REG_PADAC, paDac);
+      RADIO_RegisterWrite_Yf(REG_PADAC, paDac);
 
       if(power < 0)
         {
@@ -369,14 +369,14 @@ static void RADIO_WritePower(int8_t power)
           // Pout = 10.8 + MaxPower*0.6 - 15 + OutPower
           // Pout = -3 + OutPower
           power += 3;
-          RADIO_RegisterWrite(REG_PACONFIG, 0x20 | power);
+          RADIO_RegisterWrite_Yf(REG_PACONFIG, 0x20 | power);
         }
       else
         {
           // MaxPower = 7
           // Pout = 10.8 + MaxPower*0.6 - 15 + OutPower
           // Pout = OutPower
-          RADIO_RegisterWrite(REG_PACONFIG, 0x70 | power);
+          RADIO_RegisterWrite_Yf(REG_PACONFIG, 0x70 | power);
         }
     }
   else
@@ -399,8 +399,8 @@ static void RADIO_WritePower(int8_t power)
           power = 17;
         }
 
-      ocp = RADIO_RegisterRead(REG_OCP);
-      paDac = RADIO_RegisterRead(REG_PADAC);
+      ocp = RADIO_RegisterRead_Yf(REG_OCP);
+      paDac = RADIO_RegisterRead_Yf(REG_PADAC);
       paDac &= ~(0x07);
       if(power == 20)
         {
@@ -415,13 +415,13 @@ static void RADIO_WritePower(int8_t power)
           ocp |= 0x20;
         }
 
-      RADIO_RegisterWrite(REG_PADAC, paDac);
-      RADIO_RegisterWrite(REG_PACONFIG, 0x80 | power);
-      RADIO_RegisterWrite(REG_OCP, ocp);
+      RADIO_RegisterWrite_Yf(REG_PADAC, paDac);
+      RADIO_RegisterWrite_Yf(REG_PACONFIG, 0x80 | power);
+      RADIO_RegisterWrite_Yf(REG_OCP, ocp);
     }
 }
 
-void RADIO_Init_XYF(uint8_t *radioBuffer, uint32_t frequency)
+void RADIO_Init_XYf(uint8_t *radioBuffer, uint32_t frequency)
 {
   RadioConfiguration.frequency = frequency;
   RadioConfiguration.frequencyDeviation = 25000;
@@ -473,55 +473,55 @@ void RADIO_Init_XYF(uint8_t *radioBuffer, uint32_t frequency)
       SwTimerStop(RadioConfiguration.watchdogTimerId);
     }
 
-  RADIO_Reset();
+  RADIO_Reset_Yf();
 
   // Perform image and RSSI calibration. This also puts the radio in FSK mode.
   // In order to perform image and RSSI calibration, we need the radio in
   // FSK mode. To do this, we first put it in sleep mode.
-  RADIO_WriteMode(MODE_STANDBY, MODULATION_FSK, 1);
+  RADIO_WriteMode_Yf(MODE_STANDBY, MODULATION_FSK, 1);
 
   // Set frequency to do calibration at the configured frequency
-  RADIO_WriteFrequency(RadioConfiguration.frequency);
+  RADIO_WriteFrequency_Yf(RadioConfiguration.frequency);
 
   // Do not do autocalibration at runtime, start calibration now, Temp
   // threshold for monitoring 10 deg. C, Temperature monitoring enabled
-  RADIO_RegisterWrite(REG_FSK_IMAGECAL, 0x42);
+  RADIO_RegisterWrite_Yf(REG_FSK_IMAGECAL, 0x42);
 
   // Wait for calibration to complete
-  while((RADIO_RegisterRead(REG_FSK_IMAGECAL) & 0x20) != 0)
+  while((RADIO_RegisterRead_Yf(REG_FSK_IMAGECAL) & 0x20) != 0)
     ;
 
   // High frequency LNA current adjustment, 150% LNA current (Boost on)
-  RADIO_RegisterWrite(REG_LNA, 0x23);
+  RADIO_RegisterWrite_Yf(REG_LNA, 0x23);
 
   // Triggering event: PreambleDetect does AfcAutoOn, AgcAutoOn
-  RADIO_RegisterWrite(REG_FSK_RXCONFIG, 0x1E);
+  RADIO_RegisterWrite_Yf(REG_FSK_RXCONFIG, 0x1E);
 
   // Preamble detector on, 2 bytes trigger an interrupt, Chip errors tolerated
   // over the preamble size
-  RADIO_RegisterWrite(REG_FSK_PREAMBLEDETECT, 0xAA);
+  RADIO_RegisterWrite_Yf(REG_FSK_PREAMBLEDETECT, 0xAA);
 
   // Transmission starts as soon as there is a byte in the FIFO. FifoLevel
   // interrupt is generated whenever there are at least 16 bytes in FIFO.
-  RADIO_RegisterWrite(REG_FSK_FIFOTHRESH, 0x8F);
+  RADIO_RegisterWrite_Yf(REG_FSK_FIFOTHRESH, 0x8F);
 
   // Set FSK max payload length to 255 bytes
-  RADIO_RegisterWrite(REG_FSK_PAYLOADLENGTH, 0xFF);
+  RADIO_RegisterWrite_Yf(REG_FSK_PAYLOADLENGTH, 0xFF);
 
   // Packet mode
-  RADIO_RegisterWrite(REG_FSK_PACKETCONFIG2, 1 << SHIFT6);
+  RADIO_RegisterWrite_Yf(REG_FSK_PACKETCONFIG2, 1 << SHIFT6);
 
   // Go to LoRa mode for this register to be set
-  RADIO_WriteMode(MODE_SLEEP, MODULATION_LORA, 1);
+  RADIO_WriteMode_Yf(MODE_SLEEP, MODULATION_LORA, 1);
 
 
   // Set LoRa max payload length
-  RADIO_RegisterWrite(REG_LORA_PAYLOADMAXLENGTH, 0xFF);
+  RADIO_RegisterWrite_Yf(REG_LORA_PAYLOADMAXLENGTH, 0xFF);
 
-  RadioConfiguration.regVersion = RADIO_RegisterRead(REG_VERSION);
+  RadioConfiguration.regVersion = RADIO_RegisterRead_Yf(REG_VERSION);
 }
 
-void RADIO_SetLoRaSyncWord(uint8_t syncWord)
+void RADIO_SetLoRaSyncWord_Yf(uint8_t syncWord)
 {
   // Change LoRa syncword
   RadioConfiguration.syncWordLoRa = syncWord;
@@ -537,27 +537,27 @@ uint8_t RADIO_GetLoRaSyncWord(void)
   return RadioConfiguration.syncWordLoRa;
 }
 
-static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout)
+static void RADIO_WriteConfiguration_XYf(uint16_t symbolTimeout)
 {
   uint32_t tempValue;
   uint8_t regValue;
   uint8_t i;
 
   // Load configuration from RadioConfiguration_t structure into radio
-  RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
-  RADIO_WriteFrequency(RadioConfiguration.frequency);
+  RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
+  RADIO_WriteFrequency_Yf(RadioConfiguration.frequency);
   RADIO_WritePower(RadioConfiguration.outputPower);
 
   if(MODULATION_LORA == RadioConfiguration.modulation)
     {
-      RADIO_RegisterWrite(REG_LORA_SYNCWORD, RadioConfiguration.syncWordLoRa);
+      RADIO_RegisterWrite_Yf(REG_LORA_SYNCWORD, RadioConfiguration.syncWordLoRa);
 
-      RADIO_RegisterWrite(REG_LORA_MODEMCONFIG1,
+      RADIO_RegisterWrite_Yf(REG_LORA_MODEMCONFIG1,
                           (RadioConfiguration.bandWidth << SHIFT4) |
                           (RadioConfiguration.errorCodingRate << SHIFT1) |
                           (RadioConfiguration.implicitHeaderMode & 0x01));
 
-      RADIO_RegisterWrite(REG_LORA_MODEMCONFIG2,
+      RADIO_RegisterWrite_Yf(REG_LORA_MODEMCONFIG2,
                           (RadioConfiguration.dataRate << SHIFT4) |
                           ((RadioConfiguration.crcOn & 0x01) << SHIFT2) |
                           ((symbolTimeout & 0x0300) >> SHIFT8));
@@ -591,15 +591,15 @@ static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout)
         {
           tempValue = 0;
         }
-      RADIO_RegisterWrite(REG_LORA_HOPPERIOD, (uint8_t) tempValue);
+      RADIO_RegisterWrite_Yf(REG_LORA_HOPPERIOD, (uint8_t) tempValue);
 
-      RADIO_RegisterWrite(REG_LORA_SYMBTIMEOUTLSB, (symbolTimeout & 0xFF));
+      RADIO_RegisterWrite_Yf(REG_LORA_SYMBTIMEOUTLSB, (symbolTimeout & 0xFF));
 
       // If the symbol time is > 16ms, LowDataRateOptimize needs to be set
       // This long symbol time only happens for SF12&BW125, SF12&BW250
       // and SF11&BW125 and the following if statement checks for these
       // conditions
-      regValue = RADIO_RegisterRead(REG_LORA_MODEMCONFIG3);
+      regValue = RADIO_RegisterRead_Yf(REG_LORA_MODEMCONFIG3);
       if(
          (
           (SF_12 == RadioConfiguration.dataRate) &&
@@ -618,15 +618,15 @@ static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout)
           regValue &= ~(1 << SHIFT3); // Clear LowDataRateOptimize
         }
       regValue |= 1 << SHIFT2; // LNA gain set by internal AGC loop
-      RADIO_RegisterWrite(REG_LORA_MODEMCONFIG3, regValue);
+      RADIO_RegisterWrite_Yf(REG_LORA_MODEMCONFIG3, regValue);
 
-      regValue = RADIO_RegisterRead(REG_LORA_DETECTOPTIMIZE);
+      regValue = RADIO_RegisterRead_Yf(REG_LORA_DETECTOPTIMIZE);
       regValue &= ~(0x07); // Clear DetectOptimize bits
       regValue |= 0x03; // Set value for SF7 - SF12
-      RADIO_RegisterWrite(REG_LORA_DETECTOPTIMIZE, regValue);
+      RADIO_RegisterWrite_Yf(REG_LORA_DETECTOPTIMIZE, regValue);
 
       // Also set DetectionThreshold value for SF7 - SF12
-      RADIO_RegisterWrite(REG_LORA_DETECTIONTHRESHOLD, 0x0A);
+      RADIO_RegisterWrite_Yf(REG_LORA_DETECTIONTHRESHOLD, 0x0A);
 
       // Errata settings to mitigate spurious reception of a LoRa Signal
       if(0x12 == RadioConfiguration.regVersion)
@@ -636,36 +636,36 @@ static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout)
           if((BW_125KHZ == RadioConfiguration.bandWidth) ||
              (BW_250KHZ == RadioConfiguration.bandWidth))
             {
-              regValue = RADIO_RegisterRead(0x31);
+              regValue = RADIO_RegisterRead_Yf(0x31);
               regValue &= ~0x80; // Clear bit 7
-              RADIO_RegisterWrite(0x31, regValue);
-              RADIO_RegisterWrite(0x2F, 0x40);
-              RADIO_RegisterWrite(0x30, 0x00);
+              RADIO_RegisterWrite_Yf(0x31, regValue);
+              RADIO_RegisterWrite_Yf(0x2F, 0x40);
+              RADIO_RegisterWrite_Yf(0x30, 0x00);
             }
 
           if(BW_500KHZ == RadioConfiguration.bandWidth)
             {
-              regValue = RADIO_RegisterRead(0x31);
+              regValue = RADIO_RegisterRead_Yf(0x31);
               regValue |= 0x80; // Set bit 7
-              RADIO_RegisterWrite(0x31, regValue);
+              RADIO_RegisterWrite_Yf(0x31, regValue);
             }
         }
 
-      regValue = RADIO_RegisterRead(REG_LORA_INVERTIQ);
+      regValue = RADIO_RegisterRead_Yf(REG_LORA_INVERTIQ);
       regValue &= ~(1 << SHIFT6); // Clear InvertIQ bit
       regValue |= (1 << SHIFT0);
       regValue |= (RadioConfiguration.iqInverted & 0x01) << SHIFT6; // Set InvertIQ bit if needed   
-      RADIO_RegisterWrite(REG_LORA_INVERTIQ, regValue);
+      RADIO_RegisterWrite_Yf(REG_LORA_INVERTIQ, regValue);
 
       regValue = REG_LORA_INVERTIQ2_VALUE_OFF & (~((RadioConfiguration.iqInverted & 0x01) << SHIFT2));
-      RADIO_RegisterWrite(REG_LORA_INVERTIQ2, regValue);
+      RADIO_RegisterWrite_Yf(REG_LORA_INVERTIQ2, regValue);
 
-      RADIO_RegisterWrite(REG_LORA_PREAMBLEMSB, RadioConfiguration.preambleLen >> SHIFT8);
-      RADIO_RegisterWrite(REG_LORA_PREAMBLELSB, RadioConfiguration.preambleLen & 0xFF);
+      RADIO_RegisterWrite_Yf(REG_LORA_PREAMBLEMSB, RadioConfiguration.preambleLen >> SHIFT8);
+      RADIO_RegisterWrite_Yf(REG_LORA_PREAMBLELSB, RadioConfiguration.preambleLen & 0xFF);
 
-      RADIO_RegisterWrite(REG_LORA_FIFOADDRPTR, 0x00);
-      RADIO_RegisterWrite(REG_LORA_FIFOTXBASEADDR, 0x00);
-      RADIO_RegisterWrite(REG_LORA_FIFORXBASEADDR, 0x00);
+      RADIO_RegisterWrite_Yf(REG_LORA_FIFOADDRPTR, 0x00);
+      RADIO_RegisterWrite_Yf(REG_LORA_FIFOTXBASEADDR, 0x00);
+      RADIO_RegisterWrite_Yf(REG_LORA_FIFORXBASEADDR, 0x00);
 
       // Errata sensitivity increase for 500kHz BW
       if(0x12 == RadioConfiguration.regVersion)
@@ -675,37 +675,37 @@ static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout)
              (RadioConfiguration.frequency <= FREQ_1020000KHZ)
              )
             {
-              RADIO_RegisterWrite(0x36, 0x02);
-              RADIO_RegisterWrite(0x3a, 0x64);
+              RADIO_RegisterWrite_Yf(0x36, 0x02);
+              RADIO_RegisterWrite_Yf(0x3a, 0x64);
             }
           else if((BW_500KHZ == RadioConfiguration.bandWidth) &&
                   (RadioConfiguration.frequency >= FREQ_410000KHZ) &&
                   (RadioConfiguration.frequency <= FREQ_525000KHZ)
                   )
             {
-              RADIO_RegisterWrite(0x36, 0x02);
-              RADIO_RegisterWrite(0x3a, 0x7F);
+              RADIO_RegisterWrite_Yf(0x36, 0x02);
+              RADIO_RegisterWrite_Yf(0x3a, 0x7F);
             }
           else
             {
-              RADIO_RegisterWrite(0x36, 0x03);
+              RADIO_RegisterWrite_Yf(0x36, 0x03);
             }
 
           // LoRa Inverted Polarity 500kHz fix (May 26, 2015 document)
           if((BW_500KHZ == RadioConfiguration.bandWidth) && (1 == RadioConfiguration.iqInverted))
             {
-              RADIO_RegisterWrite(0x3A, 0x65); // Freq to time drift
-              RADIO_RegisterWrite(REG_LORA_INVERTIQ2, 25); // Freq to time invert = 0d25
+              RADIO_RegisterWrite_Yf(0x3A, 0x65); // Freq to time drift
+              RADIO_RegisterWrite_Yf(REG_LORA_INVERTIQ2, 25); // Freq to time invert = 0d25
             }
           else
             {
-              RADIO_RegisterWrite(0x3A, 0x65); // Freq to time drift
-              RADIO_RegisterWrite(REG_LORA_INVERTIQ2, 29); // Freq to time invert = 0d29 (default)
+              RADIO_RegisterWrite_Yf(0x3A, 0x65); // Freq to time drift
+              RADIO_RegisterWrite_Yf(REG_LORA_INVERTIQ2, 29); // Freq to time invert = 0d29 (default)
             }
         }
 
       // Clear all interrupts (just in case)
-      RADIO_RegisterWrite(REG_LORA_IRQFLAGS, 0xFF);
+      RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGS, 0xFF);
     }
   else
     {
@@ -713,14 +713,14 @@ static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout)
       RADIO_WriteFSKFrequencyDeviation(RadioConfiguration.frequencyDeviation);
       RADIO_WriteFSKBitRate(RadioConfiguration.bitRate);
 
-      RADIO_RegisterWrite(REG_FSK_PREAMBLEMSB, RadioConfiguration.preambleLen >> SHIFT8);
-      RADIO_RegisterWrite(REG_FSK_PREAMBLELSB, RadioConfiguration.preambleLen & 0xFF);
+      RADIO_RegisterWrite_Yf(REG_FSK_PREAMBLEMSB, RadioConfiguration.preambleLen >> SHIFT8);
+      RADIO_RegisterWrite_Yf(REG_FSK_PREAMBLELSB, RadioConfiguration.preambleLen & 0xFF);
 
       // Configure PaRamp
-      regValue = RADIO_RegisterRead(REG_PARAMP);
+      regValue = RADIO_RegisterRead_Yf(REG_PARAMP);
       regValue &= ~0x60; // Clear shaping bits
       regValue |= RadioConfiguration.fskDataShaping << SHIFT5;
-      RADIO_RegisterWrite(REG_PARAMP, regValue);
+      RADIO_RegisterWrite_Yf(REG_PARAMP, regValue);
 
       // Variable length packets, whitening, keep FIFO when CRC fails
       // no address filtering, CCITT CRC and whitening
@@ -729,29 +729,29 @@ static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout)
         {
           regValue |= 0x10; // Enable CRC
         }
-      RADIO_RegisterWrite(REG_FSK_PACKETCONFIG1, regValue);
+      RADIO_RegisterWrite_Yf(REG_FSK_PACKETCONFIG1, regValue);
 
       // Syncword value
       for(i = 0; i < RadioConfiguration.syncWordLen; i++)
         {
           // Take advantage of the fact that the SYNCVALUE registers are
           // placed at sequential addresses
-          RADIO_RegisterWrite(REG_FSK_SYNCVALUE1 + i, RadioConfiguration.syncWord[i]);
+          RADIO_RegisterWrite_Yf(REG_FSK_SYNCVALUE1 + i, RadioConfiguration.syncWord[i]);
         }
 
       // Enable sync word generation/detection if needed, Syncword size = syncWordLen + 1 bytes
       if(RadioConfiguration.syncWordLen != 0)
         {
-          RADIO_RegisterWrite(REG_FSK_SYNCCONFIG, 0x10 | (RadioConfiguration.syncWordLen - 1));
+          RADIO_RegisterWrite_Yf(REG_FSK_SYNCCONFIG, 0x10 | (RadioConfiguration.syncWordLen - 1));
         }
       else
         {
-          RADIO_RegisterWrite(REG_FSK_SYNCCONFIG, 0x00);
+          RADIO_RegisterWrite_Yf(REG_FSK_SYNCCONFIG, 0x00);
         }
 
       // Clear all FSK interrupts (just in case)
-      RADIO_RegisterWrite(REG_FSK_IRQFLAGS1, 0xFF);
-      RADIO_RegisterWrite(REG_FSK_IRQFLAGS2, 0xFF);
+      RADIO_RegisterWrite_Yf(REG_FSK_IRQFLAGS1, 0xFF);
+      RADIO_RegisterWrite_Yf(REG_FSK_IRQFLAGS2, 0xFF);
 
     }
 }
@@ -767,15 +767,15 @@ RadioError_t RADIO_TransmitCW(void)
 
   // Since we're interested in a transmission, rxWindowSize is irrelevant.
   // Setting it to 4 is a valid option.
-  RADIO_WriteConfiguration_XYF(4);
+  RADIO_WriteConfiguration_XYf(4);
 
   RadioConfiguration.flags |= RADIO_FLAG_TRANSMITTING;
   RadioConfiguration.flags &= ~RADIO_FLAG_TIMEOUT;
 
-  RADIO_RegisterWrite(0x3D, 0xA1);
-  RADIO_RegisterWrite(0x36, 0x01);
-  RADIO_RegisterWrite(0x1E, 0x08);
-  RADIO_RegisterWrite(0x01, 0x8B);
+  RADIO_RegisterWrite_Yf(0x3D, 0xA1);
+  RADIO_RegisterWrite_Yf(0x36, 0x01);
+  RADIO_RegisterWrite_Yf(0x1E, 0x08);
+  RADIO_RegisterWrite_Yf(0x01, 0x8B);
 
   return ERR_NONE;
 }
@@ -783,14 +783,14 @@ RadioError_t RADIO_TransmitCW(void)
 RadioError_t RADIO_StopCW(void)
 {
 
-  RADIO_WriteMode(MODE_STANDBY, RadioConfiguration.modulation, 0);
+  RADIO_WriteMode_Yf(MODE_STANDBY, RadioConfiguration.modulation, 0);
   SystemBlockingWaitMs(100);
-  RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+  RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
   SystemBlockingWaitMs(100);
   return ERR_NONE;
 }
 
-RadioError_t RADIO_Transmit_XYF(uint8_t *buffer, uint8_t bufferLen)
+RadioError_t RADIO_Transmit_XYf(uint8_t *buffer, uint8_t bufferLen)
 {
   uint8_t regValue;
   uint8_t i;
@@ -814,46 +814,46 @@ RadioError_t RADIO_Transmit_XYF(uint8_t *buffer, uint8_t bufferLen)
 
   // Since we're interested in a transmission, rxWindowSize is irrelevant.
   // Setting it to 4 is a valid option.
-  RADIO_WriteConfiguration_XYF(4);
+  RADIO_WriteConfiguration_XYf(4);
 
   if(MODULATION_LORA == RadioConfiguration.modulation)
     {
-      RADIO_RegisterWrite(REG_LORA_PAYLOADLENGTH, bufferLen);
+      RADIO_RegisterWrite_Yf(REG_LORA_PAYLOADLENGTH, bufferLen);
 
       // Configure PaRamp
-      regValue = RADIO_RegisterRead(REG_PARAMP);
+      regValue = RADIO_RegisterRead_Yf(REG_PARAMP);
       regValue &= ~0x0F; // Clear lower 4 bits
       regValue |= 0x08; // 50us PA Ramp-up time
-      RADIO_RegisterWrite(REG_PARAMP, regValue);
+      RADIO_RegisterWrite_Yf(REG_PARAMP, regValue);
 
       // DIO0 = 01 means TxDone in LoRa mode.
       // DIO2 = 00 means FHSSChangeChannel
-      RADIO_RegisterWrite(REG_DIOMAPPING1, 0x40);
-      RADIO_RegisterWrite(REG_DIOMAPPING2, 0x00);
+      RADIO_RegisterWrite_Yf(REG_DIOMAPPING1, 0x40);
+      RADIO_RegisterWrite_Yf(REG_DIOMAPPING2, 0x00);
 
-      RADIO_WriteMode(MODE_STANDBY, RadioConfiguration.modulation, 1);
+      RADIO_WriteMode_Yf(MODE_STANDBY, RadioConfiguration.modulation, 1);
     }
   else
     {
       // DIO0 = 00 means PacketSent in FSK Tx mode
-      RADIO_RegisterWrite(REG_DIOMAPPING1, 0x00);
-      RADIO_RegisterWrite(REG_DIOMAPPING2, 0x00);
+      RADIO_RegisterWrite_Yf(REG_DIOMAPPING1, 0x00);
+      RADIO_RegisterWrite_Yf(REG_DIOMAPPING2, 0x00);
     }
 
   if(MODULATION_FSK == RadioConfiguration.modulation)
     {
       // FSK requires the length to be sent to the FIFO
-      RADIO_RegisterWrite(REG_FIFO, bufferLen);
+      RADIO_RegisterWrite_Yf(REG_FIFO, bufferLen);
     }
 
-  HALSPICSAssert();
-  HALSPISend(REG_WRITE | REG_FIFO);
+  HALSPICSAssert_Yf();
+  HALSPISend_Yf(REG_WRITE | REG_FIFO);
 
   for(i = 0; i < bufferLen; i++)
     {
-      HALSPISend(buffer[i]);
+      HALSPISend_Yf(buffer[i]);
     }
-  HALSPICSDeassert();
+  HALSPICSDeassert_Yf();
 
   RadioConfiguration.flags |= RADIO_FLAG_TRANSMITTING;
   RadioConfiguration.flags &= ~(RADIO_FLAG_TIMEOUT | RADIO_FLAG_RXERROR);
@@ -861,18 +861,18 @@ RadioError_t RADIO_Transmit_XYF(uint8_t *buffer, uint8_t bufferLen)
   // Non blocking switch. We don't really care when it starts transmitting.
   // If accurate timing of the time on air is required, the simplest way to
   // achieve it is to change this to a blocking mode switch.
-  RADIO_WriteMode(MODE_TX, RadioConfiguration.modulation, 0);
+  RADIO_WriteMode_Yf(MODE_TX, RadioConfiguration.modulation, 0);
 
   // Set timeout to some very large value since the timer counts down.
   // Leaving the callback uninitialized it will assume the default value of
   // NULL which in turns means no callback.
-  SwTimerSetTimeout(RadioConfiguration.timeOnAirTimerId, MS_TO_TICKS(TIME_ON_AIR_LOAD_VALUE));
-  SwTimerStart(RadioConfiguration.timeOnAirTimerId);
+  SwTimerSetTimeout_Yf(RadioConfiguration.timeOnAirTimerId, MS_TO_TICKS(TIME_ON_AIR_LOAD_VALUE));
+  SwTimerStart_Yf(RadioConfiguration.timeOnAirTimerId);
 
   if(0 != RadioConfiguration.watchdogTimerTimeout)
     {
-      SwTimerSetTimeout(RadioConfiguration.watchdogTimerId, MS_TO_TICKS(RadioConfiguration.watchdogTimerTimeout));
-      SwTimerStart(RadioConfiguration.watchdogTimerId);
+      SwTimerSetTimeout_Yf(RadioConfiguration.watchdogTimerId, MS_TO_TICKS(RadioConfiguration.watchdogTimerTimeout));
+      SwTimerStart_Yf(RadioConfiguration.watchdogTimerId);
     }
 
   return ERR_NONE;
@@ -894,34 +894,34 @@ RadioError_t RADIO_ReceiveStart_XY(uint16_t rxWindowSize)
 
   if(0 == rxWindowSize)
     {
-      RADIO_WriteConfiguration_XYF(4);
+      RADIO_WriteConfiguration_XYf(4);
     }
   else
     {
-      RADIO_WriteConfiguration_XYF(rxWindowSize);
+      RADIO_WriteConfiguration_XYf(rxWindowSize);
     }
 
   if(MODULATION_LORA == RadioConfiguration.modulation)
     {
       // All LoRa packets are received with explicit header, so this register
       // is not used. However, a value of 0 is not allowed.
-      RADIO_RegisterWrite(REG_LORA_PAYLOADLENGTH, 0x01);
+      RADIO_RegisterWrite_Yf(REG_LORA_PAYLOADLENGTH, 0x01);
 
       // DIO0 = 00 means RxDone in LoRa mode
       // DIO1 = 00 means RxTimeout in LoRa mode
       // DIO2 = 00 means FHSSChangeChannel
       // Other DIOs are unused.
-      RADIO_RegisterWrite(REG_DIOMAPPING1, 0x00);
-      RADIO_RegisterWrite(REG_DIOMAPPING2, 0x00);
+      RADIO_RegisterWrite_Yf(REG_DIOMAPPING1, 0x00);
+      RADIO_RegisterWrite_Yf(REG_DIOMAPPING2, 0x00);
     }
   else
     {
-      RADIO_RegisterWrite(REG_FSK_RXBW, RadioConfiguration.rxBw);
-      RADIO_RegisterWrite(REG_FSK_AFCBW, RadioConfiguration.afcBw);
+      RADIO_RegisterWrite_Yf(REG_FSK_RXBW, RadioConfiguration.rxBw);
+      RADIO_RegisterWrite_Yf(REG_FSK_AFCBW, RadioConfiguration.afcBw);
 
       // DIO0 = 00 means PayloadReady in FSK Rx mode
-      RADIO_RegisterWrite(REG_DIOMAPPING1, 0x00);
-      RADIO_RegisterWrite(REG_DIOMAPPING2, 0x00);
+      RADIO_RegisterWrite_Yf(REG_DIOMAPPING1, 0x00);
+      RADIO_RegisterWrite_Yf(REG_DIOMAPPING2, 0x00);
     }
 
   RadioConfiguration.flags |= RADIO_FLAG_RECEIVING;
@@ -931,26 +931,26 @@ RadioError_t RADIO_ReceiveStart_XY(uint16_t rxWindowSize)
   // when it starts receiving.
   if(0 == rxWindowSize)
     {
-      RADIO_WriteMode(MODE_RXCONT, RadioConfiguration.modulation, 0);
+      RADIO_WriteMode_Yf(MODE_RXCONT, RadioConfiguration.modulation, 0);
     }
   else
     {
       if(MODULATION_LORA == RadioConfiguration.modulation)
         {
-          RADIO_WriteMode(MODE_RXSINGLE, MODULATION_LORA, 0);
+          RADIO_WriteMode_Yf(MODE_RXSINGLE, MODULATION_LORA, 0);
         }
       else
         {
-          RADIO_WriteMode(MODE_RXCONT, MODULATION_FSK, 0);
-          SwTimerSetTimeout(RadioConfiguration.fskRxWindowTimerId, MS_TO_TICKS_SHORT(rxWindowSize));
-          SwTimerStart(RadioConfiguration.fskRxWindowTimerId);
+          RADIO_WriteMode_Yf(MODE_RXCONT, MODULATION_FSK, 0);
+          SwTimerSetTimeout_Yf(RadioConfiguration.fskRxWindowTimerId, MS_TO_TICKS_SHORT(rxWindowSize));
+          SwTimerStart_Yf(RadioConfiguration.fskRxWindowTimerId);
         }
     }
 
   if(0 != RadioConfiguration.watchdogTimerTimeout)
     {
-      SwTimerSetTimeout(RadioConfiguration.watchdogTimerId, MS_TO_TICKS(RadioConfiguration.watchdogTimerTimeout));
-      SwTimerStart(RadioConfiguration.watchdogTimerId);
+      SwTimerSetTimeout_Yf(RadioConfiguration.watchdogTimerId, MS_TO_TICKS(RadioConfiguration.watchdogTimerTimeout));
+      SwTimerStart_Yf(RadioConfiguration.watchdogTimerId);
     }
   return ERR_NONE;
 }
@@ -959,7 +959,7 @@ void RADIO_ReceiveStop(void)
 {
   if(RADIO_FLAG_RECEIVING == RadioConfiguration.flags)
     {
-      RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+      RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
     }
 }
@@ -974,17 +974,17 @@ static void RADIO_RxDone(void)
 {
   uint8_t i, irqFlags;
   bool Rx_success = false;
-  irqFlags = RADIO_RegisterRead(REG_LORA_IRQFLAGS);
+  irqFlags = RADIO_RegisterRead_Yf(REG_LORA_IRQFLAGS);
   // Clear RxDone interrupt (also CRC error and ValidHeader interrupts, if
   // they exist)
-  RADIO_RegisterWrite(REG_LORA_IRQFLAGS, (1 << SHIFT6) | (1 << SHIFT5) | (1 << SHIFT4));
+  RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGS, (1 << SHIFT6) | (1 << SHIFT5) | (1 << SHIFT4));
   if(((1 << SHIFT6) | (1 << SHIFT4)) == (irqFlags & ((1 << SHIFT6) | (1 << SHIFT4))))
     {
       // Make sure the watchdog won't trigger MAC functions erroneously.
       SwTimerStop(RadioConfiguration.watchdogTimerId);
 
       // Read CRC info from received packet header
-      i = RADIO_RegisterRead(REG_LORA_HOPCHANNEL);
+      i = RADIO_RegisterRead_Yf(REG_LORA_HOPCHANNEL);
       if((0 == RadioConfiguration.crcOn) || ((0 == (irqFlags & (1 << SHIFT5))) && (0 != (i & (1 << SHIFT6)))))
         {
           // ValidHeader and RxDone are set from the initial if condition.
@@ -994,19 +994,19 @@ static void RADIO_RxDone(void)
           // Radio did not go to standby automatically. Will need to be set
           // later on.
 
-          RadioConfiguration.dataBufferLen = RADIO_RegisterRead(REG_LORA_RXNBBYTES);
-          RADIO_RegisterWrite(REG_LORA_FIFOADDRPTR, 0x00);
+          RadioConfiguration.dataBufferLen = RADIO_RegisterRead_Yf(REG_LORA_RXNBBYTES);
+          RADIO_RegisterWrite_Yf(REG_LORA_FIFOADDRPTR, 0x00);
 
-          HALSPICSAssert();
-          HALSPISend(REG_FIFO);
+          HALSPICSAssert_Yf();
+          HALSPISend_Yf(REG_FIFO);
           for(i = 0; i < RadioConfiguration.dataBufferLen; i++)
             {
-              RadioConfiguration.dataBuffer[i] = HALSPISend(0xFF);
+              RadioConfiguration.dataBuffer[i] = HALSPISend_Yf(0xFF);
             }
-          HALSPICSDeassert();
+          HALSPICSDeassert_Yf();
           RadioConfiguration.flags |= RADIO_FLAG_RXDATA;
 
-          RadioConfiguration.packetSNR = RADIO_RegisterRead(REG_LORA_PKTSNRVALUE);
+          RadioConfiguration.packetSNR = RADIO_RegisterRead_Yf(REG_LORA_PKTSNRVALUE);
           RadioConfiguration.packetSNR /= (int8_t) 4;
           Rx_success = true;
         }
@@ -1015,7 +1015,7 @@ static void RADIO_RxDone(void)
           // CRC required and CRC error found.
           RadioConfiguration.flags |= RADIO_FLAG_RXERROR;
         }
-      RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+      RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
       //      LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
       LoRa_RxDone_X(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, Rx_success);
@@ -1027,7 +1027,7 @@ static void RADIO_FSKPayloadReady(void)
   uint8_t irqFlags;
   uint8_t i;
 
-  irqFlags = RADIO_RegisterRead(REG_FSK_IRQFLAGS2);
+  irqFlags = RADIO_RegisterRead_Yf(REG_FSK_IRQFLAGS2);
   if((1 << SHIFT2) == (irqFlags & (1 << SHIFT2)))
     {
       // Clearing of the PayloadReady (and CrcOk) interrupt is done when the
@@ -1037,16 +1037,16 @@ static void RADIO_FSKPayloadReady(void)
       SwTimerStop(RadioConfiguration.watchdogTimerId);
       SwTimerStop(RadioConfiguration.fskRxWindowTimerId);
 
-      HALSPICSAssert();
-      HALSPISend(REG_FIFO);
-      RadioConfiguration.dataBufferLen = HALSPISend(0xFF);
+      HALSPICSAssert_Yf();
+      HALSPISend_Yf(REG_FIFO);
+      RadioConfiguration.dataBufferLen = HALSPISend_Yf(0xFF);
       for(i = 0; i < RadioConfiguration.dataBufferLen; i++)
         {
-          RadioConfiguration.dataBuffer[i] = HALSPISend(0xFF);
+          RadioConfiguration.dataBuffer[i] = HALSPISend_Yf(0xFF);
         }
-      HALSPICSDeassert();
+      HALSPICSDeassert_Yf();
 
-      RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+      RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
 
       RadioConfiguration.packetSNR = -128;
@@ -1084,9 +1084,9 @@ static void RADIO_RxTimeout(void)
 {
   // Make sure the watchdog won't trigger MAC functions erroneously.
   SwTimerStop(RadioConfiguration.watchdogTimerId);
-  RADIO_RegisterWrite(REG_LORA_IRQFLAGS, 1 << SHIFT7);
+  RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGS, 1 << SHIFT7);
   // Radio went to STANDBY. Set sleep.
-  RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+  RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
   RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
 
   //  LORAWAN_RxTimeout();
@@ -1098,8 +1098,8 @@ static void RADIO_TxDone(void)
   uint32_t timeOnAir;
   // Make sure the watchdog won't trigger MAC functions erroneously.
   SwTimerStop(RadioConfiguration.watchdogTimerId);
-  RADIO_RegisterWrite(REG_LORA_IRQFLAGS, 1 << SHIFT3);
-  RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+  RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGS, 1 << SHIFT3);
+  RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
   RadioConfiguration.flags &= ~RADIO_FLAG_TRANSMITTING;
   if((RadioConfiguration.flags & RADIO_FLAG_TIMEOUT) == 0)
     {
@@ -1114,10 +1114,10 @@ static void RADIO_FSKPacketSent(void)
   uint8_t irqFlags;
   uint32_t timeOnAir;
 
-  irqFlags = RADIO_RegisterRead(REG_FSK_IRQFLAGS2);
+  irqFlags = RADIO_RegisterRead_Yf(REG_FSK_IRQFLAGS2);
   if((1 << SHIFT3) == (irqFlags & (1 << SHIFT3)))
     {
-      RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+      RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
       RadioConfiguration.flags &= ~RADIO_FLAG_TRANSMITTING;
       // Make sure the watchdog won't trigger MAC functions erroneously.
       SwTimerStop(RadioConfiguration.watchdogTimerId);
@@ -1162,32 +1162,32 @@ static void RADIO_UnhandledInterrupt(RadioModulation_t modulation)
   // those registers directly.
   if(MODULATION_LORA == modulation)
     {
-      RADIO_RegisterWrite(REG_LORA_IRQFLAGS, 0xFF);
+      RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGS, 0xFF);
     }
   else
     {
       // Although just some of the bits can be cleared, try to clear
       // everything
-      RADIO_RegisterWrite(REG_FSK_IRQFLAGS1, 0xFF);
-      RADIO_RegisterWrite(REG_FSK_IRQFLAGS2, 0xFF);
+      RADIO_RegisterWrite_Yf(REG_FSK_IRQFLAGS1, 0xFF);
+      RADIO_RegisterWrite_Yf(REG_FSK_IRQFLAGS2, 0xFF);
     }
 }
 
 static void RADIO_FHSSChangeChannel(void)
 {
   uint8_t irqFlags;
-  irqFlags = RADIO_RegisterRead(REG_LORA_IRQFLAGS);
+  irqFlags = RADIO_RegisterRead_Yf(REG_LORA_IRQFLAGS);
 
   if(NULL != RadioConfiguration.frequencyHopPeriod)
     {
       if(NULL != RadioConfiguration.fhssNextFrequency)
         {
-          RADIO_WriteFrequency(RadioConfiguration.fhssNextFrequency());
+          RADIO_WriteFrequency_Yf(RadioConfiguration.fhssNextFrequency());
         }
     }
 
   // Clear FHSSChangeChannel interrupt
-  RADIO_RegisterWrite(REG_LORA_IRQFLAGS, 1 << SHIFT1);
+  RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGS, 1 << SHIFT1);
 }
 
 void RADIO_DIO0(void)
@@ -1195,8 +1195,8 @@ void RADIO_DIO0(void)
   // Check radio configuration (modulation and DIO0 settings).
   uint8_t dioMapping;
   uint8_t opMode;
-  dioMapping = (RADIO_RegisterRead(REG_DIOMAPPING1) & 0xC0) >> SHIFT6;
-  opMode = RADIO_RegisterRead(REG_OPMODE);
+  dioMapping = (RADIO_RegisterRead_Yf(REG_DIOMAPPING1) & 0xC0) >> SHIFT6;
+  opMode = RADIO_RegisterRead_Yf(REG_OPMODE);
 
   if((opMode & 0x80) != 0)
     {
@@ -1248,9 +1248,9 @@ void RADIO_DIO1(void)
 {
   // Check radio configuration (modulation and DIO1 settings).
   uint8_t dioMapping;
-  dioMapping = (RADIO_RegisterRead(REG_DIOMAPPING1) & 0x30) >> SHIFT4;
+  dioMapping = (RADIO_RegisterRead_Yf(REG_DIOMAPPING1) & 0x30) >> SHIFT4;
 
-  if((RADIO_RegisterRead(REG_OPMODE) & 0x80) != 0)
+  if((RADIO_RegisterRead_Yf(REG_OPMODE) & 0x80) != 0)
     {
       // LoRa modulation
       switch(dioMapping)
@@ -1286,10 +1286,10 @@ void RADIO_DIO2(void)
   // Check radio configuration (modulation and DIO2 settings).
   uint8_t dioMapping;
   uint8_t opMode;
-  dioMapping = (RADIO_RegisterRead(REG_DIOMAPPING1) & 0x0C) >> SHIFT2;
-  opMode = RADIO_RegisterRead(REG_OPMODE);
+  dioMapping = (RADIO_RegisterRead_Yf(REG_DIOMAPPING1) & 0x0C) >> SHIFT2;
+  opMode = RADIO_RegisterRead_Yf(REG_OPMODE);
 
-  if((RADIO_RegisterRead(REG_OPMODE) & 0x80) != 0)
+  if((RADIO_RegisterRead_Yf(REG_OPMODE) & 0x80) != 0)
     {
       // LoRa modulation
       switch(dioMapping)
@@ -1315,9 +1315,9 @@ void RADIO_DIO3(void)
 {
   // Check radio configuration (modulation and DIO3 settings).
   uint8_t dioMapping;
-  dioMapping = RADIO_RegisterRead(REG_DIOMAPPING1) & 0x03;
+  dioMapping = RADIO_RegisterRead_Yf(REG_DIOMAPPING1) & 0x03;
 
-  if((RADIO_RegisterRead(REG_OPMODE) & 0x80) != 0)
+  if((RADIO_RegisterRead_Yf(REG_OPMODE) & 0x80) != 0)
     {
       // LoRa modulation
       switch(dioMapping)
@@ -1338,9 +1338,9 @@ void RADIO_DIO4(void)
 {
   // Check radio configuration (modulation and DIO4 settings).
   uint8_t dioMapping;
-  dioMapping = (RADIO_RegisterRead(REG_DIOMAPPING2) & 0xC0) >> SHIFT6;
+  dioMapping = (RADIO_RegisterRead_Yf(REG_DIOMAPPING2) & 0xC0) >> SHIFT6;
 
-  if((RADIO_RegisterRead(REG_OPMODE) & 0x80) != 0)
+  if((RADIO_RegisterRead_Yf(REG_OPMODE) & 0x80) != 0)
     {
       // LoRa modulation
       switch(dioMapping)
@@ -1361,9 +1361,9 @@ void RADIO_DIO5(void)
 {
   // Check radio configuration (modulation and DIO5 settings).
   uint8_t dioMapping;
-  dioMapping = (RADIO_RegisterRead(REG_DIOMAPPING2) & 0x30) >> SHIFT4;
+  dioMapping = (RADIO_RegisterRead_Yf(REG_DIOMAPPING2) & 0x30) >> SHIFT4;
 
-  if((RADIO_RegisterRead(REG_OPMODE) & 0x80) != 0)
+  if((RADIO_RegisterRead_Yf(REG_OPMODE) & 0x80) != 0)
     {
       // LoRa modulation
       switch(dioMapping)
@@ -1386,33 +1386,33 @@ uint16_t RADIO_ReadRandom(void)
   uint16_t retVal;
   retVal = 0;
   // Mask all interrupts, do many measurements of RSSI
-  RADIO_WriteMode(MODE_SLEEP, MODULATION_LORA, 1);
-  RADIO_RegisterWrite(REG_LORA_IRQFLAGSMASK, 0xFF);
-  RADIO_WriteMode(MODE_RXCONT, MODULATION_LORA, 1);
+  RADIO_WriteMode_Yf(MODE_SLEEP, MODULATION_LORA, 1);
+  RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGSMASK, 0xFF);
+  RADIO_WriteMode_Yf(MODE_RXCONT, MODULATION_LORA, 1);
   for(i = 0; i < 16; i++)
     {
       SystemBlockingWaitMs(1);
       retVal <<= SHIFT1;
-      retVal |= RADIO_RegisterRead(REG_LORA_RSSIWIDEBAND) & 0x01;
+      retVal |= RADIO_RegisterRead_Yf(REG_LORA_RSSIWIDEBAND) & 0x01;
     }
 
   // Return radio to sleep
-  RADIO_WriteMode(MODE_SLEEP, MODULATION_LORA, 1);
+  RADIO_WriteMode_Yf(MODE_SLEEP, MODULATION_LORA, 1);
   // Clear interrupts in case any have been generated
-  RADIO_RegisterWrite(REG_LORA_IRQFLAGS, 0xFF);
+  RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGS, 0xFF);
   // Unmask all interrupts
-  RADIO_RegisterWrite(REG_LORA_IRQFLAGSMASK, 0x00);
+  RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGSMASK, 0x00);
   return retVal;
 }
 
 static void RADIO_RxFSKTimeout(uint8_t param)
 {
   uint8_t irqFlags;
-  irqFlags = RADIO_RegisterRead(REG_FSK_IRQFLAGS1);
+  irqFlags = RADIO_RegisterRead_Yf(REG_FSK_IRQFLAGS1);
   if(0 == (irqFlags & (1 << SHIFT0)))
     {
       // SyncAddressMatch is not set. Set radio to sleep.
-      RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+      RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
       // Make sure the watchdog won't trigger MAC functions erroneously.
       SwTimerStop(RadioConfiguration.watchdogTimerId);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
@@ -1423,8 +1423,8 @@ static void RADIO_RxFSKTimeout(uint8_t param)
 
 static void RADIO_WatchdogTimeout(uint8_t param)
 {
-  RADIO_WriteMode(MODE_STANDBY, RadioConfiguration.modulation, 1);
-  RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+  RADIO_WriteMode_Yf(MODE_STANDBY, RadioConfiguration.modulation, 1);
+  RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
   RadioConfiguration.flags |= RADIO_FLAG_TIMEOUT;
   if((RadioConfiguration.flags & RADIO_FLAG_RECEIVING) != 0)
     {
@@ -1462,8 +1462,8 @@ void RADIO_clearReceiveFlag(void)
 
 void RADIO_standby(void)
 {
-  RADIO_WriteMode(MODE_STANDBY, RadioConfiguration.modulation, 1);
-  RADIO_WriteMode(MODE_SLEEP, RadioConfiguration.modulation, 0);
+  RADIO_WriteMode_Yf(MODE_STANDBY, RadioConfiguration.modulation, 1);
+  RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
 }
 
 int8_t RADIO_GetPacketSnr(void)
@@ -1501,7 +1501,7 @@ uint32_t RADIO_GetChannelFrequency(void)
   return RadioConfiguration.frequency;
 }
 
-void RADIO_SetOutputPower(int8_t power)
+void RADIO_SetOutputPower_Yf(int8_t power)
 {
   RadioConfiguration.outputPower = power;
 }
@@ -1511,7 +1511,7 @@ uint8_t RADIO_GetOutputPower(void)
   return RadioConfiguration.outputPower;
 }
 
-void RADIO_SetCRC(uint8_t crc)
+void RADIO_SetCRC_Yf(uint8_t crc)
 {
   RadioConfiguration.crcOn = crc;
 }
@@ -1521,7 +1521,7 @@ uint8_t RADIO_GetCRC(void)
   return RadioConfiguration.crcOn;
 }
 
-void RADIO_SetIQInverted(uint8_t iqInverted)
+void RADIO_SetIQInverted_Yf(uint8_t iqInverted)
 {
   RadioConfiguration.iqInverted = iqInverted;
 }

@@ -61,7 +61,7 @@ extern ChannelParams_t LoRa_Channels[];
 extern const uint8_t rxWindowSize[];
 
 /************************ FUNCTION PROTOTYPES *************************/
-static void LoRa_AssemblePacket_XYF(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel);
+static void LoRa_AssemblePacket_XYf(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel);
 static uint8_t LoRa_GetMaxPayloadSize(void);
 uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr);
 /**********************************************************************/
@@ -79,15 +79,15 @@ LorawanError_t LoRa_Send_Data(void)
 {
   LorawanError_t result;
 
-  LoRa_ConfigureRadioTx_XY(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
+  LoRa_ConfigureRadioTx_XYf(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
-  if(RADIO_Transmit_XYF(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+  if(RADIO_Transmit_XYf(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.LoRa_StatusDanych = LoRa_transmiting;
 
       //      loRa.lorawanMacStatus.synchronization = ENABLED; //set the synchronization flag because one packet was sent (this is a guard for the the RxAppData of the user)
       loRa.LoRa_transmitStatus = LoRa_SendData_TX; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
-      SwTimerSetTimeout(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_ACK_timeout));
+      SwTimerSetTimeout_Yf(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_ACK_timeout));
     }
   else
     {
@@ -96,20 +96,20 @@ LorawanError_t LoRa_Send_Data(void)
   return OK;
 }
 
-LorawanError_t LoRa_Send_Header(void)
+LorawanError_t LoRa_Send_Header_XYfl(void)
 {
   LorawanError_t result;
 
-  LoRa_ConfigureRadioTx_XY(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
+  LoRa_ConfigureRadioTx_XYf(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
 
-  if(RADIO_Transmit_XYF(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+  if(RADIO_Transmit_XYf(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.LoRa_StatusDanych = LoRa_transmiting;
       loRa.LoRa_Counnter.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
 
       //      loRa.lorawanMacStatus.synchronization = ENABLED; //set the synchronization flag because one packet was sent (this is a guard for the the RxAppData of the user)
       loRa.LoRa_transmitStatus = LoRa_Handshaking_TX; // set the state of MAC to transmission occurring. No other packets can be sent afterwards
-      SwTimerSetTimeout(loRa.LoRa_TimerHandshaking, MS_TO_TICKS_SHORT(LoRa_Handshaking_timeout));
+      SwTimerSetTimeout_Yf(loRa.LoRa_TimerHandshaking, MS_TO_TICKS_SHORT(LoRa_Handshaking_timeout));
     }
   else
     {
@@ -118,7 +118,7 @@ LorawanError_t LoRa_Send_Header(void)
   return OK;
 }
 
-LorawanError_t LoRa_Send_XY(void *buffer, uint8_t bufferLength)
+LorawanError_t LoRa_Send_XYfl(void *buffer, uint8_t bufferLength)
 {
   LorawanError_t result;
 
@@ -129,17 +129,13 @@ LorawanError_t LoRa_Send_XY(void *buffer, uint8_t bufferLength)
       return INVALID_BUFFER_LENGTH;
     }
 
-  if((loRa.LoRa_transmitStatus != LoRa_Idle))
-    {
-      return MAC_STATE_NOT_READY_FOR_TRANSMISSION;
-    }
   uint8_t channel = Random(LoRa_Chann_nr) + 1;
 
-  result = LoRa_SelectChannelForTransmission_XYF(channel, channel);
+  result = LoRa_SelectChannelForTransmission_XYf(channel, channel);
 
-  LoRa_AssemblePacket_XYF(buffer, bufferLength, channel);
+  LoRa_AssemblePacket_XYf(buffer, bufferLength, channel);
 
-  if(LoRa_Send_Header() == OK)
+  if(LoRa_Send_Header_XYfl() == OK)
     {
       return OK;
     }
@@ -206,12 +202,12 @@ LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength)
               loRa.LoRa_Command = buffer[1];
               if(loRa.LoRa_Command == 0)
                 {
-                  LoRa_ConfigureRadioTx_XY(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
+                  LoRa_ConfigureRadioTx_XYf(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
-                  if(RADIO_Transmit_XYF(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
+                  if(RADIO_Transmit_XYf(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
                     {
                       loRa.LoRa_transmitStatus = LoRa_SendData_TX;
-                      SwTimerSetTimeout(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_Transmit_timeout));
+                      SwTimerSetTimeout_Yf(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_Transmit_timeout));
                     }
                 }
             }
@@ -243,7 +239,7 @@ LorawanError_t LoRa_RxDone_Fail(void)
 
 }
 
-void LoRa_UpdateMinMaxChDataRate_Y(void)
+void LoRa_UpdateMinMaxChDataRate_Yf(void)
 {
   uint8_t i;
   // after updating the data range of a channel we need to check if the minimum dataRange has changed or not.
@@ -274,7 +270,7 @@ uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr)
   return(CRC);
 }
 
-static void LoRa_AssemblePacket_XYF(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel)
+static void LoRa_AssemblePacket_XYf(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel)
 {
   uint8_t bufferHeadIndex = 0;
   uint8_t bufferIndex = 0;
@@ -384,10 +380,10 @@ void LoRa_PrepareRetransmit(void)
   RADIO_standby();
   RADIO_SwTimers_stop();
 
-  SwTimerSetTimeout(loRa.LoRa_TimerRetransmit, MS_TO_TICKS_LONG(LoRa_Retransmit_timeout));
+  SwTimerSetTimeout_Yf(loRa.LoRa_TimerRetransmit, MS_TO_TICKS_LONG(LoRa_Retransmit_timeout));
   if(loRa.LoRa_Counnter.value < LoRa_Retransmit_trials)
     {
-      SwTimerStart(loRa.LoRa_TimerRetransmit);
+      SwTimerStart_Yf(loRa.LoRa_TimerRetransmit);
     }
   else
     {
@@ -398,7 +394,7 @@ void LoRa_PrepareRetransmit(void)
 void LoRa_TimerRetransmitCallback(uint8_t param)
 {
   SwTimerStop(loRa.LoRa_TimerRetransmit);
-  LoRa_Send_Header();
+  LoRa_Send_Header_XYfl();
 }
 
 void LoRa_TimerWaitAckCallback(uint8_t param)
@@ -484,9 +480,9 @@ static bool LoRa_FindSmallestDataRate(void)
 
 static void LoRa_ConfigureRadioRx_XY(uint8_t dataRate, uint32_t freq)  //OK
 {
-  LoRa_ConfigureRadio_XY(dataRate, freq);
-  RADIO_SetCRC(DISABLED);
-  RADIO_SetIQInverted(ENABLED);
+  LoRa_ConfigureRadio_XYf(dataRate, freq);
+  RADIO_SetCRC_Yf(DISABLED);
+  RADIO_SetIQInverted_Yf(ENABLED);
 }
 
 //Based on the last packet received, this function checks the flags and updates the state accordingly
