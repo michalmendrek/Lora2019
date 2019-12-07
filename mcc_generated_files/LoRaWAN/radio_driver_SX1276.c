@@ -113,11 +113,11 @@ static void RADIO_WriteFrequency_Yf(uint32_t frequency);
 static void RADIO_WriteFSKFrequencyDeviation(uint32_t frequencyDeviation);
 static void RADIO_WriteFSKBitRate(uint32_t bitRate);
 static void RADIO_WritePower(int8_t power);
-static void RADIO_WriteConfiguration_XYf(uint16_t symbolTimeout);
+static void RADIO_WriteConfiguration_XYfe(uint16_t symbolTimeout);
 static void RADIO_RxDone(void);
 static void RADIO_FSKPayloadReady(void);
 static void RADIO_RxTimeout(void);
-static void RADIO_TxDone(void);
+static void RADIO_TxDone_XYfle(void);
 static void RADIO_FSKPacketSent(void);
 static void RADIO_UnhandledInterrupt(RadioModulation_t modulation);
 static void RADIO_FHSSChangeChannel(void);
@@ -527,7 +527,7 @@ void RADIO_SetLoRaSyncWord_Yf(uint8_t syncWord)
   RadioConfiguration.syncWordLoRa = syncWord;
 }
 
-void RADIO_clearFlag(void)
+void RADIO_clearFlag_Yf(void)
 {
   RadioConfiguration.flags = 0;
 }
@@ -537,7 +537,7 @@ uint8_t RADIO_GetLoRaSyncWord(void)
   return RadioConfiguration.syncWordLoRa;
 }
 
-static void RADIO_WriteConfiguration_XYf(uint16_t symbolTimeout)
+static void RADIO_WriteConfiguration_XYfe(uint16_t symbolTimeout)
 {
   uint32_t tempValue;
   uint8_t regValue;
@@ -767,7 +767,7 @@ RadioError_t RADIO_TransmitCW(void)
 
   // Since we're interested in a transmission, rxWindowSize is irrelevant.
   // Setting it to 4 is a valid option.
-  RADIO_WriteConfiguration_XYf(4);
+  RADIO_WriteConfiguration_XYfe(4);
 
   RadioConfiguration.flags |= RADIO_FLAG_TRANSMITTING;
   RadioConfiguration.flags &= ~RADIO_FLAG_TIMEOUT;
@@ -814,7 +814,7 @@ RadioError_t RADIO_Transmit_XYf(uint8_t *buffer, uint8_t bufferLen)
 
   // Since we're interested in a transmission, rxWindowSize is irrelevant.
   // Setting it to 4 is a valid option.
-  RADIO_WriteConfiguration_XYf(4);
+  RADIO_WriteConfiguration_XYfe(4);
 
   if(MODULATION_LORA == RadioConfiguration.modulation)
     {
@@ -880,7 +880,7 @@ RadioError_t RADIO_Transmit_XYf(uint8_t *buffer, uint8_t bufferLen)
 
 // rxWindowSize parameter is in symbols for LoRa and ms for FSK
 
-RadioError_t RADIO_ReceiveStart_XY(uint16_t rxWindowSize)
+RadioError_t RADIO_ReceiveStart_XYfe(uint16_t rxWindowSize)
 {
   if((RadioConfiguration.flags & RADIO_FLAG_RXDATA) != 0)
     {
@@ -894,11 +894,11 @@ RadioError_t RADIO_ReceiveStart_XY(uint16_t rxWindowSize)
 
   if(0 == rxWindowSize)
     {
-      RADIO_WriteConfiguration_XYf(4);
+      RADIO_WriteConfiguration_XYfe(4);
     }
   else
     {
-      RADIO_WriteConfiguration_XYf(rxWindowSize);
+      RADIO_WriteConfiguration_XYfe(rxWindowSize);
     }
 
   if(MODULATION_LORA == RadioConfiguration.modulation)
@@ -1093,7 +1093,7 @@ static void RADIO_RxTimeout(void)
   LoRa_RxTimeout();
 }
 
-static void RADIO_TxDone(void)
+static void RADIO_TxDone_XYfle(void)
 {
   uint32_t timeOnAir;
   // Make sure the watchdog won't trigger MAC functions erroneously.
@@ -1105,7 +1105,7 @@ static void RADIO_TxDone(void)
     {
       timeOnAir = TIME_ON_AIR_LOAD_VALUE - TICKS_TO_MS(SwTimerReadValue(RadioConfiguration.timeOnAirTimerId));
 
-      LoRa_TxDone_XY((uint16_t) timeOnAir);
+      LoRa_TxDone_XYfe((uint16_t) timeOnAir);
     }
 }
 
@@ -1127,7 +1127,7 @@ static void RADIO_FSKPacketSent(void)
           timeOnAir = TIME_ON_AIR_LOAD_VALUE - TICKS_TO_MS(SwTimerReadValue(RadioConfiguration.timeOnAirTimerId));
           SwTimerStop(RadioConfiguration.timeOnAirTimerId);
           //          LORAWAN_TxDone((uint16_t) timeOnAir);
-          LoRa_TxDone_XY((uint16_t) timeOnAir);
+          LoRa_TxDone_XYfe((uint16_t) timeOnAir);
         }
     }
 }
@@ -1207,7 +1207,7 @@ void RADIO_DIO0(void)
             RADIO_RxDone();
             break;
           case 0x01:
-            RADIO_TxDone();
+            RADIO_TxDone_XYfle();
             break;
           default:
             RADIO_UnhandledInterrupt(MODULATION_LORA);

@@ -55,7 +55,7 @@ extern "C"
 
   /*************************** FUNCTIONS PROTOTYPE ******************************/
 
-  void LoRa_TxDone_XY(uint16_t timeOnAir);
+  void LoRa_TxDone_XYfe(uint16_t timeOnAir);
 
   LorawanError_t LoRa_RxDone_X(uint8_t *buffer, uint8_t bufferLength, bool RX_success);
   

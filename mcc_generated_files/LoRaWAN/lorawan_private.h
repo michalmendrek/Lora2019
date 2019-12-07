@@ -131,6 +131,8 @@ extern "C"
     LoRa_SendFailed,
     LoRa_Wait_retransmit,
     LoRa_transmit_Error,
+            ToDo_LoRa_retransmit,
+            ToDo_LoRa_retransmit_radio_configured,
     //    LoRa_transmit_OK,
     //    LoRa_Transmit_Fail
   } LoRaTransmitState_t;
@@ -274,7 +276,7 @@ extern "C"
   void LoRa_TimerRetransmitCallback(uint8_t param);
   void LoRa_TimerWaitAckCallback(uint8_t param);
 
-  void LoRa_EnterReceive_XY_HD(void);
+  void LoRa_EnterReceive_XYfe_HD(void);
 
   void LoRa_UpdateMinMaxChDataRate_Yf(void);
 
@@ -297,7 +299,7 @@ extern "C"
 
     //MAC commands functions
 
-  void LoRa_ConfigureRadio_XYf(uint8_t dataRate, uint32_t freq);
+  void LoRa_ConfigureRadio_XYfe(uint8_t dataRate, uint32_t freq);
 
 
  #ifdef	__cplusplus

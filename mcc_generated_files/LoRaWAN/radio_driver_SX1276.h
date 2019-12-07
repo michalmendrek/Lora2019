@@ -140,7 +140,7 @@ extern "C"
 
 
   void RADIO_Init_XYf(uint8_t *radioBuffer, uint32_t frequency);
-  void RADIO_clearFlag(void);
+  void RADIO_clearFlag_Yf(void);
   void RADIO_SwTimers_stop(void);
   void RADIO_SetLoRaSyncWord_Yf(uint8_t syncWord);
   uint8_t RADIO_GetLoRaSyncWord(void);
@@ -196,7 +196,7 @@ extern "C"
   RadioError_t RADIO_Transmit_XYf(uint8_t *buffer, uint8_t bufferLen);
   RadioError_t RADIO_TransmitCW(void);
   RadioError_t RADIO_StopCW(void);
-  RadioError_t RADIO_ReceiveStart_XY(uint16_t rxWindowSize);
+  RadioError_t RADIO_ReceiveStart_XYfe(uint16_t rxWindowSize);
   void RADIO_ReceiveStop(void);
 
   int8_t RADIO_GetMaxPower(void);

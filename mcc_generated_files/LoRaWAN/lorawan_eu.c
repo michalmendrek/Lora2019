@@ -213,10 +213,10 @@ static void LoRa_InitDefault433Channels(void)
     }
 }
 
-void LoRa_TxDone_XY(uint16_t timeOnAir)
+void LoRa_TxDone_XYfe(uint16_t timeOnAir)
 {
 
-  LoRa_EnterReceive_XY_HD();
+  LoRa_EnterReceive_XYfe_HD();
 }
 
 void LoRa_RxTimeout(void)
@@ -311,7 +311,7 @@ LorawanError_t LoRa_ValidateTxPower(uint8_t txPowerNew)
   return result;
 }
 
-void LoRa_ConfigureRadio_XYf(uint8_t dataRate, uint32_t freq) //OK
+void LoRa_ConfigureRadio_XYfe(uint8_t dataRate, uint32_t freq) //OK
 {
   RADIO_SetModulation(modulation[dataRate]);
   RADIO_SetChannelFrequency(freq);
@@ -503,7 +503,7 @@ void LoRa_ConfigureRadioTx_XYf(uint8_t dataRate, uint32_t freq) //OK
 {
   int8_t txPower;
 
-  LoRa_ConfigureRadio_XYf(dataRate, freq);
+  LoRa_ConfigureRadio_XYfe(dataRate, freq);
 
   //  if(ISM_EU868 == loRa.LoRa_ismBand)
 

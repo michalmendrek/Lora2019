@@ -70,7 +70,7 @@ static uint8_t LoRa_GetMaxPayloadSize(void);
 
 static bool LoRa_FindSmallestDataRate(void);
 
-static void LoRa_ConfigureRadioRx_XY(uint8_t dataRate, uint32_t freq);
+static void LoRa_ConfigureRadioRx_XYfe(uint8_t dataRate, uint32_t freq);
 
 uint8_t localDioStatus;
 
@@ -145,37 +145,44 @@ LorawanError_t LoRa_Send_XYfl(void *buffer, uint8_t bufferLength)
     }
 }
 
-void LoRa_EnterReceive_XY_HD(void)
+void LoRa_EnterReceive_XYfe_HD(void)
 {
-  bool result = false;
-  RADIO_clearFlag();
-  if(loRa.LoRa_transmitStatus == LoRa_Handshaking_TX)
-    {
-      loRa.LoRa_transmitStatus = LoRa_Handshaking_RX;
-      result = true;
-    }
-  if(loRa.LoRa_transmitStatus == LoRa_SendData_TX)
-    {
-      loRa.LoRa_transmitStatus = LoRa_SendData_RX;
-      result = true;
-    }
+  RADIO_clearFlag_Yf();
 
-  if(result)
+  switch(loRa.LoRa_transmitStatus)
     {
-      LoRa_ConfigureRadioRx_XY(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
-
-      if(RADIO_ReceiveStart_XY(4) != OK)
+      case LoRa_Handshaking_TX:
         {
-
+          //          LoRa_EnterReceive_head
+          loRa.LoRa_transmitStatus = LoRa_Handshaking_RX;
+          break;
         }
+
+      case LoRa_SendData_TX:
+        {
+          //          LoRa_EnterReceive_data
+          loRa.LoRa_transmitStatus = LoRa_SendData_RX;
+          break;
+        }
+      default:
+        loRa.LoRa_transmitStatus = ToDo_LoRa_retransmit_radio_configured;
+        return;
+    }
+
+  LoRa_ConfigureRadioRx_XYfe(loRa.LoRa_receiveChannelParameters.dataRate, loRa.LoRa_receiveChannelParameters.frequency);
+
+  if(RADIO_ReceiveStart_XYfe(4) != OK)
+    {
+      loRa.LoRa_transmitStatus = ToDo_LoRa_retransmit;
     }
 }
+
 LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength);
 LorawanError_t LoRa_RxDone_Fail(void);
 
 LorawanError_t LoRa_RxDone_X(uint8_t *buffer, uint8_t bufferLength, bool RX_success)
 {
-  RADIO_clearFlag();
+  RADIO_clearFlag_Yf();
 
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
@@ -373,7 +380,7 @@ void LoRa_PrepareRetransmit(void)
 {
   loRa.LoRa_transmitStatus = LoRa_transmit_Error;
 
-  RADIO_clearFlag();
+  RADIO_clearFlag_Yf();
   SwTimerStop(loRa.LoRa_TimerHandshaking);
   SwTimerStop(loRa.LoRa_TimerWaitAck);
   SwTimerStop(loRa.LoRa_TimerRetransmit);
@@ -478,9 +485,9 @@ static bool LoRa_FindSmallestDataRate(void)
   return found;
 }
 
-static void LoRa_ConfigureRadioRx_XY(uint8_t dataRate, uint32_t freq)  //OK
+static void LoRa_ConfigureRadioRx_XYfe(uint8_t dataRate, uint32_t freq) //OK
 {
-  LoRa_ConfigureRadio_XYf(dataRate, freq);
+  LoRa_ConfigureRadio_XYfe(dataRate, freq);
   RADIO_SetCRC_Yf(DISABLED);
   RADIO_SetIQInverted_Yf(ENABLED);
 }
