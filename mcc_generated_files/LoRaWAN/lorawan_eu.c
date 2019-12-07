@@ -99,7 +99,7 @@ static LorawanError_t LoRa_ValidateChannelId(uint8_t channelId, bool allowedForD
 
 static void LoRa_ChannelUpdateFrequency(uint8_t channelId, uint32_t frequencyNew);
 
-void LoRa_ConfigureRadioTx_XYf(uint8_t dataRate, uint32_t freq);
+void LoRa_ConfigureRadioTx_XYfe(uint8_t dataRate, uint32_t freq);
 
 /****************************** FUNCTIONS *************************************/
 
@@ -150,9 +150,9 @@ static void LoRa_SetCallbackSoftwareTimers(void)
 
 static void LoRa_StopAllSoftwareTimers_XYf(void)
 {
-  SwTimerStop(loRa.LoRa_TimerHandshaking);
-  SwTimerStop(loRa.LoRa_TimerRetransmit);
-  SwTimerStop(loRa.LoRa_TimerWaitAck);
+  SwTimerStop_Yf(loRa.LoRa_TimerHandshaking);
+  SwTimerStop_Yf(loRa.LoRa_TimerRetransmit);
+  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
 }
 
 void LoRa_Reset_XYf(IsmBand_t ismBandNew)
@@ -223,12 +223,12 @@ void LoRa_RxTimeout(void)
 {
   if(loRa.LoRa_transmitStatus == LoRa_Handshaking_RX)
     {
-      SwTimerStop(loRa.LoRa_TimerHandshaking);
+      SwTimerStop_Yf(loRa.LoRa_TimerHandshaking);
       loRa.LoRa_transmitStatus = LoRa_SendFailed;
     }
   if(loRa.LoRa_transmitStatus == LoRa_SendData_RX)
     {
-      SwTimerStop(loRa.LoRa_TimerWaitAck);
+      SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
       loRa.LoRa_transmitStatus = LoRa_SendFailed;
     }
   RADIO_clearReceiveFlag();
@@ -499,7 +499,7 @@ static void LoRa_DutyCycleCallback(uint8_t param)
     }
 }
 
-void LoRa_ConfigureRadioTx_XYf(uint8_t dataRate, uint32_t freq) //OK
+void LoRa_ConfigureRadioTx_XYfe(uint8_t dataRate, uint32_t freq) //OK
 {
   int8_t txPower;
 

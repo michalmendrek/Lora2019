@@ -79,9 +79,9 @@ LorawanError_t LoRa_Send_Data(void)
 {
   LorawanError_t result;
 
-  LoRa_ConfigureRadioTx_XYf(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
+  LoRa_ConfigureRadioTx_XYfe(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
-  if(RADIO_Transmit_XYf(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+  if(RADIO_Transmit_XYfe(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.LoRa_StatusDanych = LoRa_transmiting;
 
@@ -100,9 +100,9 @@ LorawanError_t LoRa_Send_Header_XYfl(void)
 {
   LorawanError_t result;
 
-  LoRa_ConfigureRadioTx_XYf(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
+  LoRa_ConfigureRadioTx_XYfe(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
 
-  if(RADIO_Transmit_XYf(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+  if(RADIO_Transmit_XYfe(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.LoRa_StatusDanych = LoRa_transmiting;
       loRa.LoRa_Counnter.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
@@ -180,12 +180,12 @@ void LoRa_EnterReceive_XYfe_HD(void)
 LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength);
 LorawanError_t LoRa_RxDone_Fail(void);
 
-LorawanError_t LoRa_RxDone_X(uint8_t *buffer, uint8_t bufferLength, bool RX_success)
+LorawanError_t LoRa_RxDone_XYfe(uint8_t *buffer, uint8_t bufferLength, bool RX_success)
 {
   RADIO_clearFlag_Yf();
 
-  SwTimerStop(loRa.LoRa_TimerHandshaking);
-  SwTimerStop(loRa.LoRa_TimerWaitAck);
+  SwTimerStop_Yf(loRa.LoRa_TimerHandshaking);
+  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
 
   if(RX_success)
     {
@@ -198,46 +198,105 @@ LorawanError_t LoRa_RxDone_X(uint8_t *buffer, uint8_t bufferLength, bool RX_succ
 
 }
 
-LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength)
+LoRaResponseError_t LoRa_HandshakingAckVerify(uint8_t *buffer, uint8_t bufferLength)
 {
-  if(loRa.LoRa_transmitStatus == LoRa_Handshaking_RX)
+  if(bufferLength != 2)
     {
-      if((*buffer == loRa.LoRa_Addres)&&(bufferLength == 3))
+      return Response_LenghtError;
+    }
+  if(*buffer != loRa.LoRa_Addres)
+    {
+      return Response_AddresError;
+    }
+  //  if(buffer[2] != LoRa_CRC(buffer, 2))
+  //    {
+  //      return Response_CrcError;
+  //    }
+  switch(buffer[1]) //loRa.LoRa_Command
+    {
+      case 0:
         {
-          if(buffer[2] == LoRa_CRC(buffer, 2))
-            {
-              loRa.LoRa_Command = buffer[1];
-              if(loRa.LoRa_Command == 0)
-                {
-                  LoRa_ConfigureRadioTx_XYf(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
+          loRa.LoRa_Command = buffer[1];
+          LoRa_ConfigureRadioTx_XYfe(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
-                  if(RADIO_Transmit_XYf(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
-                    {
-                      loRa.LoRa_transmitStatus = LoRa_SendData_TX;
-                      SwTimerSetTimeout_Yf(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_Transmit_timeout));
-                    }
-                }
+          if(RADIO_Transmit_XYfe(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
+            {
+              return Response_OK;
             }
+          else
+            {
+              return Response_Transmit_problem;
+            }
+          break;
+        }
+      default:
+        {
+          return Response_UnknownCommandError;
         }
     }
-  else if(loRa.LoRa_transmitStatus == LoRa_SendData_RX)
-    {
-      if((*buffer == loRa.LoRa_Addres))
-        {
-          if(buffer[bufferLength - 1] == LoRa_CRC(buffer, bufferLength - 1))
-            {
+}
 
-              if(loRa.LoRa_nextUsedChannel == buffer[1])
+LoRaResponseError_t LoRa_DataAckVerify(uint8_t *buffer, uint8_t bufferLength)
+{
+  if(bufferLength != 2)
+    {
+      return Response_LenghtError;
+    }
+  if(*buffer != loRa.LoRa_Addres)
+    {
+      return Response_AddresError;
+    }
+  //  if(buffer[2] != LoRa_CRC(buffer, 2))
+  //    {
+  //      return Response_CrcError;
+  //    }
+  if(loRa.LoRa_nextUsedChannel != buffer[1])
+    {
+      return Response_ChannelError;
+    }
+  return Response_OK;
+}
+
+LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength)
+{
+  switch(loRa.LoRa_transmitStatus)
+    {
+      case LoRa_Handshaking_RX:
+        {
+          if(LoRa_HandshakingAckVerify(buffer, bufferLength) == Response_OK)
+            {
+              loRa.LoRa_transmitStatus = LoRa_SendData_TX;
+              SwTimerSetTimeout_Yf(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_Transmit_timeout));
+            }
+          else
+            {
+              loRa.LoRa_transmitStatus = ToDo_LoRa_retransmit_radio_configured;
+            }
+          break;
+        }
+      case LoRa_SendData_RX:
+        {
+          if(LoRa_DataAckVerify(buffer, bufferLength) == Response_OK)
+            {
+              loRa.LoRa_transmitStatus = LoRa_Sent;
+              SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
+              RADIO_SwTimers_stop();
+              if(loRa.LoRa_nextUsedChannel == 0)
                 {
-                  SwTimerStop(loRa.LoRa_TimerWaitAck);
-                  RADIO_SwTimers_stop();
-                  loRa.LoRa_transmitStatus = LoRa_Sent;
                   loRa.LoRa_StatusDanych = LoRa_transmit_OK;
                 }
             }
+          else
+            {
+              loRa.LoRa_transmitStatus = ToDo_LoRa_retransmit_radio_configured;
+            }
+          break;
+        }
+      default:
+        {
+          loRa.LoRa_transmitStatus = ToDo_LoRa_retransmit;
         }
     }
-
   return OK;
 }
 
@@ -381,9 +440,9 @@ void LoRa_PrepareRetransmit(void)
   loRa.LoRa_transmitStatus = LoRa_transmit_Error;
 
   RADIO_clearFlag_Yf();
-  SwTimerStop(loRa.LoRa_TimerHandshaking);
-  SwTimerStop(loRa.LoRa_TimerWaitAck);
-  SwTimerStop(loRa.LoRa_TimerRetransmit);
+  SwTimerStop_Yf(loRa.LoRa_TimerHandshaking);
+  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
+  SwTimerStop_Yf(loRa.LoRa_TimerRetransmit);
   RADIO_standby();
   RADIO_SwTimers_stop();
 
@@ -400,7 +459,7 @@ void LoRa_PrepareRetransmit(void)
 
 void LoRa_TimerRetransmitCallback(uint8_t param)
 {
-  SwTimerStop(loRa.LoRa_TimerRetransmit);
+  SwTimerStop_Yf(loRa.LoRa_TimerRetransmit);
   LoRa_Send_Header_XYfl();
 }
 
@@ -408,7 +467,7 @@ void LoRa_TimerWaitAckCallback(uint8_t param)
 {
   loRa.LoRa_transmitStatus = LoRa_transmit_Error;
 
-  SwTimerStop(loRa.LoRa_TimerWaitAck);
+  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
   RADIO_standby();
   RADIO_clearTransmitFlag();
   RADIO_clearReceiveFlag();

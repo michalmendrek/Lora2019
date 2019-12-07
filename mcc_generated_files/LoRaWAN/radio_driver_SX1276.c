@@ -114,7 +114,7 @@ static void RADIO_WriteFSKFrequencyDeviation(uint32_t frequencyDeviation);
 static void RADIO_WriteFSKBitRate(uint32_t bitRate);
 static void RADIO_WritePower(int8_t power);
 static void RADIO_WriteConfiguration_XYfe(uint16_t symbolTimeout);
-static void RADIO_RxDone(void);
+static void RADIO_RxDone_XYfe(void);
 static void RADIO_FSKPayloadReady(void);
 static void RADIO_RxTimeout(void);
 static void RADIO_TxDone_XYfle(void);
@@ -468,9 +468,9 @@ void RADIO_Init_XYf(uint8_t *radioBuffer, uint32_t frequency)
     }
   else
     {
-      SwTimerStop(RadioConfiguration.timeOnAirTimerId);
-      SwTimerStop(RadioConfiguration.fskRxWindowTimerId);
-      SwTimerStop(RadioConfiguration.watchdogTimerId);
+      SwTimerStop_Yf(RadioConfiguration.timeOnAirTimerId);
+      SwTimerStop_Yf(RadioConfiguration.fskRxWindowTimerId);
+      SwTimerStop_Yf(RadioConfiguration.watchdogTimerId);
     }
 
   RADIO_Reset_Yf();
@@ -790,7 +790,7 @@ RadioError_t RADIO_StopCW(void)
   return ERR_NONE;
 }
 
-RadioError_t RADIO_Transmit_XYf(uint8_t *buffer, uint8_t bufferLen)
+RadioError_t RADIO_Transmit_XYfe(uint8_t *buffer, uint8_t bufferLen)
 {
   uint8_t regValue;
   uint8_t i;
@@ -810,7 +810,7 @@ RadioError_t RADIO_Transmit_XYf(uint8_t *buffer, uint8_t bufferLen)
       return ERR_DATA_SIZE;
     }
 
-  SwTimerStop(RadioConfiguration.timeOnAirTimerId);
+  SwTimerStop_Yf(RadioConfiguration.timeOnAirTimerId);
 
   // Since we're interested in a transmission, rxWindowSize is irrelevant.
   // Setting it to 4 is a valid option.
@@ -966,11 +966,11 @@ void RADIO_ReceiveStop(void)
 
 void RADIO_SwTimers_stop(void)
 {
-  SwTimerStop(RadioConfiguration.timeOnAirTimerId);
-  SwTimerStop(RadioConfiguration.watchdogTimerId);
+  SwTimerStop_Yf(RadioConfiguration.timeOnAirTimerId);
+  SwTimerStop_Yf(RadioConfiguration.watchdogTimerId);
 }
 
-static void RADIO_RxDone(void)
+static void RADIO_RxDone_XYfe(void)
 {
   uint8_t i, irqFlags;
   bool Rx_success = false;
@@ -981,7 +981,7 @@ static void RADIO_RxDone(void)
   if(((1 << SHIFT6) | (1 << SHIFT4)) == (irqFlags & ((1 << SHIFT6) | (1 << SHIFT4))))
     {
       // Make sure the watchdog won't trigger MAC functions erroneously.
-      SwTimerStop(RadioConfiguration.watchdogTimerId);
+      SwTimerStop_Yf(RadioConfiguration.watchdogTimerId);
 
       // Read CRC info from received packet header
       i = RADIO_RegisterRead_Yf(REG_LORA_HOPCHANNEL);
@@ -1018,7 +1018,7 @@ static void RADIO_RxDone(void)
       RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
       //      LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
-      LoRa_RxDone_X(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, Rx_success);
+      LoRa_RxDone_XYfe(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, Rx_success);
     }
 }
 
@@ -1034,8 +1034,8 @@ static void RADIO_FSKPayloadReady(void)
       // FIFO is empty
 
       // Make sure the watchdog won't trigger MAC functions erroneously.
-      SwTimerStop(RadioConfiguration.watchdogTimerId);
-      SwTimerStop(RadioConfiguration.fskRxWindowTimerId);
+      SwTimerStop_Yf(RadioConfiguration.watchdogTimerId);
+      SwTimerStop_Yf(RadioConfiguration.fskRxWindowTimerId);
 
       HALSPICSAssert_Yf();
       HALSPISend_Yf(REG_FIFO);
@@ -1070,7 +1070,7 @@ static void RADIO_FSKPayloadReady(void)
       if((RadioConfiguration.flags & RADIO_FLAG_RXDATA) != 0)
         {
 //          LORAWAN_RxDone(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen);
-          LoRa_RxDone_X(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, true);
+          LoRa_RxDone_XYfe(RadioConfiguration.dataBuffer, RadioConfiguration.dataBufferLen, true);
         }
       else
         {
@@ -1083,7 +1083,7 @@ static void RADIO_FSKPayloadReady(void)
 static void RADIO_RxTimeout(void)
 {
   // Make sure the watchdog won't trigger MAC functions erroneously.
-  SwTimerStop(RadioConfiguration.watchdogTimerId);
+  SwTimerStop_Yf(RadioConfiguration.watchdogTimerId);
   RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGS, 1 << SHIFT7);
   // Radio went to STANDBY. Set sleep.
   RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
@@ -1097,7 +1097,7 @@ static void RADIO_TxDone_XYfle(void)
 {
   uint32_t timeOnAir;
   // Make sure the watchdog won't trigger MAC functions erroneously.
-  SwTimerStop(RadioConfiguration.watchdogTimerId);
+  SwTimerStop_Yf(RadioConfiguration.watchdogTimerId);
   RADIO_RegisterWrite_Yf(REG_LORA_IRQFLAGS, 1 << SHIFT3);
   RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
   RadioConfiguration.flags &= ~RADIO_FLAG_TRANSMITTING;
@@ -1120,12 +1120,12 @@ static void RADIO_FSKPacketSent(void)
       RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
       RadioConfiguration.flags &= ~RADIO_FLAG_TRANSMITTING;
       // Make sure the watchdog won't trigger MAC functions erroneously.
-      SwTimerStop(RadioConfiguration.watchdogTimerId);
+      SwTimerStop_Yf(RadioConfiguration.watchdogTimerId);
       // Clearing of the PacketSent interrupt is done on exiting Tx
       if((RadioConfiguration.flags & RADIO_FLAG_TIMEOUT) == 0)
         {
           timeOnAir = TIME_ON_AIR_LOAD_VALUE - TICKS_TO_MS(SwTimerReadValue(RadioConfiguration.timeOnAirTimerId));
-          SwTimerStop(RadioConfiguration.timeOnAirTimerId);
+          SwTimerStop_Yf(RadioConfiguration.timeOnAirTimerId);
           //          LORAWAN_TxDone((uint16_t) timeOnAir);
           LoRa_TxDone_XYfe((uint16_t) timeOnAir);
         }
@@ -1204,7 +1204,7 @@ void RADIO_DIO0(void)
       switch(dioMapping)
         {
           case 0x00:
-            RADIO_RxDone();
+            RADIO_RxDone_XYfe();
             break;
           case 0x01:
             RADIO_TxDone_XYfle();
@@ -1414,7 +1414,7 @@ static void RADIO_RxFSKTimeout(uint8_t param)
       // SyncAddressMatch is not set. Set radio to sleep.
       RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);
       // Make sure the watchdog won't trigger MAC functions erroneously.
-      SwTimerStop(RadioConfiguration.watchdogTimerId);
+      SwTimerStop_Yf(RadioConfiguration.watchdogTimerId);
       RadioConfiguration.flags &= ~RADIO_FLAG_RECEIVING;
       //      LORAWAN_RxTimeout();
       LoRa_RxTimeout();

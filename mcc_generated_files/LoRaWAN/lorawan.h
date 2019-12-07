@@ -79,6 +79,18 @@ extern "C"
 
   typedef enum
   {
+    Response_OK = 0,
+    Response_LenghtError,
+    Response_AddresError,
+    Response_CrcError,
+    Response_UnknownCommandError,
+    Response_Transmit_problem,
+            Response_ChannelError
+
+  } LoRaResponseError_t;
+
+  typedef enum
+  {
     MAC_NOT_OK = 0, //LoRaWAN operation failed
     MAC_OK, //LoRaWAN operation successful
     RADIO_NOT_OK, //Radio operation failed
@@ -402,7 +414,7 @@ extern "C"
   uint8_t LoRa_GetIsmBand(void);
 
   void LoRa_PrepareRetransmit(void);
-  
+
   void LoRa_TxWdtTimeout(void);
   void LoRa_RxWdtTimeout(void);
 

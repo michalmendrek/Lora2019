@@ -73,7 +73,7 @@ extern "C"
   uint32_t SwTimerReadValue(uint8_t timerId);
   uint8_t SwTimerIsRunning(uint8_t timerId);
   void SwTimerStart_Yf(uint8_t timerId);
-  void SwTimerStop(uint8_t timerId);
+  void SwTimerStop_Yf(uint8_t timerId);
   void SwTimersExecute(void);
   uint8_t SwTimersCanSleep(void);
   uint32_t SwTimersInterrupt(void);

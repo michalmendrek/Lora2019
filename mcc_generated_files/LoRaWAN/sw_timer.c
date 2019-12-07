@@ -233,7 +233,7 @@ void SwTimerStart_Yf(uint8_t timerId)
   INTERRUPT_GlobalInterruptEnable();
 }
 
-void SwTimerStop(uint8_t timerId)
+void SwTimerStop_Yf(uint8_t timerId)
 {
   INTERRUPT_GlobalInterruptDisable();
   swTimers[timerId].running = 0;

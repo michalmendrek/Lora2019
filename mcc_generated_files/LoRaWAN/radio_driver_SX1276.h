@@ -193,7 +193,7 @@ extern "C"
   uint8_t RADIO_GetFSKSyncWord(uint8_t* syncWord);
 
 
-  RadioError_t RADIO_Transmit_XYf(uint8_t *buffer, uint8_t bufferLen);
+  RadioError_t RADIO_Transmit_XYfe(uint8_t *buffer, uint8_t bufferLen);
   RadioError_t RADIO_TransmitCW(void);
   RadioError_t RADIO_StopCW(void);
   RadioError_t RADIO_ReceiveStart_XYfe(uint16_t rxWindowSize);
