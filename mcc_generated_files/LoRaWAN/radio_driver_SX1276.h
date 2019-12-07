@@ -141,7 +141,7 @@ extern "C"
 
   void RADIO_Init_XYf(uint8_t *radioBuffer, uint32_t frequency);
   void RADIO_clearFlag_Yf(void);
-  void RADIO_SwTimers_stop(void);
+  void RADIO_SwTimers_stop_Yf(void);
   void RADIO_SetLoRaSyncWord_Yf(uint8_t syncWord);
   uint8_t RADIO_GetLoRaSyncWord(void);
 

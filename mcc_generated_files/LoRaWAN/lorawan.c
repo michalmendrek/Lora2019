@@ -177,7 +177,7 @@ void LoRa_EnterReceive_XYfe_HD(void)
     }
 }
 
-LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength);
+LorawanError_t LoRa_RxDone_OK_XYfe(uint8_t *buffer, uint8_t bufferLength);
 LorawanError_t LoRa_RxDone_Fail(void);
 
 LorawanError_t LoRa_RxDone_XYfe(uint8_t *buffer, uint8_t bufferLength, bool RX_success)
@@ -189,7 +189,7 @@ LorawanError_t LoRa_RxDone_XYfe(uint8_t *buffer, uint8_t bufferLength, bool RX_s
 
   if(RX_success)
     {
-      LoRa_RxDone_OK_XY_H(buffer, bufferLength);
+      LoRa_RxDone_OK_XYfe(buffer, bufferLength);
     }
   else
     {
@@ -198,7 +198,7 @@ LorawanError_t LoRa_RxDone_XYfe(uint8_t *buffer, uint8_t bufferLength, bool RX_s
 
 }
 
-LoRaResponseError_t LoRa_HandshakingAckVerify(uint8_t *buffer, uint8_t bufferLength)
+LoRaResponseError_t LoRa_HandshakingAckVerify_XYfe(uint8_t *buffer, uint8_t bufferLength)
 {
   if(bufferLength != 2)
     {
@@ -236,7 +236,7 @@ LoRaResponseError_t LoRa_HandshakingAckVerify(uint8_t *buffer, uint8_t bufferLen
     }
 }
 
-LoRaResponseError_t LoRa_DataAckVerify(uint8_t *buffer, uint8_t bufferLength)
+LoRaResponseError_t LoRa_DataAckVerify_XYfe(uint8_t *buffer, uint8_t bufferLength)
 {
   if(bufferLength != 2)
     {
@@ -257,13 +257,13 @@ LoRaResponseError_t LoRa_DataAckVerify(uint8_t *buffer, uint8_t bufferLength)
   return Response_OK;
 }
 
-LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength)
+LorawanError_t LoRa_RxDone_OK_XYfe(uint8_t *buffer, uint8_t bufferLength)
 {
   switch(loRa.LoRa_transmitStatus)
     {
       case LoRa_Handshaking_RX:
         {
-          if(LoRa_HandshakingAckVerify(buffer, bufferLength) == Response_OK)
+          if(LoRa_HandshakingAckVerify_XYfe(buffer, bufferLength) == Response_OK)
             {
               loRa.LoRa_transmitStatus = LoRa_SendData_TX;
               SwTimerSetTimeout_Yf(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_Transmit_timeout));
@@ -276,12 +276,12 @@ LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength)
         }
       case LoRa_SendData_RX:
         {
-          if(LoRa_DataAckVerify(buffer, bufferLength) == Response_OK)
+          if(LoRa_DataAckVerify_XYfe(buffer, bufferLength) == Response_OK)
             {
               loRa.LoRa_transmitStatus = LoRa_Sent;
               SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
-              RADIO_SwTimers_stop();
-              if(loRa.LoRa_nextUsedChannel == 0)
+              RADIO_SwTimers_stop_Yf();
+//              if(loRa.LoRa_nextUsedChannel == 0)
                 {
                   loRa.LoRa_StatusDanych = LoRa_transmit_OK;
                 }
@@ -444,7 +444,7 @@ void LoRa_PrepareRetransmit(void)
   SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
   SwTimerStop_Yf(loRa.LoRa_TimerRetransmit);
   RADIO_standby();
-  RADIO_SwTimers_stop();
+  RADIO_SwTimers_stop_Yf();
 
   SwTimerSetTimeout_Yf(loRa.LoRa_TimerRetransmit, MS_TO_TICKS_LONG(LoRa_Retransmit_timeout));
   if(loRa.LoRa_Counnter.value < LoRa_Retransmit_trials)

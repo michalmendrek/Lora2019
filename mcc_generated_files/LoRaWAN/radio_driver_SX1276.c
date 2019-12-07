@@ -964,7 +964,7 @@ void RADIO_ReceiveStop(void)
     }
 }
 
-void RADIO_SwTimers_stop(void)
+void RADIO_SwTimers_stop_Yf(void)
 {
   SwTimerStop_Yf(RadioConfiguration.timeOnAirTimerId);
   SwTimerStop_Yf(RadioConfiguration.watchdogTimerId);
