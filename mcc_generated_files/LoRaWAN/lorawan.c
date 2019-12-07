@@ -61,7 +61,7 @@ extern ChannelParams_t LoRa_Channels[];
 extern const uint8_t rxWindowSize[];
 
 /************************ FUNCTION PROTOTYPES *************************/
-static void LoRa_AssemblePacket_XY(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel);
+static void LoRa_AssemblePacket_XYF(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel);
 static uint8_t LoRa_GetMaxPayloadSize(void);
 uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr);
 /**********************************************************************/
@@ -81,7 +81,7 @@ LorawanError_t LoRa_Send_Data(void)
 
   LoRa_ConfigureRadioTx_XY(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
-  if(RADIO_Transmit_XY(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+  if(RADIO_Transmit_XYF(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.LoRa_StatusDanych = LoRa_transmiting;
 
@@ -102,7 +102,7 @@ LorawanError_t LoRa_Send_Header(void)
 
   LoRa_ConfigureRadioTx_XY(loRa.LoRa_ch0_params.dataRate, loRa.LoRa_ch0_params.frequency);
 
-  if(RADIO_Transmit_XY(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
+  if(RADIO_Transmit_XYF(loRa.LoRa_HeaderBufor, loRa.LoRa_HeaderLength) == OK)
     {
       loRa.LoRa_StatusDanych = LoRa_transmiting;
       loRa.LoRa_Counnter.value++; // the uplink frame counter increments for every new transmission (it does not increment for a retransmission)
@@ -135,9 +135,9 @@ LorawanError_t LoRa_Send_XY(void *buffer, uint8_t bufferLength)
     }
   uint8_t channel = Random(LoRa_Chann_nr) + 1;
 
-  result = LoRa_SelectChannelForTransmission_XY(channel, channel);
+  result = LoRa_SelectChannelForTransmission_XYF(channel, channel);
 
-  LoRa_AssemblePacket_XY(buffer, bufferLength, channel);
+  LoRa_AssemblePacket_XYF(buffer, bufferLength, channel);
 
   if(LoRa_Send_Header() == OK)
     {
@@ -208,7 +208,7 @@ LorawanError_t LoRa_RxDone_OK_XY_H(uint8_t *buffer, uint8_t bufferLength)
                 {
                   LoRa_ConfigureRadioTx_XY(loRa.LoRa_sendChannelParameters.dataRate, loRa.LoRa_sendChannelParameters.frequency);
 
-                  if(RADIO_Transmit_XY(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
+                  if(RADIO_Transmit_XYF(loRa.LoRa_Bufor, loRa.LoRa_BuforLength) == OK)
                     {
                       loRa.LoRa_transmitStatus = LoRa_SendData_TX;
                       SwTimerSetTimeout(loRa.LoRa_TimerWaitAck, MS_TO_TICKS_SHORT(LoRa_Transmit_timeout));
@@ -274,7 +274,7 @@ uint8_t LoRa_CRC(uint8_t *buf, uint8_t cntr)
   return(CRC);
 }
 
-static void LoRa_AssemblePacket_XY(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel)
+static void LoRa_AssemblePacket_XYF(uint8_t *buffer, uint16_t bufferLength, uint8_t nxt_channel)
 {
   uint8_t bufferHeadIndex = 0;
   uint8_t bufferIndex = 0;

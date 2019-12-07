@@ -113,7 +113,7 @@ static void RADIO_WriteFrequency(uint32_t frequency);
 static void RADIO_WriteFSKFrequencyDeviation(uint32_t frequencyDeviation);
 static void RADIO_WriteFSKBitRate(uint32_t bitRate);
 static void RADIO_WritePower(int8_t power);
-static void RADIO_WriteConfiguration_XY(uint16_t symbolTimeout);
+static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout);
 static void RADIO_RxDone(void);
 static void RADIO_FSKPayloadReady(void);
 static void RADIO_RxTimeout(void);
@@ -421,7 +421,7 @@ static void RADIO_WritePower(int8_t power)
     }
 }
 
-void RADIO_Init_XY(uint8_t *radioBuffer, uint32_t frequency)
+void RADIO_Init_XYF(uint8_t *radioBuffer, uint32_t frequency)
 {
   RadioConfiguration.frequency = frequency;
   RadioConfiguration.frequencyDeviation = 25000;
@@ -537,7 +537,7 @@ uint8_t RADIO_GetLoRaSyncWord(void)
   return RadioConfiguration.syncWordLoRa;
 }
 
-static void RADIO_WriteConfiguration_XY(uint16_t symbolTimeout)
+static void RADIO_WriteConfiguration_XYF(uint16_t symbolTimeout)
 {
   uint32_t tempValue;
   uint8_t regValue;
@@ -767,7 +767,7 @@ RadioError_t RADIO_TransmitCW(void)
 
   // Since we're interested in a transmission, rxWindowSize is irrelevant.
   // Setting it to 4 is a valid option.
-  RADIO_WriteConfiguration_XY(4);
+  RADIO_WriteConfiguration_XYF(4);
 
   RadioConfiguration.flags |= RADIO_FLAG_TRANSMITTING;
   RadioConfiguration.flags &= ~RADIO_FLAG_TIMEOUT;
@@ -790,7 +790,7 @@ RadioError_t RADIO_StopCW(void)
   return ERR_NONE;
 }
 
-RadioError_t RADIO_Transmit_XY(uint8_t *buffer, uint8_t bufferLen)
+RadioError_t RADIO_Transmit_XYF(uint8_t *buffer, uint8_t bufferLen)
 {
   uint8_t regValue;
   uint8_t i;
@@ -814,7 +814,7 @@ RadioError_t RADIO_Transmit_XY(uint8_t *buffer, uint8_t bufferLen)
 
   // Since we're interested in a transmission, rxWindowSize is irrelevant.
   // Setting it to 4 is a valid option.
-  RADIO_WriteConfiguration_XY(4);
+  RADIO_WriteConfiguration_XYF(4);
 
   if(MODULATION_LORA == RadioConfiguration.modulation)
     {
@@ -894,11 +894,11 @@ RadioError_t RADIO_ReceiveStart_XY(uint16_t rxWindowSize)
 
   if(0 == rxWindowSize)
     {
-      RADIO_WriteConfiguration_XY(4);
+      RADIO_WriteConfiguration_XYF(4);
     }
   else
     {
-      RADIO_WriteConfiguration_XY(rxWindowSize);
+      RADIO_WriteConfiguration_XYF(rxWindowSize);
     }
 
   if(MODULATION_LORA == RadioConfiguration.modulation)

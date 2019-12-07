@@ -291,7 +291,7 @@ extern "C"
 
   //Initialization functions
 
-  LorawanError_t LoRa_SelectChannelForTransmission_XY(uint8_t channelTx, uint8_t channelRx);
+  LorawanError_t LoRa_SelectChannelForTransmission_XYF(uint8_t channelTx, uint8_t channelRx);
 
   uint16_t Random(uint16_t max);
 
