@@ -224,7 +224,7 @@ extern "C"
   
   void RADIO_clearReceiveFlag(void);
   void RADIO_clearTransmitFlag(void);
-  void RADIO_standby(void);
+  void RADIO_standby_XYfl(void);
 
 
 #ifdef	__cplusplus

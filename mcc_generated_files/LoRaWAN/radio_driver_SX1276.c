@@ -1460,7 +1460,7 @@ void RADIO_clearReceiveFlag(void)
     }
 }
 
-void RADIO_standby(void)
+void RADIO_standby_XYfl(void)
 {
   RADIO_WriteMode_Yf(MODE_STANDBY, RadioConfiguration.modulation, 1);
   RADIO_WriteMode_Yf(MODE_SLEEP, RadioConfiguration.modulation, 0);

@@ -143,7 +143,7 @@ static void LoRa_CreateSoftwareTimers(void)
 
 static void LoRa_SetCallbackSoftwareTimers(void)
 {
-  SwTimerSetCallback(loRa.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback, 0);
+  SwTimerSetCallback(loRa.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback_XYfe, 0);
   SwTimerSetCallback(loRa.LoRa_TimerRetransmit, LoRa_TimerRetransmitCallback, 0);
   SwTimerSetCallback(loRa.LoRa_TimerWaitAck, LoRa_TimerWaitAckCallback, 0);
 }

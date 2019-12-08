@@ -413,7 +413,7 @@ extern "C"
    */
   uint8_t LoRa_GetIsmBand(void);
 
-  void LoRa_PrepareRetransmit(void);
+  void LoRa_PrepareRetransmit_XYfl(void);
 
   void LoRa_TxWdtTimeout(void);
   void LoRa_RxWdtTimeout(void);

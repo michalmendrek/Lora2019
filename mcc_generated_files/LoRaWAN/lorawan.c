@@ -430,31 +430,52 @@ void LoRa_SetBattery(uint8_t batteryLevelNew)
   loRa.LoRa_batteryLevel = batteryLevelNew;
 }
 
-void LoRa_TimerHandshakingCallback(uint8_t param) //  timeout handshaking - nie nawi?zano polaczenia
+void LoRa_StopTransmisions_XYfl(void)
 {
-  LoRa_PrepareRetransmit();
+  SwTimerStop_Yf(loRa.LoRa_TimerHandshaking);
+  SwTimerStop_Yf(loRa.LoRa_TimerRetransmit);
+  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
+  
+  RADIO_SwTimers_stop_Yf();
+  
+  RADIO_clearFlag_Yf();
+  
+  RADIO_standby_XYfl();
 }
 
-void LoRa_PrepareRetransmit(void)
+void LoRa_TimerHandshakingCallback_XYfe(uint8_t param) //  timeout handshaking - nie nawi?zano polaczenia
 {
   loRa.LoRa_transmitStatus = LoRa_transmit_Error;
+  
+  LoRa_StopTransmisions_XYfl();
+  
+  LoRa_PrepareRetransmit_XYfl();
+}
 
-  RADIO_clearFlag_Yf();
-  SwTimerStop_Yf(loRa.LoRa_TimerHandshaking);
-  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
-  SwTimerStop_Yf(loRa.LoRa_TimerRetransmit);
-  RADIO_standby();
-  RADIO_SwTimers_stop_Yf();
-
-  SwTimerSetTimeout_Yf(loRa.LoRa_TimerRetransmit, MS_TO_TICKS_LONG(LoRa_Retransmit_timeout));
+void LoRa_PrepareRetransmit_XYfl(void)
+{
+  
   if(loRa.LoRa_Counnter.value < LoRa_Retransmit_trials)
     {
+      SwTimerSetTimeout_Yf(loRa.LoRa_TimerRetransmit, MS_TO_TICKS_LONG(LoRa_Retransmit_timeout));
       SwTimerStart_Yf(loRa.LoRa_TimerRetransmit);
+      loRa.LoRa_transmitStatus =LoRa_Wait_retransmit;
+      loRa.LoRa_StatusDanych = LoRa_transmiting;
     }
   else
     {
       loRa.LoRa_StatusDanych = LoRa_transmit_Fail;
     }
+}
+
+void LoRa_TimerWaitAckCallback(uint8_t param)
+{
+  loRa.LoRa_transmitStatus = LoRa_transmit_Error;
+
+  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
+  RADIO_standby_XYfl();
+  RADIO_clearTransmitFlag();
+  RADIO_clearReceiveFlag();
 }
 
 void LoRa_TimerRetransmitCallback(uint8_t param)
@@ -463,24 +484,14 @@ void LoRa_TimerRetransmitCallback(uint8_t param)
   LoRa_Send_Header_XYfl();
 }
 
-void LoRa_TimerWaitAckCallback(uint8_t param)
-{
-  loRa.LoRa_transmitStatus = LoRa_transmit_Error;
-
-  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
-  RADIO_standby();
-  RADIO_clearTransmitFlag();
-  RADIO_clearReceiveFlag();
-}
-
 void LoRa_TxWdtTimeout(void)
 {
-  LoRa_PrepareRetransmit();
+  LoRa_PrepareRetransmit_XYfl();
 }
 
 void LoRa_RxWdtTimeout(void)
 {
-  LoRa_PrepareRetransmit();
+  LoRa_PrepareRetransmit_XYfl();
 }
 
 void LoRa_UpdateCurrentDataRate(uint8_t valueNew)
