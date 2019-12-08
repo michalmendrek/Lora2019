@@ -106,24 +106,24 @@ void LoRa_ConfigureRadioTx_XYfe(uint8_t dataRate, uint32_t freq);
 void LoRa_System_Init(void) // this function resets everything to the default values
 {
   // Allocate software timers and their callbacks
-  loRa.LoRa_transmitStatus = LoRa_Idle;
-  loRa.LoRa_StatusDanych = LoRa_transmitIdle;
-  loRa.LoRa_Counnter.value = 0;
+  loRa_X.LoRa_transmitStatus = LoRa_Idle;
+  loRa_X.LoRa_StatusDanych = LoRa_transmitIdle;
+  loRa_X.LoRa_Counnter.value = 0;
 
-  if(loRa.LoRa_initialised == DISABLED)
+  if(loRa_X.LoRa_initialised == DISABLED)
     {
       //      CreateAllSoftwareTimers();
       LoRa_CreateSoftwareTimers();
       LoRa_SetCallbackSoftwareTimers();
-      loRa.LoRa_initialised = ENABLED;
+      loRa_X.LoRa_initialised = ENABLED;
     }
   else
     {
       LoRa_StopAllSoftwareTimers_XYf();
     }
-  loRa.LoRa_Addres = LoRaDeviceAddress;
-  loRa.LoRa_ch0_params.frequency = LoRa_CH0_frequency;
-  loRa.LoRa_ch0_params.dataRate = LoRa_CH0_datarate;
+  loRa_X.LoRa_Addres = LoRaDeviceAddress;
+  loRa_X.LoRa_ch0_params.frequency = LoRa_CH0_frequency;
+  loRa_X.LoRa_ch0_params.dataRate = LoRa_CH0_datarate;
   //  loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
 
   RADIO_Init_XYf(LoRa_radioBuffer, EU868_CALIBRATION_FREQ);
@@ -136,49 +136,49 @@ void LoRa_System_Init(void) // this function resets everything to the default va
 
 static void LoRa_CreateSoftwareTimers(void)
 {
-  loRa.LoRa_TimerHandshaking = SwTimerCreate();
-  loRa.LoRa_TimerRetransmit = SwTimerCreate();
-  loRa.LoRa_TimerWaitAck = SwTimerCreate();
+  loRa_X.LoRa_TimerHandshaking = SwTimerCreate();
+  loRa_X.LoRa_TimerRetransmit = SwTimerCreate();
+  loRa_X.LoRa_TimerWaitAck = SwTimerCreate();
 }
 
 static void LoRa_SetCallbackSoftwareTimers(void)
 {
-  SwTimerSetCallback(loRa.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback_XYfe, 0);
-  SwTimerSetCallback(loRa.LoRa_TimerRetransmit, LoRa_TimerRetransmitCallback, 0);
-  SwTimerSetCallback(loRa.LoRa_TimerWaitAck, LoRa_TimerWaitAckCallback_XYfl, 0);
+  SwTimerSetCallback(loRa_X.LoRa_TimerHandshaking, LoRa_TimerHandshakingCallback_XYfe, 0);
+  SwTimerSetCallback(loRa_X.LoRa_TimerRetransmit, LoRa_TimerRetransmitCallback_XYfl, 0);
+  SwTimerSetCallback(loRa_X.LoRa_TimerWaitAck, LoRa_TimerWaitAckCallback_XYfl, 0);
 }
 
 static void LoRa_StopAllSoftwareTimers_XYf(void)
 {
-  SwTimerStop_Yf(loRa.LoRa_TimerHandshaking);
-  SwTimerStop_Yf(loRa.LoRa_TimerRetransmit);
-  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
+  SwTimerStop_Yf(loRa_X.LoRa_TimerHandshaking);
+  SwTimerStop_Yf(loRa_X.LoRa_TimerRetransmit);
+  SwTimerStop_Yf(loRa_X.LoRa_TimerWaitAck);
 }
 
 void LoRa_Reset_XYf(IsmBand_t ismBandNew)
 {
-  if(loRa.LoRa_initialised == ENABLED)
+  if(loRa_X.LoRa_initialised == ENABLED)
     {
       LoRa_StopAllSoftwareTimers_XYf();
     }
 
-  loRa.LoRa_syncWord = 0x34;
-  RADIO_SetLoRaSyncWord_Yf(loRa.LoRa_syncWord);
+  loRa_X.LoRa_syncWord = 0x34;
+  RADIO_SetLoRaSyncWord_Yf(loRa_X.LoRa_syncWord);
 
-  loRa.LoRa_batteryLevel = BATTERY_LEVEL_INVALID; // the end device was not able to measure the battery level
+  loRa_X.LoRa_batteryLevel = BATTERY_LEVEL_INVALID; // the end device was not able to measure the battery level
 
-  loRa.LoRa_ismBand = ismBandNew;
+  loRa_X.LoRa_ismBand = ismBandNew;
 
   // initialize default channels
-  loRa.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
+  loRa_X.LoRa_maxChannels = MAX_EU_SINGLE_BAND_CHANNELS;
   //  if(ISM_EU868 == ismBandNew)
   RADIO_Init_XYf(LoRa_radioBuffer, EU868_CALIBRATION_FREQ);
 
   LoRa_InitDefault868Channels_Yf();
 
-  loRa.LoRa_txPower = 1;
+  loRa_X.LoRa_txPower = 1;
 
-  loRa.LoRa_currentDataRate = DR0;
+  loRa_X.LoRa_currentDataRate = DR0;
 
   LoRa_UpdateMinMaxChDataRate_Yf();
 }
@@ -221,15 +221,15 @@ void LoRa_TxDone_XYfe(uint16_t timeOnAir)
 
 void LoRa_RxTimeout(void)
 {
-  if(loRa.LoRa_transmitStatus == LoRa_Handshaking_RX)
+  if(loRa_X.LoRa_transmitStatus == LoRa_Handshaking_RX)
     {
-      SwTimerStop_Yf(loRa.LoRa_TimerHandshaking);
-      loRa.LoRa_transmitStatus = LoRa_SendFailed;
+      SwTimerStop_Yf(loRa_X.LoRa_TimerHandshaking);
+      loRa_X.LoRa_transmitStatus = LoRa_SendFailed;
     }
-  if(loRa.LoRa_transmitStatus == LoRa_SendData_RX)
+  if(loRa_X.LoRa_transmitStatus == LoRa_SendData_RX)
     {
-      SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
-      loRa.LoRa_transmitStatus = LoRa_SendFailed;
+      SwTimerStop_Yf(loRa_X.LoRa_TimerWaitAck);
+      loRa_X.LoRa_transmitStatus = LoRa_SendFailed;
     }
   RADIO_clearReceiveFlag();
 }
@@ -282,7 +282,7 @@ LorawanError_t LoRa_SetFrequency(uint8_t channelId, uint32_t frequencyNew)
 
 uint8_t LoRa_GetIsmBand(void) //returns the ISM band
 {
-  return loRa.LoRa_ismBand;
+  return loRa_X.LoRa_ismBand;
 }
 
 // this function is called by the radio when the first or the second receive window expired without receiving any message (either for join accept or for message)
@@ -303,7 +303,7 @@ LorawanError_t LoRa_ValidateTxPower(uint8_t txPowerNew)
 {
   LorawanError_t result = OK;
 
-  if(((ISM_EU868 == loRa.LoRa_ismBand) && (0 == txPowerNew)) || (txPowerNew > 5))
+  if(((ISM_EU868 == loRa_X.LoRa_ismBand) && (0 == txPowerNew)) || (txPowerNew > 5))
     {
       result = INVALID_PARAMETER;
     }
@@ -322,7 +322,7 @@ void LoRa_ConfigureRadio_XYfe(uint8_t dataRate, uint32_t freq) //OK
       //LoRa modulation
       RADIO_SetSpreadingFactor(spreadingFactor[dataRate]);
       RADIO_SetBandwidth(bandwidth[dataRate]);
-      RADIO_SetLoRaSyncWord_Yf(loRa.LoRa_syncWord);
+      RADIO_SetLoRaSyncWord_Yf(loRa_X.LoRa_syncWord);
     }
   else
     {
@@ -346,11 +346,11 @@ LorawanError_t LoRa_SelectChannelForTransmission_XYf(uint8_t channelTx, uint8_t 
       channelRxIndex = channelRx;
     }
 
-  loRa.LoRa_lastUsedChannelIndex = channelRxIndex;
-  loRa.LoRa_receiveChannelParameters.frequency = LoRa_Channels[channelRxIndex].frequency;
-  loRa.LoRa_receiveChannelParameters.dataRate = loRa.LoRa_currentDataRate;
-  loRa.LoRa_sendChannelParameters.frequency = LoRa_Channels[channelRxIndex].frequency;
-  loRa.LoRa_sendChannelParameters.dataRate = loRa.LoRa_currentDataRate;
+  loRa_X.LoRa_lastUsedChannelIndex = channelRxIndex;
+  loRa_X.LoRa_receiveChannelParameters.frequency = LoRa_Channels[channelRxIndex].frequency;
+  loRa_X.LoRa_receiveChannelParameters.dataRate = loRa_X.LoRa_currentDataRate;
+  loRa_X.LoRa_sendChannelParameters.frequency = LoRa_Channels[channelRxIndex].frequency;
+  loRa_X.LoRa_sendChannelParameters.dataRate = loRa_X.LoRa_currentDataRate;
 
   return result;
 }
@@ -360,31 +360,31 @@ static void LoRa_UpdateDataRange(uint8_t channelId, uint8_t dataRangeNew)
   uint8_t i;
   // after updating the data range of a channel we need to check if the minimum dataRange has changed or not.
   // The user cannot set the current data rate outside the range of the data range
-  loRa.LoRa_minDataRate = DR7;
-  loRa.LoRa_maxDataRate = DR0;
+  loRa_X.LoRa_minDataRate = DR7;
+  loRa_X.LoRa_maxDataRate = DR0;
 
   LoRa_Channels[channelId].dataRange.value = dataRangeNew;
   LoRa_Channels[channelId].parametersDefined |= DATA_RANGE_DEFINED;
-  for(i = 0; i < loRa.LoRa_maxChannels; i++)
+  for(i = 0; i < loRa_X.LoRa_maxChannels; i++)
     {
-      if((LoRa_Channels[i].dataRange.min < loRa.LoRa_minDataRate) && (LoRa_Channels[i].status == ENABLED))
+      if((LoRa_Channels[i].dataRange.min < loRa_X.LoRa_minDataRate) && (LoRa_Channels[i].status == ENABLED))
         {
-          loRa.LoRa_minDataRate = LoRa_Channels[i].dataRange.min;
+          loRa_X.LoRa_minDataRate = LoRa_Channels[i].dataRange.min;
         }
-      if((LoRa_Channels[i].dataRange.max > loRa.LoRa_maxDataRate) && (LoRa_Channels[i].status == ENABLED))
+      if((LoRa_Channels[i].dataRange.max > loRa_X.LoRa_maxDataRate) && (LoRa_Channels[i].status == ENABLED))
         {
-          loRa.LoRa_maxDataRate = LoRa_Channels[i].dataRange.max;
+          loRa_X.LoRa_maxDataRate = LoRa_Channels[i].dataRange.max;
         }
     }
 
-  if(loRa.LoRa_currentDataRate > loRa.LoRa_maxDataRate)
+  if(loRa_X.LoRa_currentDataRate > loRa_X.LoRa_maxDataRate)
     {
-      loRa.LoRa_currentDataRate = loRa.LoRa_maxDataRate;
+      loRa_X.LoRa_currentDataRate = loRa_X.LoRa_maxDataRate;
     }
 
-  if(loRa.LoRa_currentDataRate < loRa.LoRa_minDataRate)
+  if(loRa_X.LoRa_currentDataRate < loRa_X.LoRa_minDataRate)
     {
-      loRa.LoRa_currentDataRate = loRa.LoRa_minDataRate;
+      loRa_X.LoRa_currentDataRate = loRa_X.LoRa_minDataRate;
     }
 }
 
@@ -399,15 +399,15 @@ static void LoRa_UpdateChannelIdStatus(uint8_t channelId, bool statusNew)
       LoRa_Channels[channelId].channelTimer = 0;
     }
 
-  for(i = 0; i < loRa.LoRa_maxChannels; i++)
+  for(i = 0; i < loRa_X.LoRa_maxChannels; i++)
     {
-      if((LoRa_Channels[i].dataRange.min < loRa.LoRa_minDataRate) && (LoRa_Channels[i].status == ENABLED))
+      if((LoRa_Channels[i].dataRange.min < loRa_X.LoRa_minDataRate) && (LoRa_Channels[i].status == ENABLED))
         {
-          loRa.LoRa_minDataRate = LoRa_Channels[i].dataRange.min;
+          loRa_X.LoRa_minDataRate = LoRa_Channels[i].dataRange.min;
         }
-      if((LoRa_Channels[i].dataRange.max > loRa.LoRa_maxDataRate) && (LoRa_Channels[i].status == ENABLED))
+      if((LoRa_Channels[i].dataRange.max > loRa_X.LoRa_maxDataRate) && (LoRa_Channels[i].status == ENABLED))
         {
-          loRa.LoRa_maxDataRate = LoRa_Channels[i].dataRange.max;
+          loRa_X.LoRa_maxDataRate = LoRa_Channels[i].dataRange.max;
         }
     }
 }
@@ -416,7 +416,7 @@ static LorawanError_t LoRa_ValidateFrequency(uint32_t frequencyNew)
 {
   LorawanError_t result = OK;
 
-  if(ISM_EU868 == loRa.LoRa_ismBand)
+  if(ISM_EU868 == loRa_X.LoRa_ismBand)
     {
       if((frequencyNew > FREQ_870000KHZ) || (frequencyNew < FREQ_863000KHZ))
         {
@@ -478,9 +478,9 @@ static void LoRa_DutyCycleCallback(uint8_t param)
       //Validate this only for enabled channels
       if((LoRa_Channels[i].status == ENABLED) && (LoRa_Channels[i].channelTimer != 0))
         {
-          if(LoRa_Channels[i].channelTimer > loRa.XXX_lastTimerValue)
+          if(LoRa_Channels[i].channelTimer > loRa_X.XXX_lastTimerValue)
             {
-              LoRa_Channels[i].channelTimer = LoRa_Channels[i].channelTimer - loRa.XXX_lastTimerValue;
+              LoRa_Channels[i].channelTimer = LoRa_Channels[i].channelTimer - loRa_X.XXX_lastTimerValue;
             }
           else
             {
@@ -495,7 +495,7 @@ static void LoRa_DutyCycleCallback(uint8_t param)
     }
   if(found == true)
     {
-      loRa.XXX_lastTimerValue = minim;
+      loRa_X.XXX_lastTimerValue = minim;
     }
 }
 
@@ -507,7 +507,7 @@ void LoRa_ConfigureRadioTx_XYfe(uint8_t dataRate, uint32_t freq) //OK
 
   //  if(ISM_EU868 == loRa.LoRa_ismBand)
 
-  txPower = txPower868[loRa.LoRa_txPower];
+  txPower = txPower868[loRa_X.LoRa_txPower];
 
   RADIO_SetOutputPower_Yf(txPower);
 

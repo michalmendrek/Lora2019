@@ -92,19 +92,19 @@ void main(void)
       // Add your application code
       LoRa_Mainloop();
       
-      if(loRa.LoRa_StatusDanych == LoRa_transmitIdle)
+      if(loRa_X.LoRa_StatusDanych == LoRa_transmitIdle)
         {
           LoRa_Reset_XYf(ISM_EU868);
-          loRa.LoRa_transmitStatus = LoRa_Idle;
+          loRa_X.LoRa_transmitStatus = LoRa_Idle;
           if(LoRa_Send_XYfl(bufor, sizeof(bufor)) == OK)
             {
             }
         }
-      if(loRa.LoRa_StatusDanych == LoRa_transmit_OK)
+      if(loRa_X.LoRa_StatusDanych == LoRa_transmit_OK)
         {
           //wyslane
         }
-      if(loRa.LoRa_StatusDanych == LoRa_transmit_Fail)
+      if(loRa_X.LoRa_StatusDanych == LoRa_transmit_Fail)
         {
           //niewyslane
         }

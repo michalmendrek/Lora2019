@@ -134,7 +134,7 @@ extern "C"
     ProtocolParams_t LoRa_protocolParameters;
   } LoRa_t;
 
-  extern LoRa_t loRa;
+  extern LoRa_t loRa_X;
 #define LoRa_Handshaking_timeout 20 //ms
 #define LoRa_ACK_timeout  200 //ms
 #define LoRa_Transmit_timeout 200 //ms
