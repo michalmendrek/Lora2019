@@ -274,7 +274,7 @@ extern "C"
 
   void LoRa_TimerHandshakingCallback_XYfe(uint8_t param);
   void LoRa_TimerRetransmitCallback(uint8_t param);
-  void LoRa_TimerWaitAckCallback(uint8_t param);
+  void LoRa_TimerWaitAckCallback_XYfl(uint8_t param);
 
   void LoRa_EnterReceive_XYfe_HD(void);
 

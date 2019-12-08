@@ -468,14 +468,13 @@ void LoRa_PrepareRetransmit_XYfl(void)
     }
 }
 
-void LoRa_TimerWaitAckCallback(uint8_t param)
+void LoRa_TimerWaitAckCallback_XYfl(uint8_t param)
 {
   loRa.LoRa_transmitStatus = LoRa_transmit_Error;
-
-  SwTimerStop_Yf(loRa.LoRa_TimerWaitAck);
-  RADIO_standby_XYfl();
-  RADIO_clearTransmitFlag();
-  RADIO_clearReceiveFlag();
+  
+  LoRa_StopTransmisions_XYfl();
+  
+  LoRa_PrepareRetransmit_XYfl();
 }
 
 void LoRa_TimerRetransmitCallback(uint8_t param)
